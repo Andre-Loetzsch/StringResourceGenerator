@@ -1,0 +1,6 @@
+[strings]
+Test1 = This is Test1
+Test2(string s, int i)=Text ist {0}, Zahl ist: {1}!
+
+[strings.de]
+Test1=Das ist Test1

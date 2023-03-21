@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oleander.StrResGen", "src\Oleander.StrResGen.csproj", "{1BB5E054-295F-42C4-B201-8A7CF7D3A561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oleander.StrResGen.Tests", "tests\Oleander.StrResGen.Tests.csproj", "{9FD674FB-D2FC-419E-8C20-9E3C728810AC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1BB5E054-295F-42C4-B201-8A7CF7D3A561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BB5E054-295F-42C4-B201-8A7CF7D3A561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BB5E054-295F-42C4-B201-8A7CF7D3A561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BB5E054-295F-42C4-B201-8A7CF7D3A561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FD674FB-D2FC-419E-8C20-9E3C728810AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FD674FB-D2FC-419E-8C20-9E3C728810AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FD674FB-D2FC-419E-8C20-9E3C728810AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FD674FB-D2FC-419E-8C20-9E3C728810AC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B822E35F-46F2-4751-B163-663865509B71}
+	EndGlobalSection
+EndGlobal

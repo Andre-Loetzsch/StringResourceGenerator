@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\.targets\common.targets" />
+
+  <PropertyGroup>
+    <Product>String Resource Generator</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Template.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Template.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CodeDom" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>

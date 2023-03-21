@@ -1,0 +1,12 @@
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\bin\Debug\net7.0\Oleander.StrResGen.deps.json
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\bin\Debug\net7.0\Oleander.StrResGen.dll
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\bin\Debug\net7.0\Oleander.StrResGen.pdb
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\Oleander.StrResGen.csproj.AssemblyReference.cache
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\Oleander.StrResGen.GeneratedMSBuildEditorConfig.editorconfig
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\Oleander.StrResGen.AssemblyInfoInputs.cache
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\Oleander.StrResGen.AssemblyInfo.cs
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\Oleander.StrResGen.csproj.CoreCompileInputs.cache
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\Oleander.StrResGen.dll
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\refint\Oleander.StrResGen.dll
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\Oleander.StrResGen.pdb
+D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\obj\Debug\net7.0\ref\Oleander.StrResGen.dll

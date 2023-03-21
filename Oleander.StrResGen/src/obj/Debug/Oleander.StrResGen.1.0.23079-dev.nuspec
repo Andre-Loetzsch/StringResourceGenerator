@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Oleander.StrResGen</id>
+    <version>1.0.23079-dev</version>
+    <authors>Oleander.StrResGen</authors>
+    <projectUrl>https://nuget.pkg.github.com/Andre-Loetzsch/index.json</projectUrl>
+    <description>Configuration extensions</description>
+    <releaseNotes>Release 1.0.23079.0-dev</releaseNotes>
+    <copyright>Copyright © Oleander 2023</copyright>
+    <tags>Oleander StringResourceGenerator C#</tags>
+    <repository type="git" url="https://github.com/Andre-Loetzsch/StringResourceGenerator" />
+    <dependencies>
+      <group targetFramework="net7.0">
+        <dependency id="System.CodeDom" version="7.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen\src\bin\Debug\net7.0\Oleander.StrResGen.dll" target="lib\net7.0\Oleander.StrResGen.dll" />
+  </files>
+</package>

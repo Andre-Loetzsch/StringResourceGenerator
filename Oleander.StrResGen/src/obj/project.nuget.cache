@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "7/rW0HY5+/d9IsDqhE6gPfM0bEZaO9F6C2p63JJOZQLOtOASWJ6yZkr75Fs67y3+IzHIaXBw7+DyRqBAA4uoJQ==",
+  "success": true,
+  "projectFilePath": "D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen\\src\\Oleander.StrResGen.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\loetzsca\\.nuget\\packages\\system.codedom\\7.0.0\\system.codedom.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
