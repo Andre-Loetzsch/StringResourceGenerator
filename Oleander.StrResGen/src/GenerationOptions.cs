@@ -6,10 +6,11 @@ public class GenerationOptions
     public bool PublicSRClass = false;
     public bool PublicKeysSRClass = false;
     public bool GenerateMethodsOnly = false;
+
     public string? SRClassName;
     public string? ResourceName;
     public string? CultureInfoFragment = null;
-    public string? SRNamespace = null;
+    public string? SRNamespace;
     public string? KeysSRClassName;
     // ReSharper restore InconsistentNaming
 }

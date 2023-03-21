@@ -19,12 +19,9 @@ namespace Oleander.StrResGen.Tests
             Assert.NotNull(projectDir);
 
             var inputFileName = Path.Combine(projectDir, "SR.strings");
-            var outputFileName = Path.Combine(projectDir, "SR.cs");
-            var generated = CodeGenerator.SingleFileGeneratorGenerate(inputFileName);
+            var generated = CodeGenerator.GenerateCSharpResources(inputFileName).ToList();
 
-            Assert.NotNull(generated);
-
-            File.WriteAllText(outputFileName, generated);
+            Assert.Equal(3, generated.Count);
         }
 
 

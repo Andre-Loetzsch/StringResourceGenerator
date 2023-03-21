@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("Copyright © Oleander 2023")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Configuration extensions")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.23080.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.23080.0-dev+47be1b2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.23080.0-dev+25990c2")]
 [assembly: System.Reflection.AssemblyProductAttribute("String Resource Generator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Oleander.StrResGen")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.23080.0")]
