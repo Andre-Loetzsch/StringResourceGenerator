@@ -6,11 +6,11 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v7.0": {
-      "Oleander.StrResGen.Tests/1.0.23080.0-dev": {
+      "Oleander.StrResGen.Tests/1.0.23082.0-dev": {
         "dependencies": {
           "Microsoft.Build": "17.5.0",
           "Microsoft.NET.Test.Sdk": "17.5.0",
-          "Oleander.StrResGen": "1.0.23079-dev",
+          "Oleander.StrResGen": "1.0.23082-dev",
           "xunit": "2.4.2",
           "xunit.runner.visualstudio": "2.4.5"
         },
@@ -1213,8 +1213,9 @@
         }
       },
       "xunit.runner.visualstudio/2.4.5": {},
-      "Oleander.StrResGen/1.0.23079-dev": {
+      "Oleander.StrResGen/1.0.23082-dev": {
         "dependencies": {
+          "Microsoft.Build": "17.5.0",
           "System.CodeDom": "7.0.0"
         },
         "runtime": {
@@ -1224,7 +1225,7 @@
     }
   },
   "libraries": {
-    "Oleander.StrResGen.Tests/1.0.23080.0-dev": {
+    "Oleander.StrResGen.Tests/1.0.23082.0-dev": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1978,7 +1979,7 @@
       "path": "xunit.runner.visualstudio/2.4.5",
       "hashPath": "xunit.runner.visualstudio.2.4.5.nupkg.sha512"
     },
-    "Oleander.StrResGen/1.0.23079-dev": {
+    "Oleander.StrResGen/1.0.23082-dev": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

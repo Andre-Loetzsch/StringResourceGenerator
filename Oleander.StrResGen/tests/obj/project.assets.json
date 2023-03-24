@@ -2104,10 +2104,11 @@
           "build/netcoreapp3.1/xunit.runner.visualstudio.props": {}
         }
       },
-      "Oleander.StrResGen/1.0.23079-dev": {
+      "Oleander.StrResGen/1.0.23082-dev": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "Microsoft.Build": "17.5.0",
           "System.CodeDom": "7.0.0"
         },
         "compile": {
@@ -6448,7 +6449,7 @@
         "xunit.runner.visualstudio.nuspec"
       ]
     },
-    "Oleander.StrResGen/1.0.23079-dev": {
+    "Oleander.StrResGen/1.0.23082-dev": {
       "type": "project",
       "path": "../src/Oleander.StrResGen.csproj",
       "msbuildProject": "../src/Oleander.StrResGen.csproj"
@@ -6458,7 +6459,7 @@
     "net7.0": [
       "Microsoft.Build >= 17.5.0",
       "Microsoft.NET.Test.Sdk >= 17.5.0",
-      "Oleander.StrResGen >= 1.0.23079-dev",
+      "Oleander.StrResGen >= 1.0.23082-dev",
       "xunit >= 2.4.2",
       "xunit.runner.visualstudio >= 2.4.5"
     ]
@@ -6468,7 +6469,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.23080-dev",
+    "version": "1.0.23083-dev",
     "restore": {
       "projectUniqueName": "D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen\\tests\\Oleander.StrResGen.Tests.csproj",
       "projectName": "Oleander.StrResGen.Tests",

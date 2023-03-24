@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "q01jCMj5JEwssRSOiwHzlBGUJ6HYybt9e0YVLJ5Jm/H9TrRMDnQHCUct9iVlF3ZP8G269Bbg5bsIlfJo5ybjOg==",
+  "dgSpecHash": "sTEfWG+kY1k++YE0EpFywf7uWB3G1v2GlgTQSPXfKRX17p/L7MAgVR5uC3J+xMYfOQpJAyEvaslh7Vv4FBeG1g==",
   "success": true,
   "projectFilePath": "D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen\\tests\\Oleander.StrResGen.Tests.csproj",
   "expectedPackageFiles": [

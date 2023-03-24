@@ -35,6 +35,36 @@ namespace Oleander.StrResGen.Tests
             this.AddToProject(GetProjectFile(AppDomain.CurrentDomain.BaseDirectory), "SR.strings", "SR.srt.de.resx");
         }
 
+
+
+        [Fact]
+        public void Test3()
+        {
+
+            var projectFile = GetProjectFile(AppDomain.CurrentDomain.BaseDirectory);
+            Assert.NotNull(projectFile);
+
+            var project = new VSProject(projectFile);
+
+
+            Assert.True(project.TryGetMetaData("EmbeddedResource", "SR.srt.resx", out var metaData));
+
+            Assert.True(metaData.TryGetValue("DependentUpon", out var value));
+
+
+
+            //var metaData = project.GetMetaData("EmbeddedResource", "SR.srt.resx");
+
+
+            project.CreateOrUpdateItemElement("EmbeddedResource", "SR.srt.en.resx", metaData);
+            project.Save();
+
+        }
+
+
+
+
+
         private static string? GetProjectDir(string baseDirectory)
         {
             var projectFileName = string.Empty;
@@ -90,7 +120,7 @@ namespace Oleander.StrResGen.Tests
             //var fileStream = File.Open(projectFileName, FileMode.Open);
             //var project = ProjectRootElement.Create(new XmlTextReader(fileStream));
 
-
+           
 
             var project = ProjectRootElement.Open(
                 projectFileName,

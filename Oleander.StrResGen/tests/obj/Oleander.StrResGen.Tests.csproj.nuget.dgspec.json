@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen\\src\\Oleander.StrResGen.csproj": {
-      "version": "1.0.23079-dev",
+      "version": "1.0.23082-dev",
       "restore": {
         "projectUniqueName": "D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen\\src\\Oleander.StrResGen.csproj",
         "projectName": "Oleander.StrResGen",
@@ -49,6 +49,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Microsoft.Build": {
+              "target": "Package",
+              "version": "[17.5.0, )"
+            },
             "System.CodeDom": {
               "target": "Package",
               "version": "[7.0.0, )"
@@ -75,7 +79,7 @@
       }
     },
     "D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen\\tests\\Oleander.StrResGen.Tests.csproj": {
-      "version": "1.0.23080-dev",
+      "version": "1.0.23083-dev",
       "restore": {
         "projectUniqueName": "D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen\\tests\\Oleander.StrResGen.Tests.csproj",
         "projectName": "Oleander.StrResGen.Tests",
