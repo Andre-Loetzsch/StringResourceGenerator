@@ -5,7 +5,11 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oleander.StrResGen", "src\Oleander.StrResGen.csproj", "{1BB5E054-295F-42C4-B201-8A7CF7D3A561}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oleander.StrResGen.Tests", "tests\Oleander.StrResGen.Tests.csproj", "{9FD674FB-D2FC-419E-8C20-9E3C728810AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oleander.StrResGen.Tests", "tests\Oleander.StrResGen.Tests.csproj", "{9FD674FB-D2FC-419E-8C20-9E3C728810AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CC3D2BBF-45DA-42AE-BEFE-FD40E8DF8A15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7D3B8F3B-4549-4A50-921B-9166C6EBAC01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1BB5E054-295F-42C4-B201-8A7CF7D3A561} = {CC3D2BBF-45DA-42AE-BEFE-FD40E8DF8A15}
+		{9FD674FB-D2FC-419E-8C20-9E3C728810AC} = {7D3B8F3B-4549-4A50-921B-9166C6EBAC01}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B822E35F-46F2-4751-B163-663865509B71}
