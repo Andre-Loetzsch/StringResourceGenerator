@@ -22,29 +22,6 @@
 
 
   <ItemGroup>
-    <None Update="SR.strings">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <CustomToolNamespace>Oleander.StrResGen</CustomToolNamespace>
-    </None>
-    <Compile Update="SR.cs">
-      <Generator>SRG</Generator>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="SR.srt.resx">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </EmbeddedResource>
-    <EmbeddedResource Update="SR.srt.de.resx">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </EmbeddedResource>
-   
-
-
-   
+    <Folder Include="Data\" />
   </ItemGroup>
 </Project>

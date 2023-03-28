@@ -7,10 +7,10 @@ public class GenerationOptions
     public bool PublicKeysSRClass = false;
     public bool GenerateMethodsOnly = false;
 
-    public string? SRClassName;
-    public string? ResourceName;
-    public string? CultureInfoFragment = null;
-    public string? SRNamespace;
+    public string SRClassName = "SR";
+    public string ResourceName = "SR";
+    public string SRNamespace = "Oleander.StrResGen";
+    public string? CultureInfoFragment;
     public string? KeysSRClassName;
     // ReSharper restore InconsistentNaming
 }

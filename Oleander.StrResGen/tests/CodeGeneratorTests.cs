@@ -1,212 +1,45 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using Microsoft.Build.Construction;
-using Microsoft.Build.Evaluation;
 using Xunit;
 
-namespace Oleander.StrResGen.Tests
+namespace Oleander.StrResGen.Tests;
+
+public class CodeGeneratorTests
 {
-    public class CodeGeneratorTests
+
+    [Fact]
+    public void Test_inputFileName_is_null()
     {
-        [Fact]
-        public void Test1()
+        Assert.Throws<ArgumentNullException>(() =>
         {
-            var projectDir = GetProjectDir(AppDomain.CurrentDomain.BaseDirectory);
-            Assert.NotNull(projectDir);
-
-            var inputFileName = Path.Combine(projectDir, "SR.strings");
-            var generated = CodeGenerator.GenerateCSharpResources(inputFileName).ToList();
-
-            Assert.Equal(3, generated.Count);
-        }
-
-
-        [Fact]
-        public void Test2()
-        {
-            var projectDir = GetProjectDir(AppDomain.CurrentDomain.BaseDirectory);
-            Assert.NotNull(projectDir);
-
-            this.AddToProject(GetProjectFile(AppDomain.CurrentDomain.BaseDirectory), "SR.strings", "SR.srt.resx");
-            this.AddToProject(GetProjectFile(AppDomain.CurrentDomain.BaseDirectory), "SR.strings", "SR.srt.de.resx");
-        }
-
-
-
-        [Fact]
-        public void Test3()
-        {
-
-            var projectFile = GetProjectFile(AppDomain.CurrentDomain.BaseDirectory);
-            Assert.NotNull(projectFile);
-
-            var project = new VSProject(projectFile);
-
-
-            Assert.True(project.TryGetMetaData("EmbeddedResource", "SR.srt.resx", out var metaData));
-
-            Assert.True(metaData.TryGetValue("DependentUpon", out var value));
-
-
-
-            //var metaData = project.GetMetaData("EmbeddedResource", "SR.srt.resx");
-
-
-            project.CreateOrUpdateItemElement("EmbeddedResource", "SR.srt.en.resx", metaData);
-            project.Save();
-
-        }
-
-
-
-
-
-        private static string? GetProjectDir(string baseDirectory)
-        {
-            var projectFileName = string.Empty;
-            var dirInfo = new DirectoryInfo(baseDirectory);
-            var parentDir = dirInfo;
-
-            while (parentDir != null)
-            {
-                var fileInfo = parentDir.GetFiles("*.csproj").FirstOrDefault();
-                if (fileInfo != null)
-                {
-                    return parentDir.FullName;
-                }
-
-                parentDir = parentDir.Parent;
-            }
-
-            return null;
-        }
-
-
-        private static string? GetProjectFile(string baseDirectory)
-        {
-            var projectFileName = string.Empty;
-            var dirInfo = new DirectoryInfo(baseDirectory);
-            var parentDir = dirInfo;
-
-            while (parentDir != null)
-            {
-                var fileInfo = parentDir.GetFiles("*.csproj").FirstOrDefault();
-                if (fileInfo != null)
-                {
-                    return fileInfo.FullName;
-                }
-
-                parentDir = parentDir.Parent;
-            }
-
-            return null;
-        }
-
-
-
-
-
-
-        private void AddToProject(string projectFileName, string stringResFile, string resFile)
-        {
-
-            //var coll = new ProjectCollection();
-            //coll.LoadProject()
-
-            //var fileStream = File.Open(projectFileName, FileMode.Open);
-            //var project = ProjectRootElement.Create(new XmlTextReader(fileStream));
-
-           
-
-            var project = ProjectRootElement.Open(
-                projectFileName,
-                ProjectCollection.GlobalProjectCollection,
-                preserveFormatting: true);
-
-
-
-
-            //if (project.ItemGroups.Any(itemGroupElement => itemGroupElement.Items.Any(x => x.ElementName == "EmbeddedResource" && x.Update == resFile)))
-            //{
-            //    return;
-            //}
-
-
-
-
-            //ProjectItemGroupElement group = project.AddItemGroup();
-
-            //// MUST set the Update attribute before adding it to the group
-            //ProjectItemElement compile = project.CreateItemElement("Compile");
-            //compile.Update = childName;
-            //group.AppendChild(compile);
-
-            //// MUST be in the group before we can add metadata
-            //compile.AddMetadata("AutoGen", "True");
-            //compile.AddMetadata("DependentUpon", parentName);
-
-
-
-
-
-
-
-
-            var item = project.ItemGroups.FirstOrDefault(itemGroupElement => itemGroupElement.Items.Any(x => x.ElementName == "EmbeddedResource" && x.Update == resFile));
-          
-
-
-            foreach (var itemGroupElement in project.ItemGroups)
-            {
-                if (itemGroupElement.Items.Any(x => x.ElementName == "None" && x.Update == stringResFile))
-                {
-
-
-                    ProjectItemElement compile = project.CreateItemElement("EmbeddedResource");
-                    compile.Update = resFile;
-
-                    itemGroupElement.AppendChild(compile);
-
-                    // MUST be in the group before we can add metadata
-                    compile.AddMetadata("AutoGen", "True");
-                    compile.AddMetadata("DependentUpon", stringResFile);
-                    compile.AddMetadata("DesignTime", "True");
-
-
-
-
-
-
-                    //var metaData = new Dictionary<string, string>
-                    //{
-                    //    ["DependentUpon"] = stringResFile,
-                    //    ["DesignTime"] = "True",
-                    //    ["AutoGen"] = "True"
-                    //};
-
-                    //var projectItemElement = itemGroupElement.AddItem("EmbeddedResource", "Update", metaData);
-
-
-                    //projectItemElement.Update = resFile;
-
-                   
-
-
-                }
-            }
-
-            //fileStream.Flush(true);
-            //fileStream.Close();
-
-         
-            //project.Save(projectFileName);
-            project.Save();
-
-
-        }
+            #pragma warning disable CS8625
+            _ = new CodeGenerator().GenerateCSharpResources(null);
+            #pragma warning restore CS8625
+        });
     }
+
+    [Fact]
+    public void Test_inputFileName_does_not_exist()
+    {
+        var inputFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SR.strings");
+
+        if (File.Exists(inputFileName)) File.Delete(inputFileName);
+
+        var generated = new CodeGenerator().GenerateCSharpResources(inputFileName, "Oleander.StrResGen.Tests").ToList();
+
+        Assert.True(File.Exists(inputFileName));
+
+        Assert.Equal(3, generated.Count);
+        Assert.EndsWith("SR.cs", generated[0]);
+        Assert.EndsWith("SR.srt.resx", generated[1]);
+        Assert.EndsWith("SR.srt.de.resx", generated[2]);
+
+        File.Delete(inputFileName);
+        File.Delete(generated[0]);
+        File.Delete(generated[1]);
+        File.Delete(generated[2]);
+    }
+
+
 }

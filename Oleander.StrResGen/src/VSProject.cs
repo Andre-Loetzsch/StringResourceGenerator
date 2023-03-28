@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Build.Construction;
@@ -37,55 +38,41 @@ public class VSProject
         return false;
     }
 
-
-    public bool CreateOrUpdateItemElement(string elementName, string update, Dictionary<string, string> metaData)
+    public ProjectItemGroupElement FindOrCreateProjectItemGroupElement(string elementName, string update)
     {
-        foreach (var projectItemGroupElement in this._projectRootElement.ItemGroups)
+        return this._projectRootElement.ItemGroups
+                   .FirstOrDefault(x => x.Items.Any(x1 => x1.ElementName == elementName && x1.Update == update)) ??
+               this._projectRootElement.AddItemGroup();
+    }
+
+    public void UpdateOrCreateItemElement(ProjectItemGroupElement projectItemGroupElement, string elementName, string update, Dictionary<string, string>? metaData = null)
+    {
+        var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && x.Update == update);
+
+        if (element == null)
         {
-            var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && x.Update == update);
+            element = this._projectRootElement.CreateItemElement(elementName);
+            element.Update = update;
 
-            if (element == null) continue;
-
-            foreach (var (key, value) in metaData)
-            {
-                var metaDataElement = element.Metadata.FirstOrDefault(x => x.Name == key);
-
-                if (metaDataElement == null)
-                {
-                    element.AddMetadata(key, key);
-                }
-                else
-                {
-                    metaDataElement.Value = value;
-                }
-            }
-           
-            return false;
+            // MUST be in the group before we can add metadata
+            projectItemGroupElement.AppendChild(element);
         }
 
-        var projectItemElement = this._projectRootElement.CreateItemElement(elementName);
-        projectItemElement.Update = update;
-
-        var lastItemGroups = this._projectRootElement.ItemGroups.LastOrDefault() ?? this._projectRootElement.AddItemGroup();
-
-        // MUST be in the group before we can add metadata
-        lastItemGroups.AppendChild(projectItemElement);
+        if (metaData == null) return;
 
         foreach (var (key, value) in metaData)
         {
-            var metaDataElement = projectItemElement.Metadata.FirstOrDefault(x => x.Name == key);
+            var metaDataElement = element.Metadata.FirstOrDefault(x => x.Name == key);
 
             if (metaDataElement == null)
             {
-                projectItemElement.AddMetadata(key, key);
+                element.AddMetadata(key, value);
             }
             else
             {
                 metaDataElement.Value = value;
             }
         }
-
-        return true;
     }
 
     public void Save()
@@ -93,4 +80,52 @@ public class VSProject
         this._projectRootElement.Save();
     }
 
+    #region static members
+
+    public static bool TryFindProjectFileName(string startDirectory, out string projectFileName)
+    {
+        projectFileName = string.Empty;
+        var dirInfo = new DirectoryInfo(startDirectory);
+        var parentDir = dirInfo;
+
+        while (parentDir != null)
+        {
+            var fileInfo = parentDir.GetFiles("*.csproj").FirstOrDefault();
+            if (fileInfo != null)
+            {
+                projectFileName = fileInfo.FullName;
+                return true;
+            }
+
+            parentDir = parentDir.Parent;
+        }
+
+        return false;
+    }
+
+    public static bool TryFindNameSpaceFromProjectItem(string itemFileName, out string itemNamespace)
+    {
+        itemNamespace = string.Empty;
+        var itemDir = Path.GetDirectoryName(itemFileName);
+        if (itemDir == null) return false;
+        if (!TryFindProjectFileName(itemDir, out var projectFileName)) return false;
+
+        var projectDir = Path.GetDirectoryName(projectFileName);
+        if (projectDir == null) return false;
+
+        var projectName = Path.GetFileName(projectFileName);
+        if (projectName.Length < 8) return false;
+
+        projectName = projectName[..^7];
+
+        if (itemDir.Length < projectDir.Length) return false;
+
+        itemNamespace = string.Concat(projectName, itemDir[projectDir.Length..]).Replace("\\", ".");
+        return true;
+    }
+
+    
+
+
+    #endregion
 }

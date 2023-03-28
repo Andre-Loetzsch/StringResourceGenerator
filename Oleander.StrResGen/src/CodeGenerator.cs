@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.CSharp;
@@ -16,73 +17,80 @@ namespace Oleander.StrResGen;
 
 public class CodeGenerator
 {
-    public static ReportErrors ReportErrors { get; set; } = (message, line, lineNo) => Console.WriteLine($"{message} - line: {line} lineNo: {lineNo}");
+    public ReportErrors ReportErrors { get; set; } = (message, line, lineNo) =>
+    {
+        Console.WriteLine($"{message} - line: {line} lineNo: {lineNo}");
+    };
 
-    public static IEnumerable<string> GenerateCSharpResources(string inputFileName, string? fileNameSpace = null)
+    public IEnumerable<string> GenerateCSharpResources(string inputFileName, string? nameSpace = null)
     {
         if (string.IsNullOrWhiteSpace(inputFileName)) throw new ArgumentNullException(nameof(inputFileName));
 
-        if (string.IsNullOrEmpty(fileNameSpace))
-        {
-            fileNameSpace = GetNameSpaceFromProjectItem(inputFileName);
-        }
+        var options = !string.IsNullOrEmpty(nameSpace) || VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace) ? 
+            new GenerationOptions { SRNamespace = nameSpace } : 
+            new GenerationOptions();
 
-        var generatedFiles = GenerateResourceFiles(inputFileName).ToList();
-
-        if (!generatedFiles.Any()) return Enumerable.Empty<string>();
-
-        var cSharpCode = GenerateCSharpCode(generatedFiles.First(), fileNameSpace);
-
-        if (string.IsNullOrEmpty(cSharpCode)) return generatedFiles;
-
-        var fileExtension = Path.GetExtension(inputFileName);
-        var outputFileName = string.Concat(inputFileName.Substring(0, inputFileName.Length - fileExtension.Length), ".cs");
-
-        File.WriteAllText(outputFileName, cSharpCode);
-
-        generatedFiles.Add(outputFileName);
-
-        return generatedFiles;
+        return this.GenerateCSharpResources(inputFileName, options);
     }
 
-    public static IEnumerable<string> GenerateCSharpResources(string inputFileName, GenerationOptions options)
+    public IEnumerable<string> GenerateCSharpResources(string inputFileName, GenerationOptions options)
     {
         if (string.IsNullOrWhiteSpace(inputFileName)) throw new ArgumentNullException(nameof(inputFileName));
 
-        if (string.IsNullOrEmpty(options.SRNamespace))
+        this._errorStringBuilder.Clear();
+        
+        var fileExtension = Path.GetExtension(inputFileName);
+        var outputFileName = string.Concat(inputFileName[..^fileExtension.Length], ".cs");
+
+        if (!fileExtension.Equals(".strings", StringComparison.InvariantCultureIgnoreCase))
         {
-            options.SRNamespace = GetNameSpaceFromProjectItem(inputFileName);
+            this.ReportError($"File must have '*.strings' extension ({inputFileName})", string.Empty, 0);
+            File.WriteAllText(outputFileName, this._errorStringBuilder.ToString());
+            return new[] { outputFileName };
         }
 
-        var generatedFiles = GenerateResourceFiles(inputFileName).ToList();
+        var generatedFiles = new List<string>();
 
-        if (!generatedFiles.Any()) return Enumerable.Empty<string>();
+        if (!File.Exists(inputFileName))
+        {
+            var content = $"[strings]{Environment.NewLine}Test(string s)=Test: {0}{Environment.NewLine}{Environment.NewLine}[strings.de]{Environment.NewLine}Test(string s)=German Test: {0}";
+            File.WriteAllText(inputFileName, content);
+            generatedFiles.Add(inputFileName);
+        }
 
-        var cSharpCode = GenerateCSharpCode(generatedFiles.First(), options);
+        generatedFiles.AddRange(this.GenerateResourceFiles(inputFileName));
 
-        if (string.IsNullOrEmpty(cSharpCode)) return generatedFiles;
+        if (!generatedFiles.Any())
+        {
+            if (this._errorStringBuilder.Length < 1)
+            {
+                this.ReportError("No files were generated!", string.Empty, 0);
+            }
 
-        var fileExtension = Path.GetExtension(inputFileName);
-        var outputFileName = string.Concat(inputFileName.Substring(0, inputFileName.Length - fileExtension.Length), ".cs");
+            File.WriteAllText(outputFileName, this._errorStringBuilder.ToString());
+            return new[] { outputFileName };
+        }
+
+        var cSharpCode = this.GenerateCSharpCode(generatedFiles.First(x => x.ToLower().EndsWith(".resx")), options);
+
+        if (string.IsNullOrEmpty(cSharpCode) && this._errorStringBuilder.Length < 1)
+        {
+            this.ReportError("No c# code was generated!", string.Empty, 0);
+        }
+
+        if (this._errorStringBuilder.Length > 0)
+        {
+            cSharpCode = string.Concat(this._errorStringBuilder.ToString(), Environment.NewLine, cSharpCode);
+        }
 
         File.WriteAllText(outputFileName, cSharpCode);
-
-        generatedFiles.Add(outputFileName);
-
+        generatedFiles.Insert(0, outputFileName);
         return generatedFiles;
     }
 
+    #region private members
 
-
-
-
-
-
-
-
-
-
-    private static IEnumerable<string> GenerateResourceFiles(string stringsSource)
+    private IEnumerable<string> GenerateResourceFiles(string stringsSource)
     {
         var resourceFiles = new List<string>();
         var locale = GetLocaleFromFileName(stringsSource);
@@ -92,26 +100,20 @@ public class CodeGenerator
         {
             if (stream == null)
             {
-                ReportError("Resource Template.xml not found!", string.Empty, 0);
+                this.ReportError("Resource Template.xml not found!", string.Empty, 0);
                 return Enumerable.Empty<string>();
             }
 
             template.Load(stream);
         }
 
-        var ext = Path.GetExtension(stringsSource).ToLower();
+        if (IsCultureSpecified(stringsSource)) ParseHeader("#! generate_class = false", template);
 
-        if (ext.StartsWith(".strings"))
+        if (!ParseHeader($"#! stringSource={stringsSource}", template))
         {
-            if (IsCultureSpecified(stringsSource)) ParseHeader("#! generate_class = false", template);
-        }
-        else
-        {
-            Console.WriteLine($"File must have *.strings extension ({stringsSource})", "0", 0);
+            this.ReportError($"Header could not be parsed! ({stringsSource})", string.Empty, 0);
             return Enumerable.Empty<string>();
         }
-
-        if (!ParseHeader($"#! stringSource={stringsSource}", template)) return Enumerable.Empty<string>();
 
         XmlDocument? doc = null;
         XmlElement? prevElement = null;
@@ -143,11 +145,11 @@ public class CodeGenerator
                 {
                     if (doc != null)
                     {
-                        resourceFiles.Add(SaveResX(stringsSource, locale, doc));
+                        resourceFiles.Add(this.SaveResX(stringsSource, locale, doc));
                         doc = null;
                     }
 
-                    if (line.Trim().ToLower().Substring(0, 8) == "[strings")
+                    if (line.Trim().ToLower()[..8] == "[strings")
                     {
                         var strLocale = line.Trim().Substring(8, line.Trim().Length - 9);
                         if (strLocale != "") locale = strLocale;
@@ -155,7 +157,7 @@ public class CodeGenerator
 
                         if (template.DocumentElement == null)
                         {
-                            ReportError("template.DocumentElement == null", line, lineNo);
+                            this.ReportError("template.DocumentElement == null", line, lineNo);
                         }
                         else
                         {
@@ -174,12 +176,12 @@ public class CodeGenerator
                 var split = line.IndexOf('=');
                 if (split == -1)
                 {
-                    ReportError("Invalid resource, missing = sign", line, lineNo);
+                    this.ReportError("Invalid resource, missing = sign", line, lineNo);
                     continue;
                 }
 
-                var res = line.Substring(0, split).Trim();
-                var text = line.Substring(split + 1).Trim();
+                var res = line[..split].Trim();
+                var text = line[(split + 1)..].Trim();
                 string? comment = null;
 
                 if (res.Length == 0)
@@ -190,7 +192,7 @@ public class CodeGenerator
                     }
                     else
                     {
-                        ReportError("Invalid resource, missing resource name", line, lineNo);
+                        this.ReportError("Invalid resource, missing resource name", line, lineNo);
                     }
                     continue;
                 }
@@ -200,18 +202,18 @@ public class CodeGenerator
                 {
                     if (resArgSplit == 0)
                     {
-                        ReportError("Invalid resource, no resource name", line, lineNo);
+                        this.ReportError("Invalid resource, no resource name", line, lineNo);
                         continue;
                     }
 
                     var resArgSplit2 = res.IndexOf(')', resArgSplit);
                     if (resArgSplit2 == -1)
                     {
-                        ReportError("Invalid resource, missing end bracket on arguments", line, lineNo);
+                        this.ReportError("Invalid resource, missing end bracket on arguments", line, lineNo);
                         continue;
                     }
                     comment = res.Substring(resArgSplit + 1, resArgSplit2 - resArgSplit - 1);
-                    res = res.Substring(0, resArgSplit);
+                    res = res[..resArgSplit];
                 }
 
                 var el = doc.CreateElement("data");
@@ -233,7 +235,7 @@ public class CodeGenerator
 
                 if (doc.DocumentElement == null)
                 {
-                    ReportError("doc.DocumentElement == null", line, lineNo);
+                    this.ReportError("doc.DocumentElement == null", line, lineNo);
                 }
                 else
                 {
@@ -244,155 +246,30 @@ public class CodeGenerator
 
         if (doc != null)
         {
-            resourceFiles.Add(SaveResX(stringsSource, locale, doc));
+            resourceFiles.Add(this.SaveResX(stringsSource, locale, doc));
         }
 
         if (resourceFiles.Count == 0)
         {
-            ReportError("No [strings] section has been found.", string.Empty, 0);
+            this.ReportError("No [strings] section has been found.", string.Empty, 0);
         }
 
         return resourceFiles;
     }
-
-    private static string GetLocaleFromFileName(string inputFileName)
-    {
-        var resFilename = Path.GetFileNameWithoutExtension(inputFileName);
-        if (string.IsNullOrEmpty(resFilename)) return string.Empty;
-
-        var localeIndex = resFilename.LastIndexOf(".", StringComparison.OrdinalIgnoreCase);
-
-        if (localeIndex != -1 && IsCultureSpecified(inputFileName))
-        {
-            return resFilename.Substring(localeIndex);
-        }
-
-        return string.Empty;
-    }
-
-    private static bool ParseHeader(string line, XmlDocument template)
-    {
-        if (line[0] != '#') return false;
-        if (line.Length == 1) return true;
-        if (line[1] != '!') return true;
-
-        // Options
-        var pos = line.IndexOf('=');
-
-        if (pos <= -1) return true;
-
-        var opt = line.Substring(2, pos - 2).Trim();
-        var arg = line.Substring(pos + 1).Trim();
-
-        // Add to the headers
-        var resHeaderEl = template.CreateElement("resheader");
-        resHeaderEl.SetAttribute("name", opt);
-
-        var resValueEl = template.CreateElement("value");
-        resValueEl.AppendChild(template.CreateTextNode(arg));
-        resHeaderEl.AppendChild(resValueEl);
-
-        if (template.DocumentElement == null) return false;
-        template.DocumentElement.AppendChild(resHeaderEl);
-        return true;
-    }
-
-    private static string SaveResX(string source, string locale, XmlDocument doc)
-    {
-        var resFilename = source;
-
-        if (IsCultureSpecified(resFilename))
-        {
-            resFilename = Path.GetFileNameWithoutExtension(resFilename);
-        }
-
-        resFilename = Path.GetFileNameWithoutExtension(resFilename);
-        resFilename += ".srt" + locale;
-
-        var directory = Path.GetDirectoryName(source) ?? string.Empty;
-        var fullFilename = Path.Combine(directory, $"{resFilename}.resx");
-
-        if (File.Exists(fullFilename))
-        {
-            var attributes = File.GetAttributes(fullFilename);
-
-            if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-            {
-                attributes = RemoveAttribute(attributes, FileAttributes.ReadOnly);
-                File.SetAttributes(fullFilename, attributes);
-                Console.WriteLine($"{fullFilename} ReadOnly attribute removed.");
-            }
-        }
-
-        try
-        {
-            doc.Save(fullFilename);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Save '{fullFilename}' failed! {ex.Message}");
-        }
-
-        return fullFilename;
-    }
-
-    private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
-    {
-        return attributes & ~attributesToRemove;
-    }
-
-    private static string GetNameSpaceFromProjectItem(string inputFileName)
-    {
-        var directory = Path.GetDirectoryName(inputFileName);
-        if (directory == null) return "Oleander.StrResGen";
-
-        var projectFileName = string.Empty;
-        var dirInfo = new DirectoryInfo(directory);
-        var parentDir = dirInfo;
-
-        while (parentDir != null)
-        {
-            var fileInfo = parentDir.GetFiles("*.csproj").FirstOrDefault();
-            if (fileInfo != null)
-            {
-                projectFileName = fileInfo.FullName;
-                break;
-            }
-
-            parentDir = parentDir.Parent;
-        }
-
-
-        var fileNameSpace = (Path.GetDirectoryName(inputFileName) ?? string.Empty)
-            .Replace(Path.GetDirectoryName(projectFileName) ?? string.Empty, string.Empty)
-            .Replace("\\", ".");
-
-        fileNameSpace = string.Concat(Path.GetFileNameWithoutExtension(projectFileName), fileNameSpace);
-        return fileNameSpace;
-    }
     
-    private static string? GenerateCSharpCode(string resxFileName, string fileNameSpace)
+    private string GenerateCSharpCode(string resxFileName, GenerationOptions options)
     {
-        GenerationOptions? options;
         Dictionary<string, string> commandLines;
 
         using (Stream inputStream = File.OpenRead(resxFileName))
         {
             var doc = new XPathDocument(inputStream);
-            options = GetGenerationOptions(resxFileName, doc);
-
-            if (options == null) return null;
-
-            if (string.IsNullOrEmpty(options.SRNamespace))
-            {
-                options.SRNamespace = fileNameSpace;
-            }
-
-            commandLines = ParsLines(doc);
+            options = this.ReadGenerationOptions(resxFileName, doc, options);
+            commandLines = this.ParsLines(doc);
         }
 
         var codeProvider = new CSharpCodeProvider();
-        var ccu = Process(codeProvider, options, commandLines, resxFileName);
+        var ccu = this.Process(new CSharpCodeProvider(), options, commandLines, resxFileName);
         var sw = new StringWriter();
         var opts = new CodeGeneratorOptions { BracingStyle = "C" };
         codeProvider.GenerateCodeFromCompileUnit(ccu, sw, opts);
@@ -401,39 +278,14 @@ public class CodeGenerator
         return sw.GetStringBuilder().ToString();
     }
 
-    private static string GenerateCSharpCode(string resxFileName, GenerationOptions options)
+    private GenerationOptions ReadGenerationOptions(string inputFileName, IXPathNavigable doc, GenerationOptions options)
     {
-        Dictionary<string, string> commandLines;
-
-        using (Stream inputStream = File.OpenRead(resxFileName))
-        {
-            commandLines = ParsLines(new XPathDocument(inputStream));
-        }
-
-        var codeProvider = new CSharpCodeProvider();
-        var ccu = Process(new CSharpCodeProvider(), options, commandLines, resxFileName);
-        var sw = new StringWriter();
-        var opts = new CodeGeneratorOptions { BracingStyle = "C" };
-        codeProvider.GenerateCodeFromCompileUnit(ccu, sw, opts);
-        sw.Close();
-
-        return sw.GetStringBuilder().ToString();
-    }
-
-    private static void ReportError(string message, string line, int lineNo)
-    {
-        ReportErrors.Invoke(message, line, lineNo);
-    }
-
-    private static GenerationOptions? GetGenerationOptions(string inputFileName, IXPathNavigable doc)
-    {
-        var options = new GenerationOptions();
         var nav = doc.CreateNavigator();
 
         if (nav == null)
         {
-            ReportError("nav is null!", "var nav = doc.CreateNavigator();", 0);
-            return null;
+            this.ReportError("nav is null!", "var nav = doc.CreateNavigator();", 0);
+            return options;
         }
 
         var headerIt = nav.Select("//resheader");
@@ -506,24 +358,14 @@ public class CodeGenerator
         return options;
     }
 
-    private static bool IsCultureSpecified(string stringsSource)
-    {
-        var localeIndex = Path.GetFileNameWithoutExtension(stringsSource).LastIndexOf('.');
-
-        if (localeIndex == -1) return false;
-
-        var culture = Path.GetFileNameWithoutExtension(stringsSource).Substring(localeIndex + 1);
-        return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(existingCulture => existingCulture.ToString() == culture);
-    }
-
-    private static Dictionary<string, string> ParsLines(IXPathNavigable doc)
+    private Dictionary<string, string> ParsLines(IXPathNavigable doc)
     {
         var dict = new Dictionary<string, string>();
         var nav = doc.CreateNavigator();
 
         if (nav == null)
         {
-            ReportError("nav is null!", "var nav = doc.CreateNavigator();", 0);
+            this.ReportError("nav is null!", "var nav = doc.CreateNavigator();", 0);
             return dict;
         }
 
@@ -557,7 +399,7 @@ public class CodeGenerator
         return dict;
     }
 
-    private static CodeCompileUnit Process(CodeDomProvider codeProvider, GenerationOptions options, IDictionary<string, string> commandLines, string inputFileName)
+    private CodeCompileUnit Process(CodeDomProvider codeProvider, GenerationOptions options, IDictionary<string, string> commandLines, string inputFileName)
     {
         var compileUnit = new CodeCompileUnit();
 
@@ -570,31 +412,31 @@ public class CodeGenerator
         compileUnit.Namespaces.Add(dummyNamespace);
 
         //Namespace Import
-        dummyNamespace.Imports.Add(new CodeNamespaceImport("System"));
-        dummyNamespace.Imports.Add(new CodeNamespaceImport("System.Resources"));
-        dummyNamespace.Imports.Add(new CodeNamespaceImport("System.Reflection"));
-        dummyNamespace.Imports.Add(new CodeNamespaceImport("System.Threading"));
+        dummyNamespace.Imports.Add(new("System"));
+        dummyNamespace.Imports.Add(new("System.Resources"));
+        dummyNamespace.Imports.Add(new("System.Reflection"));
+        dummyNamespace.Imports.Add(new("System.Threading"));
 
         //Namespace
-        var nSpace = new CodeNamespace(options.SRNamespace ?? "");
+        var nSpace = new CodeNamespace(options.SRNamespace);
         compileUnit.Namespaces.Add(nSpace);
 
         //Namespace comments
-        nSpace.Comments.Add(new CodeCommentStatement("-----------------------------------------------------------------------------"));
-        nSpace.Comments.Add(new CodeCommentStatement(" <autogeneratedinfo>"));
-        nSpace.Comments.Add(new CodeCommentStatement("     This code was generated by:"));
-        nSpace.Comments.Add(new CodeCommentStatement("       SR Resource Generator custom tool for VS.NET, by Oleander"));
-        nSpace.Comments.Add(new CodeCommentStatement(""));
-        nSpace.Comments.Add(new CodeCommentStatement("     It contains classes defined from the contents of the resource file:"));
-        nSpace.Comments.Add(new CodeCommentStatement("       " + inputFileName));
-        nSpace.Comments.Add(new CodeCommentStatement(""));
-        nSpace.Comments.Add(new CodeCommentStatement("     Generated: " + DateTime.Now.ToString("f", new CultureInfo("en-US"))));
-        nSpace.Comments.Add(new CodeCommentStatement(" </autogeneratedinfo>"));
-        nSpace.Comments.Add(new CodeCommentStatement("-----------------------------------------------------------------------------"));
+        nSpace.Comments.Add(new("-----------------------------------------------------------------------------"));
+        nSpace.Comments.Add(new(" <autogeneratedinfo>"));
+        nSpace.Comments.Add(new("     This code was generated by:"));
+        nSpace.Comments.Add(new("       SR Resource Generator custom tool for VS.NET, by Oleander"));
+        nSpace.Comments.Add(new(""));
+        nSpace.Comments.Add(new("     It contains classes defined from the contents of the resource file:"));
+        nSpace.Comments.Add(new("       " + inputFileName));
+        nSpace.Comments.Add(new(""));
+        nSpace.Comments.Add(new("     Generated: " + DateTime.Now.ToString("f", new CultureInfo("en-US"))));
+        nSpace.Comments.Add(new(" </autogeneratedinfo>"));
+        nSpace.Comments.Add(new("-----------------------------------------------------------------------------"));
 
         // Define SR class
         // ReSharper disable once InconsistentNaming
-        var cSR = new CodeTypeDeclaration(options.SRClassName ?? "SR")
+        var cSR = new CodeTypeDeclaration(options.SRClassName)
         {
             IsPartial = true,
             TypeAttributes = options.PublicSRClass ? TypeAttributes.Public : TypeAttributes.NotPublic
@@ -604,7 +446,7 @@ public class CodeGenerator
         // So we have to do a search and replace on the resulting text after we have generated
         // the file.
 
-        var keysClassName = options.KeysSRClassName ?? $"{options.ResourceName?.Replace('.', '_').Replace('-', '_')}Keys";
+        var keysClassName = options.KeysSRClassName ?? $"{options.ResourceName.Replace('.', '_').Replace('-', '_')}Keys";
 
         if (options.CultureInfoFragment == null)
         {
@@ -613,18 +455,18 @@ public class CodeGenerator
             {
                 Name = "Culture",
                 Attributes = MemberAttributes.Public | MemberAttributes.Static,
-                Type = new CodeTypeReference(typeof(CultureInfo))
+                Type = new(typeof(CultureInfo))
             };
 
             cmStaticCulture.GetStatements.Add(
                 new CodeMethodReturnStatement(
-                    new CodePropertyReferenceExpression(
-                        new CodeTypeReferenceExpression(keysClassName), "Culture")));
+                new CodePropertyReferenceExpression(
+                new CodeTypeReferenceExpression(keysClassName), "Culture")));
 
             cmStaticCulture.SetStatements.Add(
                 new CodeAssignStatement(
                     new CodePropertyReferenceExpression(
-                        new CodeTypeReferenceExpression(keysClassName), "Culture"),
+                    new CodeTypeReferenceExpression(keysClassName), "Culture"),
                     new CodeArgumentReferenceExpression("value")));
 
             cSR.Members.Add(cmStaticCulture);
@@ -665,22 +507,22 @@ public class CodeGenerator
             var pCulture = new CodeMemberProperty
             {
                 Attributes = MemberAttributes.Static | MemberAttributes.Public,
-                Type = new CodeTypeReference(typeof(CultureInfo)),
+                Type = new(typeof(CultureInfo)),
                 Name = "Culture"
             };
 
             pCulture.GetStatements.Add(
                 new CodeMethodReturnStatement(
-                    new CodeFieldReferenceExpression{ FieldName = "culture" }));
+                    new CodeFieldReferenceExpression { FieldName = "culture" }));
 
             pCulture.SetStatements.Add(
                 new CodeAssignStatement(
-                    new CodeFieldReferenceExpression { FieldName =  "culture" },
+                    new CodeFieldReferenceExpression { FieldName = "culture" },
                     new CodeArgumentReferenceExpression("value")));
 
             cKeys.Members.Add(pCulture);
 
-            cultureCodeExp = new CodeFieldReferenceExpression{ FieldName = "culture" };
+            cultureCodeExp = new CodeFieldReferenceExpression { FieldName = "culture" };
         }
         else
         {
@@ -695,15 +537,15 @@ public class CodeGenerator
         {
             Name = "GetString",
             Attributes = MemberAttributes.Public | MemberAttributes.Static,
-            ReturnType = new CodeTypeReference(typeof(string))
+            ReturnType = new(typeof(string))
         };
 
         mGetStringNoParams.Parameters.Add(
-            new CodeParameterDeclarationExpression(typeof(string), "key"));
+            new(typeof(string), "key"));
 
         mGetStringNoParams.Statements.Add(new CodeMethodReturnStatement(
             new CodeMethodInvokeExpression(
-                new CodeFieldReferenceExpression {FieldName = "resourceManager" }, "GetString",
+                new CodeFieldReferenceExpression { FieldName = "resourceManager" }, "GetString",
                 new CodeArgumentReferenceExpression("key"), cultureCodeExp)));
 
         cKeys.Members.Add(mGetStringNoParams);
@@ -714,14 +556,14 @@ public class CodeGenerator
         {
             Name = "GetString",
             Attributes = MemberAttributes.Public | MemberAttributes.Static,
-            ReturnType = new CodeTypeReference(typeof(string))
+            ReturnType = new(typeof(string))
         };
 
         mGetStringWithParams.Parameters.Add(
-            new CodeParameterDeclarationExpression(typeof(string), "key"));
+            new(typeof(string), "key"));
 
         mGetStringWithParams.Parameters.Add(
-            new CodeParameterDeclarationExpression(typeof(object[]), "args"));
+            new(typeof(object[]), "args"));
 
         // string msg = resourceManager.GetString( key, _culture );
         mGetStringWithParams.Statements.Add(
@@ -753,7 +595,7 @@ public class CodeGenerator
 
             if (string.IsNullOrEmpty(safeKey))
             {
-                ReportError("safeKey is empty!", resource.Key, 0);
+                this.ReportError("safeKey is empty!", resource.Key, 0);
                 continue;
             }
 
@@ -777,7 +619,7 @@ public class CodeGenerator
                 {
                     Name = safeKey,
                     Attributes = MemberAttributes.Static | MemberAttributes.Public,
-                    ReturnType = new CodeTypeReference(typeof(string))
+                    ReturnType = new(typeof(string))
                 };
 
                 //Create the argument lists
@@ -793,11 +635,11 @@ public class CodeGenerator
                         var typeName = MapType(parameterName.Substring(0, parameterName.IndexOf(' ')).Trim());
                         parameterName = parameterName.Substring(parameterName.IndexOf(' ') + 1).Trim();
 
-                        mGetString.Parameters.Add(new CodeParameterDeclarationExpression(typeName, parameterName));
+                        mGetString.Parameters.Add(new(typeName, parameterName));
                     }
                     else
                     {
-                        mGetString.Parameters.Add(new CodeParameterDeclarationExpression(typeof(object), parameterName));
+                        mGetString.Parameters.Add(new(typeof(object), parameterName));
                     }
                     args[i] = new CodeArgumentReferenceExpression(parameterName);
                 }
@@ -819,7 +661,7 @@ public class CodeGenerator
                 {
                     Name = safeKey,
                     Attributes = MemberAttributes.Static | MemberAttributes.Public,
-                    Type = new CodeTypeReference(typeof(string))
+                    Type = new(typeof(string))
                 };
 
                 pGetString.GetStatements.Add(
@@ -848,6 +690,79 @@ public class CodeGenerator
         return compileUnit;
     }
 
+    private string SaveResX(string source, string locale, XmlDocument doc)
+    {
+        var resFilename = source;
+
+        if (IsCultureSpecified(resFilename))
+        {
+            resFilename = Path.GetFileNameWithoutExtension(resFilename);
+        }
+
+        resFilename = Path.GetFileNameWithoutExtension(resFilename);
+        resFilename += ".srt" + locale;
+
+        var directory = Path.GetDirectoryName(source) ?? string.Empty;
+        var fullFilename = Path.Combine(directory, $"{resFilename}.resx");
+
+        if (File.Exists(fullFilename))
+        {
+            var attributes = File.GetAttributes(fullFilename);
+
+            if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            {
+                attributes = RemoveAttribute(attributes, FileAttributes.ReadOnly);
+                File.SetAttributes(fullFilename, attributes);
+                Console.WriteLine($"{fullFilename} ReadOnly attribute removed.");
+            }
+        }
+
+        try
+        {
+            doc.Save(fullFilename);
+        }
+        catch (Exception ex)
+        {
+            this.ReportError(ex.Message, string.Empty, 0);
+        }
+
+        return fullFilename;
+    }
+
+    #region ReportError
+
+    private readonly StringBuilder _errorStringBuilder = new();
+
+    private void ReportError(string message, string line, int lineNo)
+    {
+        this.ReportErrors.Invoke(message, line, lineNo);
+        this._errorStringBuilder.AppendLine($"// {DateTime.Now:yyyy.MM.dd HH:mm:ss}  {message} - line: {line} lineNo: {lineNo}");
+    }
+
+    #endregion
+
+    #region static members
+
+    private static FileAttributes RemoveAttribute(FileAttributes attributes, FileAttributes attributesToRemove)
+    {
+        return attributes & ~attributesToRemove;
+    }
+    
+    private static string GetLocaleFromFileName(string inputFileName)
+    {
+        var resFilename = Path.GetFileNameWithoutExtension(inputFileName);
+        if (string.IsNullOrEmpty(resFilename)) return string.Empty;
+
+        var localeIndex = resFilename.LastIndexOf(".", StringComparison.OrdinalIgnoreCase);
+
+        if (localeIndex != -1 && IsCultureSpecified(inputFileName))
+        {
+            return resFilename[localeIndex..];
+        }
+
+        return string.Empty;
+    }
+
     private static string MapType(string typeName)
     {
         return typeName switch
@@ -869,4 +784,44 @@ public class CodeGenerator
         };
     }
 
+    private static bool ParseHeader(string line, XmlDocument template)
+    {
+        if (line[0] != '#') return false;
+        if (line.Length == 1) return true;
+        if (line[1] != '!') return true;
+
+        // Options
+        var pos = line.IndexOf('=');
+
+        if (pos <= -1) return true;
+
+        var opt = line.Substring(2, pos - 2).Trim();
+        var arg = line[(pos + 1)..].Trim();
+
+        // Add to the headers
+        var resHeaderEl = template.CreateElement("resheader");
+        resHeaderEl.SetAttribute("name", opt);
+
+        var resValueEl = template.CreateElement("value");
+        resValueEl.AppendChild(template.CreateTextNode(arg));
+        resHeaderEl.AppendChild(resValueEl);
+
+        if (template.DocumentElement == null) return false;
+        template.DocumentElement.AppendChild(resHeaderEl);
+        return true;
+    }
+
+    private static bool IsCultureSpecified(string stringsSource)
+    {
+        var localeIndex = Path.GetFileNameWithoutExtension(stringsSource).LastIndexOf('.');
+
+        if (localeIndex == -1) return false;
+
+        var culture = Path.GetFileNameWithoutExtension(stringsSource).Substring(localeIndex + 1);
+        return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(existingCulture => existingCulture.ToString() == culture);
+    }
+
+    #endregion
+
+    #endregion
 }
