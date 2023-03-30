@@ -1,24 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
+using Microsoft.Extensions.Logging;
+using Oleander.Extensions.Logging.Abstractions;
 
 namespace Oleander.StrResGen;
 
 // ReSharper disable once InconsistentNaming
 public class VSProject
 {
-
     private readonly ProjectRootElement _projectRootElement;
+    private readonly ILogger _logger;
 
     public VSProject(string projectFileName)
     {
+        this._logger = LoggerFactory.CreateLogger<VSProject>();
+        this._logger.LogInformation("Try to open project file: '{projectFileName}'", projectFileName);
+
+        if (!File.Exists(projectFileName))
+        {
+            this._logger.LogError("Project file '{projectFileName}' not found!", projectFileName);
+            throw new FileNotFoundException("Project file not found!", projectFileName);
+        }
+
         this._projectRootElement = ProjectRootElement.Open(
             projectFileName,
             ProjectCollection.GlobalProjectCollection,
             preserveFormatting: true);
+
+        this._logger.LogInformation("Project has been opened.");
     }
 
     public bool TryGetMetaData(string elementName, string update, out Dictionary<string, string> metaData)
@@ -45,9 +57,17 @@ public class VSProject
                this._projectRootElement.AddItemGroup();
     }
 
+
+    public void UpdateOrCreateItemElement(string elementName, string update, Dictionary<string, string>? metaData = null)
+    {
+        this.UpdateOrCreateItemElement(
+            this.FindOrCreateProjectItemGroupElement(elementName, update), elementName, update, metaData);
+    }
+
     public void UpdateOrCreateItemElement(ProjectItemGroupElement projectItemGroupElement, string elementName, string update, Dictionary<string, string>? metaData = null)
     {
         var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && x.Update == update);
+        this._logger.LogInformation("{action} element: <{elementName} Update=\"{update}\">.", element == null ? "Create" : "Update", elementName, update);
 
         if (element == null)
         {
@@ -67,17 +87,17 @@ public class VSProject
             if (metaDataElement == null)
             {
                 element.AddMetadata(key, value);
+                continue;
             }
-            else
-            {
-                metaDataElement.Value = value;
-            }
+
+            metaDataElement.Value = value;
         }
     }
 
     public void Save()
     {
         this._projectRootElement.Save();
+        this._logger.LogInformation("Project saved.");
     }
 
     #region static members
@@ -123,9 +143,6 @@ public class VSProject
         itemNamespace = string.Concat(projectName, itemDir[projectDir.Length..]).Replace("\\", ".");
         return true;
     }
-
-    
-
 
     #endregion
 }

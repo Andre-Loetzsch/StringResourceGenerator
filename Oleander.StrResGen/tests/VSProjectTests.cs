@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using Xunit;
 
 namespace Oleander.StrResGen.Tests;
@@ -42,160 +43,45 @@ public class VSProjectTests
     }
 
     [Fact]
-    public void Test()
+    public void Test_TryGetMetaData()
     {
         var projectDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyProject");
 
         if (Directory.Exists(projectDir)) Directory.Delete(projectDir, true);
         Directory.CreateDirectory(projectDir);
+        var projectFileName = Path.Combine(projectDir, "ClassLibrary.csproj");
 
-        var projectFileName = Path.Combine(projectDir, "MyProject.csproj");
-        var projectFileContent = $"<Project Sdk=\"Microsoft.NET.Sdk\">{Environment.NewLine}</Project>";
-
-        File.WriteAllText(projectFileName, projectFileContent);
-
-        var projectItemDir = Path.Combine(projectDir, "Resources");
-        if (!Directory.Exists(projectItemDir)) Directory.CreateDirectory(projectItemDir);
-
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.strings"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.cs"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.srt.resx"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.srt.de.resx"), string.Empty);
-
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.strings"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.cs"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.srt.resx"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.srt.de.resx"), string.Empty);
+        File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData", "ClassLibrary.csproj"), projectFileName, true);
 
         var vsProject = new VSProject(projectFileName);
-        var metaData = new Dictionary<string, string>
-        {
-            ["AutoGen"] = "True",
-            ["DependentUpon"] = "SR.strings",
-            ["DesignTime"] = "True"
-        };
-
-        var itemGroup = vsProject.FindOrCreateProjectItemGroupElement("Non", "Resources\\SR.strings");
-
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Non", "Resources\\SR.strings");
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Compile", "Resources\\SR.cs", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR.srt.resx", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR.srt.de.resx", metaData);
-
-
-        metaData["DependentUpon"] = "SR2.strings";
-
-        itemGroup = vsProject.FindOrCreateProjectItemGroupElement("Non", "Resources\\SR2.strings");
-
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Non", "Resources\\SR2.strings");
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Compile", "Resources\\SR2.cs", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR2.srt.resx", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR2.srt.de.resx", metaData);
-
-
-
-        vsProject.Save();
-
-        Directory.Delete(projectDir, true);
+        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", "Resources\\StringResources.srt.resx", out var metaData));
+        Assert.True(metaData.TryGetValue("AutoGen", out var value));
+        Assert.Equal("True", value);
     }
-
-
-
 
     [Fact]
-    public void Test2()
+    public void Test_UpdateOrCreateItemElement()
     {
         var projectDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyProject");
 
         if (Directory.Exists(projectDir)) Directory.Delete(projectDir, true);
         Directory.CreateDirectory(projectDir);
+        var projectFileName = Path.Combine(projectDir, "ClassLibrary.csproj");
 
-        var projectFileName = Path.Combine(projectDir, "MyProject.csproj");
-        var projectFileContent = $"<Project Sdk=\"Microsoft.NET.Sdk\">{Environment.NewLine}</Project>";
+        File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData", "ClassLibrary.csproj"), projectFileName, true);
 
-        File.WriteAllText(projectFileName, projectFileContent);
-
-        var projectItemDir = Path.Combine(projectDir, "Resources");
-        if (!Directory.Exists(projectItemDir)) Directory.CreateDirectory(projectItemDir);
-
-        var inputFileName = Path.Combine(projectItemDir, "SR.strings");
-        var relativeDir = Path.GetRelativePath(projectDir, projectItemDir);
-        var generated = new CodeGenerator().GenerateCSharpResources(inputFileName).ToList();
         var vsProject = new VSProject(projectFileName);
-        var elementNameStrings = Path.Combine(relativeDir, Path.GetFileName(inputFileName));
-
-
-        //var itemGroup = vsProject.FindOrCreateProjectItemGroupElement("Non", "Resources\\SR.strings");
-        var itemGroup = vsProject.FindOrCreateProjectItemGroupElement("Non", elementNameStrings);
 
         var metaData = new Dictionary<string, string>
         {
-            ["AutoGen"] = "True",
-            ["DependentUpon"] = Path.GetFileName(inputFileName),
-            ["DesignTime"] = "True"
+            ["Test"] = "Test value"
         };
 
-        foreach (var path in generated)
-        {
-            var fileExtension = Path.GetExtension(path);
-
-            switch (fileExtension.ToLower())
-            {
-                case ".cs":
-                    vsProject.UpdateOrCreateItemElement(itemGroup, "Compile", Path.Combine(relativeDir, Path.GetFileName(path)), metaData);
-                    break;
-                case ".strings":
-                    vsProject.UpdateOrCreateItemElement(itemGroup, "Non", Path.Combine(relativeDir, Path.GetFileName(path)));
-                    break;
-                case ".resx":
-                    vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", Path.Combine(relativeDir, Path.GetFileName(path)), metaData);
-                    break;
-            }
-        }
-
-
+        vsProject.UpdateOrCreateItemElement("EmbeddedResource", "Resources\\StringResources.srt.resx", metaData);
         vsProject.Save();
 
-        Directory.Delete(projectDir, true);
-
-
-        return;
-
-
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.strings"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.cs"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.srt.resx"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR.srt.de.resx"), string.Empty);
-
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.strings"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.cs"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.srt.resx"), string.Empty);
-        File.WriteAllText(Path.Combine(projectItemDir, "SR2.srt.de.resx"), string.Empty);
-
-        
-
-       
-
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Non", "Resources\\SR.strings");
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Compile", "Resources\\SR.cs", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR.srt.resx", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR.srt.de.resx", metaData);
-
-
-        metaData["DependentUpon"] = "SR2.strings";
-
-        itemGroup = vsProject.FindOrCreateProjectItemGroupElement("Non", "Resources\\SR2.strings");
-
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Non", "Resources\\SR2.strings");
-        vsProject.UpdateOrCreateItemElement(itemGroup, "Compile", "Resources\\SR2.cs", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR2.srt.resx", metaData);
-        vsProject.UpdateOrCreateItemElement(itemGroup, "EmbeddedResource", "Resources\\SR2.srt.de.resx", metaData);
-
-
-
-        vsProject.Save();
-
-        Directory.Delete(projectDir, true);
+        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", "Resources\\StringResources.srt.resx", out metaData));
+        Assert.True(metaData.TryGetValue("Test", out var value));
+        Assert.Equal("Test value", value);
     }
-
 }

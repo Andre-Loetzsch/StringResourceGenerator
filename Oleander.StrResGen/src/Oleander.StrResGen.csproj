@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build" Version="17.5.0" />
+    <PackageReference Include="Oleander.Extensions.Logging.Abstractions" Version="1.0.23076.1407" />
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
   </ItemGroup>
 

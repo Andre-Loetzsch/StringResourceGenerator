@@ -26,7 +26,7 @@ public class CodeGenerator
     {
         if (string.IsNullOrWhiteSpace(inputFileName)) throw new ArgumentNullException(nameof(inputFileName));
 
-        var options = !string.IsNullOrEmpty(nameSpace) || VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace) ? 
+        var options = !string.IsNullOrEmpty(nameSpace) ? 
             new GenerationOptions { SRNamespace = nameSpace } : 
             new GenerationOptions();
 
@@ -820,6 +820,8 @@ public class CodeGenerator
         var culture = Path.GetFileNameWithoutExtension(stringsSource).Substring(localeIndex + 1);
         return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(existingCulture => existingCulture.ToString() == culture);
     }
+
+
 
     #endregion
 

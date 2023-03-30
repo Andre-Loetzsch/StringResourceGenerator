@@ -13,9 +13,9 @@ public class CodeGeneratorTests
     {
         Assert.Throws<ArgumentNullException>(() =>
         {
-            #pragma warning disable CS8625
+#pragma warning disable CS8625
             _ = new CodeGenerator().GenerateCSharpResources(null);
-            #pragma warning restore CS8625
+#pragma warning restore CS8625
         });
     }
 
@@ -30,16 +30,15 @@ public class CodeGeneratorTests
 
         Assert.True(File.Exists(inputFileName));
 
-        Assert.Equal(3, generated.Count);
+        foreach (var file in generated)
+        {
+            File.Delete(file);
+        }
+
+        Assert.Equal(4, generated.Count);
         Assert.EndsWith("SR.cs", generated[0]);
-        Assert.EndsWith("SR.srt.resx", generated[1]);
-        Assert.EndsWith("SR.srt.de.resx", generated[2]);
-
-        File.Delete(inputFileName);
-        File.Delete(generated[0]);
-        File.Delete(generated[1]);
-        File.Delete(generated[2]);
+        Assert.EndsWith("SR.strings", generated[1]);
+        Assert.EndsWith("SR.srt.resx", generated[2]);
+        Assert.EndsWith("SR.srt.de.resx", generated[3]);
     }
-
-
 }

@@ -22,6 +22,15 @@
 
 
   <ItemGroup>
-    <Folder Include="Data\" />
+    <None Include="TestData\ClassLibrary.csproj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="TestData\SR.strings">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

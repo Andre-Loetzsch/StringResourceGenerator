@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="Resources\StringResources.strings">
+      <Generator>SRG</Generator>
+      <LastGenOutput>StringResources.cs</LastGenOutput>
+    </None>
+    <Compile Update="Resources\StringResources.cs">
+      <Generator>SRG</Generator>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StringResources.strings</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Resources\StringResources.srt.de.resx">
+      <DependentUpon>StringResources.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\StringResources.srt.resx">
+      <DependentUpon>StringResources.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SR.strings">
+      <LastGenOutput>SR.cs</LastGenOutput>
+      <Generator>SRG</Generator>
+    </None>
+    <Compile Update="SR.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="SR.srt.de.resx">
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR.srt.resx">
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
