@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\.targets\common.targets" />
+
+  <PropertyGroup>
+    <Product>String Resource Generator</Product>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Oleander.Extensions.Configuration" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Configuration.Json" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.DependencyInjection" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Logging" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Logging.Abstractions" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Logging.Console" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Logging.File" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Logging.TextFormatters" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="Oleander.Extensions.Logging.TextFormatters.Abstractions" Version="1.1.23090.1151-dev" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Oleander.StrResGen\src\Oleander.StrResGen.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appConfiguration.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SR.strings">
+      <LastGenOutput>SR.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Update="SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update=".\SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update=".\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update=".\SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update=".\SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update=".\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update=".\SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

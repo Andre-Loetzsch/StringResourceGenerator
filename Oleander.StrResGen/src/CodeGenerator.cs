@@ -11,12 +11,22 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.CSharp;
+using Microsoft.Extensions.Logging;
+using Oleander.Extensions.Logging.Abstractions;
+
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 namespace Oleander.StrResGen;
 
 public class CodeGenerator
 {
+    private readonly ILogger _logger;
+
+    public CodeGenerator()
+    {
+        this._logger = LoggerFactory.CreateLogger<CodeGenerator>();
+    }
+
     public ReportErrors ReportErrors { get; set; } = (message, line, lineNo) =>
     {
         Console.WriteLine($"{message} - line: {line} lineNo: {lineNo}");
@@ -45,6 +55,7 @@ public class CodeGenerator
         if (!fileExtension.Equals(".strings", StringComparison.InvariantCultureIgnoreCase))
         {
             this.ReportError($"File must have '*.strings' extension ({inputFileName})", string.Empty, 0);
+
             File.WriteAllText(outputFileName, this._errorStringBuilder.ToString());
             return new[] { outputFileName };
         }
@@ -321,11 +332,9 @@ public class CodeGenerator
                             options.SRClassName = arg;
                         }
                         break;
-
                     case "culture_info":
                         options.CultureInfoFragment = arg;
                         break;
-
                     case "generate_methods_only":
                         options.GenerateMethodsOnly = bool.Parse(arg);
                         break;
@@ -737,6 +746,7 @@ public class CodeGenerator
     {
         this.ReportErrors.Invoke(message, line, lineNo);
         this._errorStringBuilder.AppendLine($"// {DateTime.Now:yyyy.MM.dd HH:mm:ss}  {message} - line: {line} lineNo: {lineNo}");
+        this._logger.LogError("{message} - line: {line} lineNo: {lineNo}", message, line, lineNo);
     }
 
     #endregion

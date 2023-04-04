@@ -1,0 +1,8 @@
+[strings]
+Test(string s, int i)=Test: 0 count is: {1}
+
+PromptYourName(string name)=Das ist mein Name {0}!
+
+
+[strings.de]
+Test(string s, int i)=Test: 0 Zahl ist: {1}

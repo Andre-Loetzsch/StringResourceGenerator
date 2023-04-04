@@ -1,0 +1,52 @@
+{
+  "types": {
+    "consoleSink": {
+      "Type": "Oleander.Extensions.Logging.Console.ColoredConsoleSink, Oleander.Extensions.Logging.Console",
+      "Instance": null
+    },
+    "fileSinkOpcUa": {
+      "Type": "Oleander.Extensions.Logging.File.FileSink, Oleander.Extensions.Logging.File",
+      "Instance": null
+    },
+    "fileSinkProgram": {
+      "Type": "Oleander.Extensions.Logging.File.FileSink, Oleander.Extensions.Logging.File",
+      "Instance": null
+    }
+  },
+
+  "consoleSink": {
+    "Name": "consoleSink",
+    "Categories": [
+      "*"
+    ],
+    "LogLevel": "Debug",
+    "TextFormatterType": "Oleander.Extensions.Logging.TextFormatters.ShortVerticalTextFormatter, Oleander.Extensions.Logging.TextFormatters"
+  },
+
+  "fileSinkProgram": {
+
+    "Name": "fileSinkOpcClient",
+    "OverrideExistingFile": "true",
+    "FileNameTemplate": "{baseDirectory}/Logging/Tool.log",
+    "TextFormatterType": "Oleander.Extensions.Logging.TextFormatters.ShortVerticalTextFormatter, Oleander.Extensions.Logging.TextFormatters",
+    "Categories": [
+      "*"
+    ],
+    "LogLevel": "Debug"
+  },
+
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Debug"
+    },
+    "Tentakel": {
+      "LogLevel": {
+        "Default": "Debug",
+        "Opc UA Client": "Debug",
+        "Program": "Debug",
+        "Tentakel.OpcClient.OpcClient": "Debug"
+      }
+    }
+  }
+}
