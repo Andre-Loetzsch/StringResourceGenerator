@@ -72,6 +72,9 @@ public class ResourceGenerator
         var vsProject = new VSProject(projectFileName);
         var relativeDir = Path.GetRelativePath(projectDir, projectItemDir);
         var elementNameStrings = Path.Combine(relativeDir, Path.GetFileName(inputFileName));
+
+        if (relativeDir == ".") relativeDir = string.Empty;
+
         string? customToolNamespace = null;
 
         if (vsProject.TryGetMetaData("None", elementNameStrings, out var metaData) &&

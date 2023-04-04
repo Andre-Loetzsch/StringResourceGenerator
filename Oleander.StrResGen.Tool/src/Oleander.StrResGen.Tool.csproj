@@ -34,52 +34,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="SR.strings">
-      <LastGenOutput>SR.cs</LastGenOutput>
-    </None>
-    <EmbeddedResource Update="SR.srt.de.resx">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update=".\SR.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <EmbeddedResource Update=".\SR.srt.resx">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </EmbeddedResource>
-    <EmbeddedResource Update=".\SR.srt.de.resx">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update=".\SR.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <EmbeddedResource Update=".\SR.srt.resx">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </EmbeddedResource>
-    <EmbeddedResource Update=".\SR.srt.de.resx">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </EmbeddedResource>
-  </ItemGroup>
-
+  
 </Project>
