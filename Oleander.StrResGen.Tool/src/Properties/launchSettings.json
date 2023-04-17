@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Oleander.StrResGen.Tool": {
+      "commandName": "Project",
+      "commandLineArgs": "generate -f \"D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR.strings\" -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR2.strings"
+    }
+  }
+}

@@ -34,5 +34,32 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <None Update="SR.strings">
+      <LastGenOutput>SR.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Update="SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <Compile Update="SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PostBuildEvent">
+    <!--<Exec Command="&quot;D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.Tool\src\bin\Debug\net\Oleander.StrResGen.Tool.exe&quot; &quot;generate -f \&quot;D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR.strings\&quot; -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR2.strings&quot;" />-->
+    <!--<Exec Command="&quot;D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.Tool\src\bin\Debug\net\Oleander.StrResGen.Tool.exe&quot; new -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR.strings -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR2.strings" />-->
+    <Exec Command="&quot;D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.Tool\src\bin\Debug\net\Oleander.StrResGen.Tool.exe&quot; generate -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR.strings -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR.strings" />
+  </Target>
+
 </Project>

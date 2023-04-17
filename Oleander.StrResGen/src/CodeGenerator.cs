@@ -7,18 +7,19 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Microsoft.CSharp;
 using Microsoft.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
-
+// ReSharper disable ExplicitCallerInfoArgument
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 namespace Oleander.StrResGen;
 
-public class CodeGenerator
+internal class CodeGenerator
 {
     private readonly ILogger _logger;
 
@@ -27,18 +28,20 @@ public class CodeGenerator
         this._logger = LoggerFactory.CreateLogger<CodeGenerator>();
     }
 
-    public ReportErrors ReportErrors { get; set; } = (message, line, lineNo) =>
-    {
-        Console.WriteLine($"{message} - line: {line} lineNo: {lineNo}");
-    };
-
     public IEnumerable<string> GenerateCSharpResources(string inputFileName, string? nameSpace = null)
     {
         if (string.IsNullOrWhiteSpace(inputFileName)) throw new ArgumentNullException(nameof(inputFileName));
 
-        var options = !string.IsNullOrEmpty(nameSpace) ? 
-            new GenerationOptions { SRNamespace = nameSpace } : 
-            new GenerationOptions();
+        var options = new GenerationOptions();
+
+        if (string.IsNullOrEmpty(nameSpace))
+        {
+            this.ReportWarning(1, $"Namespace is null! Use default namespace: {options.SRNamespace}");
+        }
+        else
+        {
+            options.SRNamespace = nameSpace;
+        }
 
         return this.GenerateCSharpResources(inputFileName, options);
     }
@@ -48,14 +51,13 @@ public class CodeGenerator
         if (string.IsNullOrWhiteSpace(inputFileName)) throw new ArgumentNullException(nameof(inputFileName));
 
         this._errorStringBuilder.Clear();
-        
+
         var fileExtension = Path.GetExtension(inputFileName);
         var outputFileName = string.Concat(inputFileName[..^fileExtension.Length], ".cs");
 
         if (!fileExtension.Equals(".strings", StringComparison.InvariantCultureIgnoreCase))
         {
-            this.ReportError($"File must have '*.strings' extension ({inputFileName})", string.Empty, 0);
-
+            this.ReportError(1, $"File must have '*.strings' extension ({inputFileName})");
             File.WriteAllText(outputFileName, this._errorStringBuilder.ToString());
             return new[] { outputFileName };
         }
@@ -75,7 +77,7 @@ public class CodeGenerator
         {
             if (this._errorStringBuilder.Length < 1)
             {
-                this.ReportError("No files were generated!", string.Empty, 0);
+                this.ReportError(2, "No files were generated!");
             }
 
             File.WriteAllText(outputFileName, this._errorStringBuilder.ToString());
@@ -86,7 +88,7 @@ public class CodeGenerator
 
         if (string.IsNullOrEmpty(cSharpCode) && this._errorStringBuilder.Length < 1)
         {
-            this.ReportError("No c# code was generated!", string.Empty, 0);
+            this.ReportError(3, "No c# code was generated!");
         }
 
         if (this._errorStringBuilder.Length > 0)
@@ -98,6 +100,8 @@ public class CodeGenerator
         generatedFiles.Insert(0, outputFileName);
         return generatedFiles;
     }
+
+    public int ErrorCode { get; private set; }
 
     #region private members
 
@@ -111,7 +115,8 @@ public class CodeGenerator
         {
             if (stream == null)
             {
-                this.ReportError("Resource Template.xml not found!", string.Empty, 0);
+                this.ReportError(4, "Resource Template.xml not found!");
+
                 return Enumerable.Empty<string>();
             }
 
@@ -122,7 +127,7 @@ public class CodeGenerator
 
         if (!ParseHeader($"#! stringSource={stringsSource}", template))
         {
-            this.ReportError($"Header could not be parsed! ({stringsSource})", string.Empty, 0);
+            this.ReportError(5, $"Header could not be parsed! ({stringsSource})");
             return Enumerable.Empty<string>();
         }
 
@@ -162,13 +167,13 @@ public class CodeGenerator
 
                     if (line.Trim().ToLower()[..8] == "[strings")
                     {
-                        var strLocale = line.Trim().Substring(8, line.Trim().Length - 9);
+                        var strLocale = line.Trim()[8..^1];
                         if (strLocale != "") locale = strLocale;
                         doc = new XmlDocument();
 
                         if (template.DocumentElement == null)
                         {
-                            this.ReportError("template.DocumentElement == null", line, lineNo);
+                            this.ReportWarning(2, $"{line} -> template.DocumentElement == null", lineNo);
                         }
                         else
                         {
@@ -187,7 +192,7 @@ public class CodeGenerator
                 var split = line.IndexOf('=');
                 if (split == -1)
                 {
-                    this.ReportError("Invalid resource, missing = sign", line, lineNo);
+                    this.ReportWarning(3, $"{line} -> Invalid resource, missing = sign", lineNo);
                     continue;
                 }
 
@@ -203,7 +208,7 @@ public class CodeGenerator
                     }
                     else
                     {
-                        this.ReportError("Invalid resource, missing resource name", line, lineNo);
+                        this.ReportWarning(4, $"{line} -> Invalid resource, missing resource name", lineNo);
                     }
                     continue;
                 }
@@ -213,14 +218,14 @@ public class CodeGenerator
                 {
                     if (resArgSplit == 0)
                     {
-                        this.ReportError("Invalid resource, no resource name", line, lineNo);
+                        this.ReportWarning(5, $"{line} -> Invalid resource, no resource name", lineNo);
                         continue;
                     }
 
                     var resArgSplit2 = res.IndexOf(')', resArgSplit);
                     if (resArgSplit2 == -1)
                     {
-                        this.ReportError("Invalid resource, missing end bracket on arguments", line, lineNo);
+                        this.ReportWarning(6, $"{line} _> Invalid resource, missing end bracket on arguments", lineNo);
                         continue;
                     }
                     comment = res.Substring(resArgSplit + 1, resArgSplit2 - resArgSplit - 1);
@@ -246,7 +251,7 @@ public class CodeGenerator
 
                 if (doc.DocumentElement == null)
                 {
-                    this.ReportError("doc.DocumentElement == null", line, lineNo);
+                    this.ReportWarning(7, $"{line} -> doc.DocumentElement == null", lineNo);
                 }
                 else
                 {
@@ -262,12 +267,12 @@ public class CodeGenerator
 
         if (resourceFiles.Count == 0)
         {
-            this.ReportError("No [strings] section has been found.", string.Empty, 0);
+            this.ReportWarning(8, "No [strings] section has been found.");
         }
 
         return resourceFiles;
     }
-    
+
     private string GenerateCSharpCode(string resxFileName, GenerationOptions options)
     {
         Dictionary<string, string> commandLines;
@@ -295,7 +300,7 @@ public class CodeGenerator
 
         if (nav == null)
         {
-            this.ReportError("nav is null!", "var nav = doc.CreateNavigator();", 0);
+            this.ReportError(6, "var nav = doc.CreateNavigator(); -> nav is null!");
             return options;
         }
 
@@ -374,7 +379,7 @@ public class CodeGenerator
 
         if (nav == null)
         {
-            this.ReportError("nav is null!", "var nav = doc.CreateNavigator();", 0);
+            this.ReportError(7, "var nav = doc.CreateNavigator(); -> nav is null!");
             return dict;
         }
 
@@ -604,7 +609,7 @@ public class CodeGenerator
 
             if (string.IsNullOrEmpty(safeKey))
             {
-                this.ReportError("safeKey is empty!", resource.Key, 0);
+                this.ReportWarning(9, $"{resource.Key} -> safeKey is empty!", 0);
                 continue;
             }
 
@@ -616,7 +621,7 @@ public class CodeGenerator
 
             // The VS Generator always lower cases the first letter, which is not
             // wanted in this case.
-            safeKey = char.ToUpper(safeKey[0], CultureInfo.InvariantCulture) + safeKey.Substring(1);
+            safeKey = char.ToUpper(safeKey[0], CultureInfo.InvariantCulture) + safeKey[1..];
 
             // Get parameter names from comma sep names in comment
             var parameterNames = resource.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -641,8 +646,8 @@ public class CodeGenerator
                     if (parameterName.IndexOf(' ') > -1)
                     {
                         // parameter name includes type.
-                        var typeName = MapType(parameterName.Substring(0, parameterName.IndexOf(' ')).Trim());
-                        parameterName = parameterName.Substring(parameterName.IndexOf(' ') + 1).Trim();
+                        var typeName = MapType(parameterName[..parameterName.IndexOf(' ')].Trim());
+                        parameterName = parameterName[(parameterName.IndexOf(' ') + 1)..].Trim();
 
                         mGetString.Parameters.Add(new(typeName, parameterName));
                     }
@@ -722,7 +727,7 @@ public class CodeGenerator
             {
                 attributes = RemoveAttribute(attributes, FileAttributes.ReadOnly);
                 File.SetAttributes(fullFilename, attributes);
-                Console.WriteLine($"{fullFilename} ReadOnly attribute removed.");
+                this._logger.LogInformation("ReadOnly attribute removed. ({fullFilename}) ", fullFilename);
             }
         }
 
@@ -732,7 +737,7 @@ public class CodeGenerator
         }
         catch (Exception ex)
         {
-            this.ReportError(ex.Message, string.Empty, 0);
+            this.ReportError(8, ex.Message);
         }
 
         return fullFilename;
@@ -742,11 +747,17 @@ public class CodeGenerator
 
     private readonly StringBuilder _errorStringBuilder = new();
 
-    private void ReportError(string message, string line, int lineNo)
+    private void ReportWarning(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
     {
-        this.ReportErrors.Invoke(message, line, lineNo);
-        this._errorStringBuilder.AppendLine($"// {DateTime.Now:yyyy.MM.dd HH:mm:ss}  {message} - line: {line} lineNo: {lineNo}");
-        this._logger.LogError("{message} - line: {line} lineNo: {lineNo}", message, line, lineNo);
+        this._logger.CreateMSBuildWarning(code + 100, text, subCategory, line);
+    }
+
+    private void ReportError(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
+    {
+        this._errorStringBuilder.AppendLine(
+            this._logger.CreateMSBuildError(code + 100, text, subCategory, line));
+
+        this.ErrorCode = code;
     }
 
     #endregion
@@ -757,7 +768,7 @@ public class CodeGenerator
     {
         return attributes & ~attributesToRemove;
     }
-    
+
     private static string GetLocaleFromFileName(string inputFileName)
     {
         var resFilename = Path.GetFileNameWithoutExtension(inputFileName);
@@ -805,7 +816,7 @@ public class CodeGenerator
 
         if (pos <= -1) return true;
 
-        var opt = line.Substring(2, pos - 2).Trim();
+        var opt = line[2..pos].Trim();
         var arg = line[(pos + 1)..].Trim();
 
         // Add to the headers
@@ -827,11 +838,9 @@ public class CodeGenerator
 
         if (localeIndex == -1) return false;
 
-        var culture = Path.GetFileNameWithoutExtension(stringsSource).Substring(localeIndex + 1);
+        var culture = Path.GetFileNameWithoutExtension(stringsSource)[(localeIndex + 1)..];
         return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(existingCulture => existingCulture.ToString() == culture);
     }
-
-
 
     #endregion
 

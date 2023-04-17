@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
+using System.Runtime.CompilerServices;
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace Oleander.StrResGen;
 
@@ -16,64 +18,153 @@ public class ResourceGenerator
         this._logger = LoggerFactory.CreateLogger<ResourceGenerator>();
     }
 
-    public void Generate(string inputFileName, string? nameSpace)
+    public int Generate(string inputFileName, string? nameSpace)
     {
-        this._logger.LogInformation("Update project file.");
-
         var projectItemDir = Path.GetDirectoryName(inputFileName);
         if (projectItemDir == null)
         {
-            this._logger.LogError("Get directory name failed! Path='{inputFileName}'", inputFileName);
-            throw new ArgumentException($"Get directory name failed! Path={inputFileName}", nameof(inputFileName));
+            this.ReportError(1, $"Get directory name failed! Path='{inputFileName}'");
+            return this.ErrorCode;
         }
 
         if (!VSProject.TryFindProjectFileName(projectItemDir, out var projectFileName))
         {
-            this._logger.LogError("Find project filename failed! Project directory='{projectItemDir}'", projectItemDir);
-            throw new FileNotFoundException($"Find project filename failed! Project directory='{projectItemDir}'");
+            this.ReportError(2, $"Find project filename failed! Project directory='{projectItemDir}'");
+            return this.ErrorCode;
         }
 
         var projectDir = Path.GetDirectoryName(projectFileName);
 
         if (projectDir == null)
         {
-            this._logger.LogError("Get directory name failed! Path='{inputFileName}'", projectDir);
-            throw new ArgumentException($"Get directory name failed! Path={projectDir}", nameof(inputFileName));
+            this.ReportError(3, $"Get directory name failed! Path='{inputFileName}'");
+            return this.ErrorCode;
         }
 
         if (nameSpace == null) VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace);
-        this.Generate(projectDir, projectFileName, projectItemDir, inputFileName, nameSpace);
+        return this.Generate(projectDir, projectFileName, projectItemDir, inputFileName, nameSpace);
     }
 
-    public void Generate(string projectFileName, string inputFileName, string? nameSpace)
+    public int Generate(string projectFileName, string inputFileName, string? nameSpace)
     {
         var projectItemDir = Path.GetDirectoryName(inputFileName);
         var projectDir = Path.GetDirectoryName(projectFileName);
 
         if (projectItemDir == null)
         {
-            this._logger.LogError("Get directory name failed! Path='{inputFileName}'", inputFileName);
-            throw new ArgumentException($"Get directory name failed! Path={inputFileName}", nameof(inputFileName));
+            this.ReportError(4, $"Get directory name failed! Path='{inputFileName}'");
+            return this.ErrorCode;
         }
 
         if (projectDir == null)
         {
-            this._logger.LogError("Get directory name failed! Path='{projectFileName}'", projectFileName);
-            throw new ArgumentException($"Get directory name failed! Path={inputFileName}", nameof(inputFileName));
+            this.ReportError(5, $"Get directory name failed! Path='{projectFileName}'");
+            return this.ErrorCode;
         }
 
         if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace);
 
-        this.Generate(projectDir, projectFileName, projectItemDir, inputFileName, nameSpace);
+        return this.Generate(projectDir, projectFileName, projectItemDir, inputFileName, nameSpace);
     }
 
-    private void Generate(string projectDir, string projectFileName, string projectItemDir, string inputFileName, string? nameSpace)
+    public int Generate(IEnumerable<string> inputFileNames, string? nameSpace)
+    {
+        var projects = new Dictionary<string, List<string>>(StringComparer.CurrentCultureIgnoreCase);
+
+        foreach (var inputFileName in inputFileNames)
+        {
+            var projectItemDir = Path.GetDirectoryName(inputFileName);
+
+            if (projectItemDir == null)
+            {
+                this.ReportError(6, $"Get directory name failed! Path='{inputFileName}'");
+                return this.ErrorCode;
+            }
+
+            if (!VSProject.TryFindProjectFileName(projectItemDir, out var projectFileName))
+            {
+                this.ReportError(7, $"Find project filename failed! Project directory='{projectItemDir}'");
+                return this.ErrorCode;
+            }
+
+            var projectDir = Path.GetDirectoryName(projectFileName);
+
+            if (projectDir == null)
+            {
+                this.ReportError(8, $"Get directory name failed! Path='{inputFileName}'");
+                return this.ErrorCode;
+            }
+
+            if (!projects.TryGetValue(projectFileName, out var list))
+            {
+                list = new();
+                projects[projectFileName] = list;
+            }
+
+            if (list.Contains(inputFileName))
+            {
+                this.ReportWarning(1, $"The specified file '{inputFileName}' is ignored because it has already been specified.");
+                continue;
+            }
+
+            list.Add(inputFileName);
+        }
+
+        return projects.Select(project =>
+            this.Generate(project.Key, project.Value, nameSpace))
+            .FirstOrDefault(errorCode => errorCode != 0);
+    }
+
+    public int Generate(string projectFileName, IEnumerable<string> inputFileNames, string? nameSpace)
+    {
+        var projectDir = Path.GetDirectoryName(projectFileName);
+
+        if (projectDir == null)
+        {
+            this.ReportError(9, $"Get directory name failed! Path='{projectFileName}'");
+            return this.ErrorCode;
+        }
+
+        var vsProject = new VSProject(projectFileName);
+
+        foreach (var inputFileName in inputFileNames)
+        {
+            var projectItemDir = Path.GetDirectoryName(inputFileName);
+
+            if (projectItemDir == null)
+            {
+                this.ReportError(10, $"Get directory name failed! Path='{inputFileName}'");
+                return this.ErrorCode;
+            }
+
+            if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace);
+
+            var errorCode = this.Generate(projectDir, vsProject, projectItemDir, inputFileName, nameSpace);
+            if (errorCode != 0) return errorCode;
+        }
+
+        vsProject.Save();
+        return 0;
+    }
+
+    #region private members
+
+    private int Generate(string projectDir, string projectFileName, string projectItemDir, string inputFileName, string? nameSpace)
     {
         var vsProject = new VSProject(projectFileName);
+        var errorCode = this.Generate(projectDir, vsProject, projectItemDir, inputFileName, nameSpace);
+
+        vsProject.Save();
+
+        return errorCode;
+    }
+
+    private int Generate(string projectDir, VSProject vsProject, string projectItemDir, string inputFileName, string? nameSpace)
+    {
         var relativeDir = Path.GetRelativePath(projectDir, projectItemDir);
-        var elementNameStrings = Path.Combine(relativeDir, Path.GetFileName(inputFileName));
 
         if (relativeDir == ".") relativeDir = string.Empty;
+        var elementNameStrings = Path.Combine(relativeDir, Path.GetFileName(inputFileName));
 
         string? customToolNamespace = null;
 
@@ -102,9 +193,13 @@ public class ResourceGenerator
             ["DesignTime"] = "True"
         };
 
-        var generated = new CodeGenerator().GenerateCSharpResources(inputFileName, nameSpace).ToList();
+        var generator = new CodeGenerator();
+        var generated = generator.GenerateCSharpResources(inputFileName, nameSpace).ToList();
+
+        if (generator.ErrorCode != 0) return generator.ErrorCode;
+
         var csFile = generated.FirstOrDefault(x => x.ToLower().EndsWith(".cs"));
-        
+
         if (csFile != null) csFile = Path.GetFileName(csFile);
         if (csFile != null) noneMetaData["LastGenOutput"] = csFile;
         if (!string.IsNullOrEmpty(customToolNamespace)) noneMetaData["CustomToolNamespace"] = customToolNamespace;
@@ -129,6 +224,25 @@ public class ResourceGenerator
             }
         }
 
-        vsProject.Save();
+        return generator.ErrorCode;
     }
+
+    public int ErrorCode { get; private set; }
+
+    #region ReportError
+
+    private void ReportWarning(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
+    {
+        this._logger.CreateMSBuildWarning(code + 100, text, subCategory, line);
+    }
+
+    private void ReportError(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
+    {
+        this._logger.CreateMSBuildError(code + 200, text, subCategory, line);
+        this.ErrorCode = code;
+    }
+
+    #endregion
+
+    #endregion
 }

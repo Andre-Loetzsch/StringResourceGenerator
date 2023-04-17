@@ -4,10 +4,6 @@
       "Type": "Oleander.Extensions.Logging.Console.ColoredConsoleSink, Oleander.Extensions.Logging.Console",
       "Instance": null
     },
-    "systemConsoleSink": {
-      "Type": "Microsoft.Build.Logging.ConsoleLogger, Microsoft.Build, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-      "Instance": null
-    },
     "fileSinkProgram": {
       "Type": "Oleander.Extensions.Logging.File.FileSink, Oleander.Extensions.Logging.File",
       "Instance": null
@@ -17,16 +13,11 @@
   "consoleSink": {
     "Name": "consoleSink",
     "Categories": [
-      "*"
+      "-"
     ],
     "LogLevel": "Debug",
     "TextFormatterType": "Oleander.Extensions.Logging.TextFormatters.ShortVerticalTextFormatter, Oleander.Extensions.Logging.TextFormatters"
   },
-
-  "systemConsoleSink": {
-    "Name": "systemConsoleSink"
-  },
-
   "fileSinkProgram": {
 
     "Name": "fileSinkOpcClient",

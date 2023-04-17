@@ -9,7 +9,7 @@ using Oleander.Extensions.Logging.Abstractions;
 namespace Oleander.StrResGen;
 
 // ReSharper disable once InconsistentNaming
-public class VSProject
+internal class VSProject
 {
     private readonly ProjectRootElement _projectRootElement;
     private readonly ILogger _logger;
