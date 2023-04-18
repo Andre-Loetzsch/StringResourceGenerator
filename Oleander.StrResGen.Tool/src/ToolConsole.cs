@@ -1,7 +1,5 @@
-﻿using System;
-using System.CommandLine;
+﻿using System.CommandLine;
 using System.CommandLine.IO;
-using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +27,7 @@ internal class ToolConsole : IConsole
             this._hasErrors = true;
 
             this._systemConsole.Write(this._output.Length < 1 ? 
-                MSBuildLogFormatter.CreateMSBuildErrorFormat(1, msg, "Oleander.StrResGen.Tool") : msg);
+                MSBuildLogFormatter.CreateMSBuildErrorFormat("SRG1", msg, "Oleander.StrResGen.Tool") : msg);
 
             this._output.Append(msg);
         });

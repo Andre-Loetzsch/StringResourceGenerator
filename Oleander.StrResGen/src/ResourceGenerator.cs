@@ -29,7 +29,7 @@ public class ResourceGenerator
 
         if (!VSProject.TryFindProjectFileName(projectItemDir, out var projectFileName))
         {
-            this.ReportError(2, $"Find project filename failed! Project directory='{projectItemDir}'");
+            this.ReportError(232, $"Find project filename failed! Project directory='{projectItemDir}'");
             return this.ErrorCode;
         }
 
@@ -173,7 +173,7 @@ public class ResourceGenerator
             !string.IsNullOrEmpty(customToolNamespace))
         {
             nameSpace = customToolNamespace;
-            this._logger.LogInformation("Use 'CustomToolNamespace' from Element '{elementNameStrings}'.", elementNameStrings);
+            this._logger.LogInformation("Use CustomToolNamespace: '{nameSpace}' from Element: '{elementNameStrings}'.", nameSpace, elementNameStrings);
         }
 
         var itemGroup = vsProject.FindOrCreateProjectItemGroupElement("None", elementNameStrings);
@@ -233,12 +233,12 @@ public class ResourceGenerator
 
     private void ReportWarning(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
     {
-        this._logger.CreateMSBuildWarning(code + 100, text, subCategory, line);
+        this._logger.CreateMSBuildWarning($"RG{code}", text, subCategory, line);
     }
 
     private void ReportError(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
     {
-        this._logger.CreateMSBuildError(code + 200, text, subCategory, line);
+        this._logger.CreateMSBuildError($"RG{code}", text, subCategory, line);
         this.ErrorCode = code;
     }
 

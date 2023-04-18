@@ -1,4 +1,5 @@
-﻿using System.CommandLine;
+﻿using System;
+using System.CommandLine;
 using System.IO;
 using System.Linq;
 
@@ -6,28 +7,36 @@ namespace Oleander.StrResGen.Tool.Options;
 
 public class NewFileOption : Option<FileInfo[]>
 {
-    internal NewFileOption() : base("--file", "The '*.strings' filename to create")
+    internal NewFileOption() : base("--file", "The '.strings' filename to create")
     {
         this.AddAlias("-f");
         this.IsRequired = true;
 
         this.AddValidator(result =>
         {
-            var fileInfos = result.GetValueOrDefault<FileInfo[]>() ?? Enumerable.Empty<FileInfo>();
-
-            foreach (var fileInfo in fileInfos)
+            try
             {
-                var fullName = fileInfo.FullName;
+                var fileInfos = result.GetValueOrDefault<FileInfo[]>() ?? Enumerable.Empty<FileInfo>();
 
-                if (!string.Equals(Path.GetExtension(fullName).Trim('\"'), ".strings"))
+                foreach (var fileInfo in fileInfos)
                 {
-                    result.ErrorMessage = $"File must have an '*.strings' extension! ({fullName})";
+                    var fullName = fileInfo.FullName;
+
+                    if (!string.Equals(Path.GetExtension(fullName).Trim('\"'), ".strings"))
+                    {
+                        result.ErrorMessage = $"File must have an '.strings' extension: {fullName}";
+                    }
+
+                    if (File.Exists(fullName))
+                    {
+                        result.ErrorMessage = $"File already exists: {fullName}";
+                    }
                 }
 
-                if (File.Exists(fullName))
-                {
-                    result.ErrorMessage = MSBuildLogFormatter.CreateMSBuildError(1, $"File already exists! ({fullName})", "Oleander.StrResGen.Tool");
-                }
+            }
+            catch (Exception ex)
+            {
+                result.ErrorMessage = ex.Message;
             }
         });
     }

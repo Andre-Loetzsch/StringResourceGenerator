@@ -101,8 +101,6 @@ internal class CodeGenerator
         return generatedFiles;
     }
 
-    public int ErrorCode { get; private set; }
-
     #region private members
 
     private IEnumerable<string> GenerateResourceFiles(string stringsSource)
@@ -745,17 +743,19 @@ internal class CodeGenerator
 
     #region ReportError
 
+    public int ErrorCode { get; private set; }
+
     private readonly StringBuilder _errorStringBuilder = new();
 
     private void ReportWarning(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
     {
-        this._logger.CreateMSBuildWarning(code + 100, text, subCategory, line);
+        this._logger.CreateMSBuildWarning($"CG{code}", text, subCategory, line);
     }
 
     private void ReportError(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
     {
         this._errorStringBuilder.AppendLine(
-            this._logger.CreateMSBuildError(code + 100, text, subCategory, line));
+            this._logger.CreateMSBuildError($"CG{code}", text, subCategory, line));
 
         this.ErrorCode = code;
     }

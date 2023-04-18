@@ -17,7 +17,7 @@ internal class ProjFileOption : Option<FileInfo>
 
             if (!string.Equals(Path.GetExtension(fullName), ".csproj"))
             {
-                result.ErrorMessage = MSBuildLogFormatter.CreateMSBuildError(1, $"Invalid project file: '{fullName}'", "Oleander.StrResGen.Tool");
+                result.ErrorMessage = $"Invalid project file: '{fullName}'";
             }
         });
     }
