@@ -12,7 +12,7 @@ public class VSProjectTests
     [Fact]
     public void TestTryFindProjectDir()
     {
-        Assert.True(VSProject.TryFindProjectFileName(AppDomain.CurrentDomain.BaseDirectory, out var projectFile));
+        Assert.True(VSProject.TryFindProjectFileName(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData"), out var projectFile));
         Assert.True(File.Exists(projectFile));
     }
 
