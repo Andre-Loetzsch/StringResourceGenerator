@@ -55,6 +55,60 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="SR1.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="SR1.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR1.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SR1.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="SR1.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR1.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SR1.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="SR1.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR1.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PostBuildEvent">
     <!--<Exec Command="&quot;D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.Tool\src\bin\Debug\net\Oleander.StrResGen.Tool.exe&quot; &quot;generate -f \&quot;D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR.strings\&quot; -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR2.strings&quot;" />-->
     <!--<Exec Command="&quot;D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.Tool\src\bin\Debug\net\Oleander.StrResGen.Tool.exe&quot; new -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR.strings -f D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\SR2.strings" />-->

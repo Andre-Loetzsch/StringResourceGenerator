@@ -2,7 +2,7 @@
   "profiles": {
     "Oleander.StrResGen.Tool": {
       "commandName": "Project",
-      "commandLineArgs": "generate -p D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.Tool\\src\\Oleander.StrResGen.Tool.csproj -n Oleander.StrResGen.T00l2"
+      "commandLineArgs": "--help"
     }
   }
 }
