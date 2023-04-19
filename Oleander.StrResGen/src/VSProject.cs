@@ -140,7 +140,7 @@ internal class VSProject
 
         if (itemDir.Length < projectDir.Length) return false;
 
-        itemNamespace = string.Concat(projectName, itemDir[projectDir.Length..]).Replace("\\", ".");
+        itemNamespace = string.Concat(projectName, itemDir[projectDir.Length..]).Replace(Path.DirectorySeparatorChar, '.');
         return true;
     }
 
