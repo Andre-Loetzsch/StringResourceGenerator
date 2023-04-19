@@ -1,0 +1,102 @@
+name: 'deployNugetPackages'
+
+on:
+  push:
+    branches:
+    - main
+    - 'release/**'
+  pull_request:
+    branches:
+    - main
+    - 'release/**'
+
+  workflow_dispatch:
+
+env:
+  VERSION_SUFFIX: ${{ github.ref_name }}
+  OUTDIR: ${{ github.workspace }}\output
+                    
+jobs:
+  deploy:
+    name: 'Deploy packages'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+    steps:
+     - name: 'echo VERSION_SUFFIX'
+       shell: bash
+       run: echo ${{ env.VERSION_SUFFIX }}
+
+     - name: 'Set VERSION_SUFFIX: dev'
+       if: ${{ github.ref_name }} == 'main'
+       shell: bash
+       run: echo "VERSION_SUFFIX=dev" >> $GITHUB_ENV
+
+     - name: 'Set VERSION_SUFFIX: string.Empty'
+       if: ${{ startsWith(github.ref_name, 'release/v') }}
+       shell: bash
+       run: echo "VERSION_SUFFIX=" >> $GITHUB_ENV
+
+     - name: 'Set VERSION_SUFFIX: alpha'
+       if: ${{ startsWith(github.ref_name, 'release/alpha') }}
+       shell: bash
+       run: echo "VERSION_SUFFIX=alpha" >> $GITHUB_ENV
+
+     - name: 'Set VERSION_SUFFIX: beta'
+       if: ${{ startsWith(github.ref_name, 'release/beta') }}
+       shell: bash
+       run:  echo "VERSION_SUFFIX=beta" >> $GITHUB_ENV
+
+     - name: 'Checkout'
+       uses: actions/checkout@v3
+     
+     - name: 'Install dotnet'
+       uses: actions/setup-dotnet@v2
+       with:
+         dotnet-version: '7.0.x'
+
+     - name: 'Add GitHub to Nuget source'
+       uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@main'
+       with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.StrResGen.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@main
+       with:
+         solution: '${{ github.workspace }}\Oleander.StrResGen\Oleander.StrResGen.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         outdir: ${{ env.OUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+     - name: 'Build and test Oleander.StrResGen.Tool.sln'
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@main
+       with:
+         solution: '${{ github.workspace }}\Oleander.StrResGen.Tool\Oleander.StrResGen.Tool.sln'
+         version-suffix: ${{ env.VERSION_SUFFIX }}
+         outdir: ${{ env.OUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    
+     - name: 'delete Oleander.StrResGen-dev old packages'
+       if: ${{ env.VERSION_SUFFIX }} == 'dev'
+       uses: actions/delete-package-versions@v3
+       with:
+         package-name: 'Oleander.StrResGen'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'delete Oleander.StrResGen.Tool-dev old packages'
+       if: ${{ env.VERSION_SUFFIX }} == 'dev'
+       uses: actions/delete-package-versions@v3
+       with:
+         package-name: 'Oleander.StrResGen.Tool'
+         min-versions-to-keep: 5
+         delete-only-pre-release-versions: "true"
+         
+     - name: 'push nuget packages'
+       if: matrix.os == 'windows-latest' && github.event_name != 'pull_request'
+       uses: Andre-Loetzsch/actions/pushNugetPackages@main
+       with:
+         outdir: ${{ env.OUTDIR }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
