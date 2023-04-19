@@ -40,7 +40,7 @@ public class ResourceGeneratorTests
         projectFileName = TestHelper.CopyFile(projectFileName, projectDir);
         strResFile = TestHelper.CopyFile(strResFile, Path.Combine(projectDir, "Resources"));
 
-        TestHelper.AddMetaDataToItemElement(projectFileName, "None", "Resources\\SR.strings", "CustomToolNamespace", "MyProject.TestGenerated_CustomToolNamespace.Resources");
+        TestHelper.AddMetaDataToItemElement(projectFileName, "None", $"Resources{Path.DirectorySeparatorChar}SR.strings", "CustomToolNamespace", "MyProject.TestGenerated_CustomToolNamespace.Resources");
         TestHelper.AssertTest(strResFile, null, "MyProject.TestGenerated_CustomToolNamespace.Resources");
     }
 
@@ -54,7 +54,7 @@ public class ResourceGeneratorTests
         projectFileName = TestHelper.CopyFile(projectFileName, projectDir);
         strResFile = TestHelper.CopyFile(strResFile, Path.Combine(projectDir, "Resources"));
 
-        TestHelper.AddMetaDataToItemElement(projectFileName, "None", "Resources\\SR.strings", "CustomToolNamespace", "MyProject.TestGenerated_CustomToolNamespace.Resources");
+        TestHelper.AddMetaDataToItemElement(projectFileName, "None", $"Resources{Path.DirectorySeparatorChar}SR.strings", "CustomToolNamespace", "MyProject.TestGenerated_CustomToolNamespace.Resources");
         TestHelper.AddAccessor(strResFile, "#! accessor_namespace=MyProject.accessor_namespace.Resources");
         TestHelper.AssertTest(strResFile, null, "MyProject.accessor_namespace.Resources");
     }

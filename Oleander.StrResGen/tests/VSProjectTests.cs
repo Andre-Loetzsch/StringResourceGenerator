@@ -52,7 +52,7 @@ public class VSProjectTests
         File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData", "ClassLibrary.csproj"), projectFileName, true);
 
         var vsProject = new VSProject(projectFileName);
-        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", "Resources\\StringResources.srt.resx", out var metaData));
+        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", out var metaData));
         Assert.True(metaData.TryGetValue("AutoGen", out var value));
         Assert.Equal("True", value);
     }
@@ -75,10 +75,10 @@ public class VSProjectTests
             ["Test"] = "Test value"
         };
 
-        vsProject.UpdateOrCreateItemElement("EmbeddedResource", "Resources\\StringResources.srt.resx", metaData);
+        vsProject.UpdateOrCreateItemElement("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", metaData);
         vsProject.Save();
 
-        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", "Resources\\StringResources.srt.resx", out metaData));
+        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", out metaData));
         Assert.True(metaData.TryGetValue("Test", out var value));
         Assert.Equal("Test value", value);
     }
