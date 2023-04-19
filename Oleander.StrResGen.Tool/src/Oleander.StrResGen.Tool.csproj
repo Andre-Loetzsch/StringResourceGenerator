@@ -9,6 +9,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>strresgen</ToolCommandName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +35,24 @@
     <None Update="appConfiguration.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SR1.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="SR1.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR1.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR1.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PostBuildEvent">
