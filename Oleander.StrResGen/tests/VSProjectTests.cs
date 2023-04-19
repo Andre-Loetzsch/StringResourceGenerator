@@ -12,7 +12,7 @@ public class VSProjectTests
     [Fact]
     public void TestTryFindProjectDir()
     {
-        Assert.True(VSProject.TryFindProjectFileName(AppDomain.CurrentDomain.BaseDirectory, out var projectFile));
+        Assert.True(VSProject.TryFindProjectFileName(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData"), out var projectFile));
         Assert.True(File.Exists(projectFile));
     }
 
@@ -75,10 +75,10 @@ public class VSProjectTests
             ["Test"] = "Test value"
         };
 
-        vsProject.UpdateOrCreateItemElement("EmbeddedResource", "Resources\\StringResources.srt.resx", metaData);
+        vsProject.UpdateOrCreateItemElement("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", metaData);
         vsProject.Save();
 
-        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", "Resources\\StringResources.srt.resx", out metaData));
+        Assert.True(vsProject.TryGetMetaData("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", out metaData));
         Assert.True(metaData.TryGetValue("Test", out var value));
         Assert.Equal("Test value", value);
     }
