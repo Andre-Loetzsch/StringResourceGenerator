@@ -12,6 +12,7 @@ using Oleander.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
 using Oleander.Extensions.Logging.Providers;
 using Oleander.StrResGen.Tool.Commands;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Oleander.StrResGen.Tool;
@@ -57,6 +58,7 @@ internal class Program
         if (exitCode == 0)
         {
             logger.LogInformation(logMsg, string.Join(" ", args), exitCode);
+            MSBuildLogFormatter.CreateMSBuildMessage("SRG0", $"StrResGen {exitCode}", "Main");
         }
         else
         {
@@ -65,6 +67,5 @@ internal class Program
 
         await host.WaitForLoggingAsync(TimeSpan.FromSeconds(5));
         return exitCode;
-        //host.WaitForShutdown();
     }
 }

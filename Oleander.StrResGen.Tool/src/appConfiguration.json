@@ -1,33 +1,21 @@
 {
   "types": {
-    "consoleSink": {
-      "Type": "Oleander.Extensions.Logging.Console.ColoredConsoleSink, Oleander.Extensions.Logging.Console",
-      "Instance": null
-    },
-    "fileSinkProgram": {
+    "fileSink": {
       "Type": "Oleander.Extensions.Logging.File.FileSink, Oleander.Extensions.Logging.File",
       "Instance": null
     }
   },
 
-  "consoleSink": {
-    "Name": "consoleSink",
-    "Categories": [
-      "-"
-    ],
-    "LogLevel": "Debug",
-    "TextFormatterType": "Oleander.Extensions.Logging.TextFormatters.ShortVerticalTextFormatter, Oleander.Extensions.Logging.TextFormatters"
-  },
-  "fileSinkProgram": {
+  "fileSink": {
 
-    "Name": "fileSinkOpcClient",
+    "Name": "fileSink",
     "OverrideExistingFile": "true",
-    "FileNameTemplate": "{baseDirectory}/Logging/Tool.log",
+    "FileNameTemplate": "{baseDirectory}/Logging/StrResGen.log",
     "TextFormatterType": "Oleander.Extensions.Logging.TextFormatters.ShortVerticalTextFormatter, Oleander.Extensions.Logging.TextFormatters",
     "Categories": [
       "*"
     ],
-    "LogLevel": "Debug"
+    "LogLevel": "Information"
   },
 
   "Logging": {

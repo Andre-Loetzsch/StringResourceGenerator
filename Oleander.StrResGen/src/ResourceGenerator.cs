@@ -196,7 +196,16 @@ public class ResourceGenerator
         var generator = new CodeGenerator();
         var generated = generator.GenerateCSharpResources(inputFileName, nameSpace).ToList();
 
-        if (generator.ErrorCode != 0) return generator.ErrorCode;
+        if (generator.ErrorCode != 0)
+        {
+            this.ReportWarning(2, "No files generated");
+            return generator.ErrorCode;
+        }
+
+        foreach (var file in generated)
+        {
+            this.ReportMessage(0, $"File '{file}' generated");
+        }
 
         var csFile = generated.FirstOrDefault(x => x.ToLower().EndsWith(".cs"));
 
@@ -229,7 +238,12 @@ public class ResourceGenerator
 
     public int ErrorCode { get; private set; }
 
-    #region ReportError
+    #region MSBuild message
+
+    private void ReportMessage(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
+    {
+        MSBuildLogFormatter.CreateMSBuildMessage($"RG{code}", text, subCategory, line);
+    }
 
     private void ReportWarning(int code, string text, [CallerLineNumber] int line = 0, [CallerMemberName] string subCategory = "")
     {
