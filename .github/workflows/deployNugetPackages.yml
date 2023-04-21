@@ -14,7 +14,7 @@ on:
 
 env:
   VERSION_SUFFIX: ${{ github.ref_name }}
-  OUTDIR: ${{ github.workspace }}\output
+  PACKOUTDIR: ${{ github.workspace }}\packoutput
                     
 jobs:
   deploy:
@@ -57,24 +57,24 @@ jobs:
          dotnet-version: '7.0.x'
 
      - name: 'Add GitHub to Nuget source'
-       uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@main'
+       uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'
        with:
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
      - name: 'Build and test Oleander.StrResGen.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@main
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
        with:
          solution: '${{ github.workspace }}\Oleander.StrResGen\Oleander.StrResGen.sln'
          version-suffix: ${{ env.VERSION_SUFFIX }}
-         outdir: ${{ env.OUTDIR }}
+         packoutdir: ${{ env.PACKOUTDIR }}
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
      - name: 'Build and test Oleander.StrResGen.Tool.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@main
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
        with:
          solution: '${{ github.workspace }}\Oleander.StrResGen.Tool\Oleander.StrResGen.Tool.sln'
          version-suffix: ${{ env.VERSION_SUFFIX }}
-         outdir: ${{ env.OUTDIR }}
+         packoutdir: ${{ env.PACKOUTDIR }}
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
     
@@ -96,7 +96,7 @@ jobs:
          
      - name: 'push nuget packages'
        if: matrix.os == 'windows-latest' && github.event_name != 'pull_request'
-       uses: Andre-Loetzsch/actions/pushNugetPackages@main
+       uses: Andre-Loetzsch/actions/pushNugetPackages@v1
        with:
-         outdir: ${{ env.OUTDIR }}
+         outdir: ${{ env.PACKOUTDIR }}
          github_token: ${{ secrets.GITHUB_TOKEN }}
