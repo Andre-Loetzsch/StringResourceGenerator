@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Construction;
@@ -13,6 +14,7 @@ internal class VSProject
 {
     private readonly ProjectRootElement _projectRootElement;
     private readonly ILogger _logger;
+    private bool _hasChanges;
 
     public VSProject(string projectFileName)
     {
@@ -33,13 +35,13 @@ internal class VSProject
         this._logger.LogInformation("Project has been opened.");
     }
 
-    public bool TryGetMetaData(string elementName, string update, out Dictionary<string, string> metaData)
+    public bool TryGetMetaData(string elementName, string updateOrInclude, out Dictionary<string, string> metaData)
     {
         metaData = new Dictionary<string, string>();
 
         foreach (var projectItemGroupElement in this._projectRootElement.ItemGroups)
         {
-            var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && x.Update == update);
+            var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude));
 
             if (element == null) continue;
 
@@ -50,13 +52,12 @@ internal class VSProject
         return false;
     }
 
-    public ProjectItemGroupElement FindOrCreateProjectItemGroupElement(string elementName, string update)
+    public ProjectItemGroupElement FindOrCreateProjectItemGroupElement(string elementName, string updateOrInclude)
     {
         return this._projectRootElement.ItemGroups
-                   .FirstOrDefault(x => x.Items.Any(x1 => x1.ElementName == elementName && x1.Update == update)) ??
+                   .FirstOrDefault(x => x.Items.Any(x1 => x1.ElementName == elementName && (x1.Update == updateOrInclude || x1.Include == updateOrInclude))) ??
                this._projectRootElement.AddItemGroup();
     }
-
 
     public void UpdateOrCreateItemElement(string elementName, string update, Dictionary<string, string>? metaData = null)
     {
@@ -64,18 +65,19 @@ internal class VSProject
             this.FindOrCreateProjectItemGroupElement(elementName, update), elementName, update, metaData);
     }
 
-    public void UpdateOrCreateItemElement(ProjectItemGroupElement projectItemGroupElement, string elementName, string update, Dictionary<string, string>? metaData = null)
+    public void UpdateOrCreateItemElement(ProjectItemGroupElement projectItemGroupElement, string elementName, string updateOrInclude, Dictionary<string, string>? metaData = null)
     {
-        var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && x.Update == update);
-        this._logger.LogInformation("{action} element: <{elementName} Update=\"{update}\">.", element == null ? "Create" : "Update", elementName, update);
+        var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude));
+        this._logger.LogInformation("{action} element: <{elementName} Update=\"{update}\">.", element == null ? "Create" : "Update", elementName, updateOrInclude);
 
         if (element == null)
         {
             element = this._projectRootElement.CreateItemElement(elementName);
-            element.Update = update;
+            element.Update = updateOrInclude;
 
             // MUST be in the group before we can add metadata
             projectItemGroupElement.AppendChild(element);
+            this._hasChanges = true;
         }
 
         if (metaData == null) return;
@@ -87,17 +89,29 @@ internal class VSProject
             if (metaDataElement == null)
             {
                 element.AddMetadata(key, value);
+                this._hasChanges = true;
                 continue;
             }
 
+            if (metaDataElement.Value == value) continue;
+
             metaDataElement.Value = value;
+            this._hasChanges = true;
         }
     }
 
-    public void Save()
+    public void SaveChanges()
     {
-        this._projectRootElement.Save();
-        this._logger.LogInformation("Project saved.");
+        if (this._hasChanges)
+        {
+            this._projectRootElement.Save();
+            this._logger.LogInformation("Project saved.");
+            this._hasChanges = false;
+
+            return;
+        }
+        
+        this._logger.LogInformation("Nothing to save. Project has no changes.");
     }
 
     #region static members
