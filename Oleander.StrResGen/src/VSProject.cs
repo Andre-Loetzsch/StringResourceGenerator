@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Construction;
@@ -32,8 +31,14 @@ internal class VSProject
             ProjectCollection.GlobalProjectCollection,
             preserveFormatting: true);
 
+        this.IsDotnetCoreProject = !string.IsNullOrEmpty(this._projectRootElement.Sdk) && 
+                                   string.IsNullOrEmpty(this._projectRootElement.ToolsVersion);
+
         this._logger.LogInformation("Project has been opened.");
     }
+
+
+    public bool IsDotnetCoreProject { get; set; }
 
     public bool TryGetMetaData(string elementName, string updateOrInclude, out Dictionary<string, string> metaData)
     {
@@ -52,6 +57,12 @@ internal class VSProject
         return false;
     }
 
+    public ProjectItemGroupElement? FindProjectItemGroupElement(string elementName, string updateOrInclude)
+    {
+        return this._projectRootElement.ItemGroups
+            .FirstOrDefault(x => x.Items.Any(x1 => x1.ElementName == elementName && (x1.Update == updateOrInclude || x1.Include == updateOrInclude)));
+    }
+
     public ProjectItemGroupElement FindOrCreateProjectItemGroupElement(string elementName, string updateOrInclude)
     {
         return this._projectRootElement.ItemGroups
@@ -59,24 +70,35 @@ internal class VSProject
                this._projectRootElement.AddItemGroup();
     }
 
-    public void UpdateOrCreateItemElement(string elementName, string update, Dictionary<string, string>? metaData = null)
+    public void UpdateOrCreateItemElement(string elementName, string updateOrInclude, Dictionary<string, string>? metaData = null)
     {
         this.UpdateOrCreateItemElement(
-            this.FindOrCreateProjectItemGroupElement(elementName, update), elementName, update, metaData);
+            this.FindOrCreateProjectItemGroupElement(elementName, updateOrInclude), elementName, updateOrInclude, metaData);
     }
 
-    public void UpdateOrCreateItemElement(ProjectItemGroupElement projectItemGroupElement, string elementName, string updateOrInclude, Dictionary<string, string>? metaData = null)
+    public void UpdateOrCreateItemElement(ProjectItemGroupElement defaultProjectItemGroupElement, string elementName, string updateOrInclude, Dictionary<string, string>? metaData = null)
     {
-        var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude));
-        this._logger.LogInformation("{action} element: <{elementName} Update=\"{update}\">.", element == null ? "Create" : "Update", elementName, updateOrInclude);
+        var element = defaultProjectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude)) ?? 
+                      this.FindProjectItemGroupElement(elementName, updateOrInclude)?.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude));
+
+        if (element != null) this.IsDotnetCoreProject = !string.IsNullOrEmpty(element.Update);
+        this._logger.LogInformation("{action} element: <{elementName} {attribute}=\"{updateOrInclude}\">.",
+            element == null ? "Create" : "Update", elementName, this.IsDotnetCoreProject ? "Update" : "Include", updateOrInclude);
 
         if (element == null)
         {
             element = this._projectRootElement.CreateItemElement(elementName);
-            element.Update = updateOrInclude;
+            if (this.IsDotnetCoreProject)
+            {
+                element.Update = updateOrInclude;
+            }
+            else
+            {
+                element.Include = updateOrInclude;
+            }
 
             // MUST be in the group before we can add metadata
-            projectItemGroupElement.AppendChild(element);
+            defaultProjectItemGroupElement.AppendChild(element);
             this._hasChanges = true;
         }
 

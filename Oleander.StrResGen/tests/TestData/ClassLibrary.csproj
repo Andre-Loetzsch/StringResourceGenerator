@@ -27,25 +27,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="SR.strings">
-      <LastGenOutput>SR.cs</LastGenOutput>
-      <Generator>SRG</Generator>
-    </None>
-    <Compile Update="SR.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="SR.srt.de.resx">
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </EmbeddedResource>
-    <EmbeddedResource Update="SR.srt.resx">
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>

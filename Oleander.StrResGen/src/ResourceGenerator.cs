@@ -194,7 +194,16 @@ public class ResourceGenerator
         };
 
         var generator = new CodeGenerator();
-        var generated = generator.GenerateCSharpResources(inputFileName, nameSpace).ToList();
+        var options = generator.CreateGenerationOptions(nameSpace);
+
+        options.SRClassName = string.Concat(Path.GetFileNameWithoutExtension(inputFileName).Replace('.', '_').Replace('-', '_'));
+
+        if (!vsProject.IsDotnetCoreProject)
+        {
+            options.KeysSRClassName = string.Concat("Keys_", Path.GetFileNameWithoutExtension(inputFileName).Replace('.', '_').Replace('-', '_'));
+        }
+
+        var generated = generator.GenerateCSharpResources(inputFileName, options).ToList();
 
         if (generator.ErrorCode != 0)
         {

@@ -82,4 +82,7 @@ public class VSProjectTests
         Assert.True(metaData.TryGetValue("Test", out var value));
         Assert.Equal("Test value", value);
     }
+
+
+    
 }

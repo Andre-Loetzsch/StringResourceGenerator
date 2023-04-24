@@ -22,13 +22,25 @@
 
 
   <ItemGroup>
+    <None Include="TestData\DotnetCore.csproj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\ClassLibrary.csproj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\LegacyProject\LegacyProject.csproj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
 
   <ItemGroup>
+    <None Update="TestData\LegacyProject\Basic_SR.strings">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Basic_SR.strings">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\SR.strings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

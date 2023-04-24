@@ -12,8 +12,6 @@ using Oleander.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
 using Oleander.Extensions.Logging.Providers;
 using Oleander.StrResGen.Tool.Commands;
-using static System.Net.Mime.MediaTypeNames;
-
 
 namespace Oleander.StrResGen.Tool;
 
