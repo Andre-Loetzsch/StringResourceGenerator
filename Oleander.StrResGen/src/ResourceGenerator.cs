@@ -143,7 +143,7 @@ public class ResourceGenerator
             if (errorCode != 0) return errorCode;
         }
 
-        vsProject.Save();
+        vsProject.SaveChanges();
         return 0;
     }
 
@@ -154,7 +154,7 @@ public class ResourceGenerator
         var vsProject = new VSProject(projectFileName);
         var errorCode = this.Generate(projectDir, vsProject, projectItemDir, inputFileName, nameSpace);
 
-        vsProject.Save();
+        vsProject.SaveChanges();
 
         return errorCode;
     }

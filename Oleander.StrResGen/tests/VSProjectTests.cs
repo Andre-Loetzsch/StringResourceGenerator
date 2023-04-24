@@ -76,7 +76,7 @@ public class VSProjectTests
         };
 
         vsProject.UpdateOrCreateItemElement("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", metaData);
-        vsProject.Save();
+        vsProject.SaveChanges();
 
         Assert.True(vsProject.TryGetMetaData("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", out metaData));
         Assert.True(metaData.TryGetValue("Test", out var value));

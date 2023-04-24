@@ -35,7 +35,7 @@ internal static class TestHelper
         };
 
         vsProject.UpdateOrCreateItemElement(elementName, update, metaData);
-        vsProject.Save();
+        vsProject.SaveChanges();
     }
 
     public static void AddAccessor(string fileName, string accessor)
