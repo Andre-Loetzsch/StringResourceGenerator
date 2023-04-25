@@ -11,7 +11,7 @@ internal class GenerateCommand : CommandBase
     public GenerateCommand(ILogger logger, ResGen resGen) : base(logger, resGen, "generate", "Generate string resource files")
     {
         var fileOption = new ExistFilesOption().ExistingOnly();
-        var projFileOption = new ProjFileOption();
+        var projFileOption = new ProjFileOption().ExistingOnly();
         var namespaceOption = new NameSpaceOption();
 
         this.AddOption(fileOption);
