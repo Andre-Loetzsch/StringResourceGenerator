@@ -38,7 +38,7 @@ internal class CodeGenerator
         }
         else
         {
-            options.SRNamespace = nameSpace;
+            options.SRNamespace = nameSpace.Replace("-", "_").Replace(" ", "_");
         }
 
         return options;
@@ -359,7 +359,7 @@ internal class CodeGenerator
             options.SRClassName = Path.GetFileNameWithoutExtension(inputFileName);
             //--remove srt---
             options.SRClassName = options.SRClassName.Replace(".srt", "");
-            options.SRClassName = options.SRClassName.Replace('.', '_').Replace("-", "_");
+            options.SRClassName = options.SRClassName.Replace('.', '_').Replace("-", "_").Replace(" ", "_");
         }
         // remove .resx (resource.locale.resx, messages.de-DE.resx)
         options.ResourceName = Path.GetFileNameWithoutExtension(inputFileName);
