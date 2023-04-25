@@ -62,7 +62,7 @@ public class ResourceGenerator
             return this.ErrorCode;
         }
 
-        if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace);
+        if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(projectFileName, inputFileName, out nameSpace);
 
         return this.Generate(projectDir, projectFileName, projectItemDir, inputFileName, nameSpace);
     }
@@ -137,7 +137,7 @@ public class ResourceGenerator
                 return this.ErrorCode;
             }
 
-            if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace);
+            if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(projectFileName, inputFileName, out nameSpace);
 
             var errorCode = this.Generate(projectDir, vsProject, projectItemDir, inputFileName, nameSpace);
             if (errorCode != 0) return errorCode;
