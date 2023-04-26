@@ -12,6 +12,7 @@ using Oleander.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
 using Oleander.Extensions.Logging.Providers;
 using Oleander.StrResGen.Tool.Commands;
+using static Oleander.StrResGen.Tool.Options.ExistFilesOption;
 
 namespace Oleander.StrResGen.Tool;
 
@@ -46,6 +47,8 @@ internal class Program
 
         rootCommand.AddCommand(new GenerateCommand(logger, resGen));
         rootCommand.AddCommand(new NewCommand(logger, resGen));
+        rootCommand.AddCommand(new DateCommand());
+
 
         var exitCode = await rootCommand.InvokeAsync(args, console);
 
@@ -56,7 +59,7 @@ internal class Program
         if (exitCode == 0)
         {
             logger.LogInformation(logMsg, string.Join(" ", args), exitCode);
-            MSBuildLogFormatter.CreateMSBuildMessage("SRG0", $"StrResGen {exitCode}", "Main");
+            //MSBuildLogFormatter.CreateMSBuildMessage("SRG0", $"StrResGen {exitCode}", "Main");
         }
         else
         {
