@@ -146,7 +146,8 @@ internal class VSProject
 
         while (parentDir != null)
         {
-            var fileInfo = parentDir.GetFiles("*.csproj").FirstOrDefault();
+            var fileInfo = parentDir.GetFiles("*.csproj").MinBy(x => x.FullName);
+
             if (fileInfo != null)
             {
                 projectFileName = fileInfo.FullName;
@@ -164,7 +165,15 @@ internal class VSProject
         itemNamespace = string.Empty;
         var itemDir = Path.GetDirectoryName(itemFileName);
         if (itemDir == null) return false;
-        if (!TryFindProjectFileName(itemDir, out var projectFileName)) return false;
+        return TryFindProjectFileName(itemDir, out var projectFileName) && 
+               TryFindNameSpaceFromProjectItem(projectFileName, itemFileName, out itemNamespace);
+    }
+
+    public static bool TryFindNameSpaceFromProjectItem(string projectFileName, string itemFileName, out string itemNamespace)
+    {
+        itemNamespace = string.Empty;
+        var itemDir = Path.GetDirectoryName(itemFileName);
+        if (itemDir == null) return false;
 
         var projectDir = Path.GetDirectoryName(projectFileName);
         if (projectDir == null) return false;
