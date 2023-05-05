@@ -30,10 +30,8 @@ internal class ProjFileOption : Option<FileInfo>
 
             //************************************************************************************
 
-            //wordToComplete = "StringResourceGenerator/Oleander.StrResGen.";
-            //wordToComplete = "O";//"Oleander.StrResGen/";
-
-            //Directory.SetCurrentDirectory("D:\\dev\\git\\oleander\\StringResourceGenerator");
+            wordToComplete = "O/.";
+            Directory.SetCurrentDirectory("D:\\dev\\git\\oleander\\StringResourceGenerator");
 
             //************************************************************************************
 
@@ -116,6 +114,8 @@ internal class ProjFileOption : Option<FileInfo>
                 }
             }
 
+            File.AppendAllText(@"D:\WordToComplete.log", string.Join(Environment.NewLine, result));
+
             return result;
 
         });
@@ -141,25 +141,13 @@ internal class ProjFileOption : Option<FileInfo>
             return true;
         }
 
-        var first = testPathItems.First();
+        if (testPathItems.Count < 2) return false;
 
-        if (first.Length != 1) return false;
+        var driveInfo = DriveInfo.GetDrives().FirstOrDefault(x => x.Name.StartsWith(testPathItems[0]));
 
-        testPathItems[0] = string.Concat(testPathItems[0], ":");
+        if (driveInfo == null) return false;
 
-        if (testPathItems.Count == 1)
-        {
-            var driveInfo = new DriveInfo(testPathItems[0]);
-
-            if (driveInfo.IsReady)
-            {
-                path = driveInfo.Name;
-                pathItems[0] = testPathItems[0];
-                return true;
-            }
-
-        }
-
+        testPathItems[0] = driveInfo.Name;
         relativePathTest = string.Join('/', testPathItems);
         dirInfoTest = new DirectoryInfo(relativePathTest);
 

@@ -53,12 +53,8 @@ internal class Program
             .UseDefaults() // automatically configures dotnet-suggest
             .Build();
 
-        
-
         rootCommand.AddCommand(new GenerateCommand(logger, resGen));
         rootCommand.AddCommand(new NewCommand(logger, resGen));
-        rootCommand.AddCommand(new DateCommand());
-
 
         var exitCode = await commandLine.InvokeAsync(args, console);
 

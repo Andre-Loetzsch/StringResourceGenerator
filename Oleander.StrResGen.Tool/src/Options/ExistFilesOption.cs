@@ -4,6 +4,7 @@ using System.CommandLine;
 using System.CommandLine.Completions;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 
 namespace Oleander.StrResGen.Tool.Options;
 
@@ -41,114 +42,162 @@ internal class ExistFilesOption : Option<FileInfo[]>
         this.AddCompletions(ctx =>
         {
             var wordToComplete = ctx.WordToComplete;
+            var fileItems = new List<CompletionItem>();
+            var strResFiles = new List<string>();
 
+            //************************************************************************************
 
-
-
-            //wordToComplete = "Oleander.StrResGen.Tool/";
+            //wordToComplete = "O";
+            //////wordToComplete = "Oleander.StrResGen.";
             //Directory.SetCurrentDirectory("D:\\dev\\git\\oleander\\StringResourceGenerator");
 
+            //************************************************************************************
+
+            // TODO remove File.WriteAllText
+            File.WriteAllText(@"D:\WordToComplete-f.log", $"{Environment.NewLine}--{DateTime.Now}--{Environment.NewLine}{wordToComplete}{Environment.NewLine}");
 
 
+            if (string.IsNullOrEmpty(wordToComplete)) return fileItems;
 
-            wordToComplete = wordToComplete?.Replace('/', Path.DirectorySeparatorChar);
-            
-            File.WriteAllText(@"D:\WordToComplete.log", $"{wordToComplete}{Environment.NewLine}" );
+            var toReplace = new Dictionary<string, string>();
+            var directorySeparatorChar = wordToComplete.Contains('\\') ? '\\' : '/';
+            var wordToCompleteList = wordToComplete.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var lastWordToComplete = wordToCompleteList.Last();
 
-
-            var currentDirectory = Directory.GetCurrentDirectory();
-            var fileItems = new List<CompletionItem>();
-
-
-
-
-
-
-
-            if (!string.IsNullOrEmpty(wordToComplete) && wordToComplete.EndsWith(Path.DirectorySeparatorChar) && Directory.Exists(wordToComplete))
+            if (wordToCompleteList.Count > 1)
             {
-                currentDirectory = Path.GetFullPath(wordToComplete);
-
-                foreach (var subDirectory in new DirectoryInfo(currentDirectory).GetDirectories())
-                {
-                    //fileItems.Add(new(label: $"{subDirectory.Name}/" , sortText: subDirectory.Name));
-                    fileItems.Add(new(label: subDirectory.FullName.Replace('\\', '/') , sortText: subDirectory.Name));
-                }
+                wordToCompleteList.RemoveAt(wordToCompleteList.Count - 1);
             }
             else
             {
+                lastWordToComplete = "";
+            }
 
-                if (!string.IsNullOrEmpty(wordToComplete) && wordToComplete.Contains(Path.DirectorySeparatorChar))
+            var currentDirectory = Directory.GetCurrentDirectory();
+            File.AppendAllText(@"D:\WordToComplete-f.log", $"{currentDirectory}-- currentDirectory {Environment.NewLine}");
+
+            var pathTest = currentDirectory;
+
+            if (wordToCompleteList.Count > 0 && wordToComplete.StartsWith(directorySeparatorChar))
+            {
+                pathTest = string.Join(Path.DirectorySeparatorChar, wordToCompleteList);
+
+                if (!new DirectoryInfo(pathTest).Exists)
                 {
-                    var directoryList = wordToComplete.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var driveInfoNames = DriveInfo.GetDrives().Select(x => x.Name.ToLower()).ToList();
+                    var driveInfo = driveInfoNames.FirstOrDefault(x => x.StartsWith(wordToCompleteList[0].ToLower()));
 
+                    if (driveInfo == null) return fileItems;
 
-                    for (var i = 0; i < directoryList.Count; i++)
-                    {
+                    wordToCompleteList[0] = driveInfo;
+                    var newPathTest = Path.GetFullPath(string.Join(Path.DirectorySeparatorChar, wordToCompleteList));
 
-                        if (new DirectoryInfo(currentDirectory).GetDirectories().All(x => x.Name != directoryList[i])) break;
-
-                        currentDirectory = Path.Combine(currentDirectory, directoryList[i]);
-
-                        directoryList[i] = string.Empty;
-                    }
-
-                    wordToComplete = string.Join(Path.DirectorySeparatorChar, directoryList.Where(x => !string.IsNullOrEmpty(x)));
-                }
-
-              
-
-                foreach (var subDirectory in new DirectoryInfo(currentDirectory).GetDirectories().Where(x => x.Name.StartsWith(wordToComplete ?? string.Empty)))
-                {
-                    //fileItems.Add(new(label: $"{subDirectory.Name}/", sortText: subDirectory.Name));
-                    fileItems.Add(new(label: subDirectory.FullName.Replace('\\', '/'), sortText: subDirectory.Name));
+                    toReplace[newPathTest] = string.Concat(pathTest, directorySeparatorChar);
+                    pathTest = newPathTest;
                 }
             }
 
+            var dirInfoTest = new DirectoryInfo(pathTest);
+            if (!dirInfoTest.Exists) return fileItems;
 
-            File.AppendAllText(@"D:\WordToComplete.log", string.Join("|", fileItems.Select(x => x.Label)));
+            var isRelativePath = wordToCompleteList.Count == 0 || pathTest != dirInfoTest.FullName;
 
+            // Test directory without last word
+            if (!isRelativePath)
+            {
+                strResFiles.Add(string.Concat(dirInfoTest.FullName, directorySeparatorChar));
+                strResFiles.AddRange(dirInfoTest.GetFiles($"{lastWordToComplete}*.strings",
+                    SearchOption.TopDirectoryOnly).Select(x => x.FullName));
+            }
+
+            this.AddSingleDirectory(strResFiles, dirInfoTest.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                    .Where(x => x.Name.StartsWith(lastWordToComplete) && x.Name != lastWordToComplete), directorySeparatorChar);
+
+            // Test directory with last word
+            pathTest = Path.Combine(pathTest, lastWordToComplete);
+            dirInfoTest = new DirectoryInfo(pathTest);
+
+            if (dirInfoTest.Exists && dirInfoTest.FullName.EndsWith(lastWordToComplete))
+            {
+                strResFiles.Add(string.Concat(dirInfoTest.FullName, directorySeparatorChar));
+                strResFiles.AddRange(dirInfoTest.GetFiles("*.strings",
+                    SearchOption.TopDirectoryOnly).Select(x => x.FullName));
+
+                this.AddSingleDirectory(strResFiles, dirInfoTest.GetDirectories("*", SearchOption.TopDirectoryOnly), directorySeparatorChar);
+            }
+
+            var firstChar = wordToComplete.StartsWith(directorySeparatorChar) ? directorySeparatorChar.ToString() : string.Empty;
+            var pathToRemove = (isRelativePath ? currentDirectory : string.Empty)
+                .Replace('\\', directorySeparatorChar)
+                .Replace('/', directorySeparatorChar);
+
+            strResFiles = strResFiles.Distinct().ToList();
+
+            for (var i = 0; i < strResFiles.Count; i++)
+            {
+                var label = $"{firstChar}{strResFiles[i]}";
+
+                foreach (var (key, value) in toReplace)
+                {
+                    label = label.Replace(key, value);
+                }
+
+                label = label
+                    .Replace("\\\\", directorySeparatorChar.ToString())
+                    .Replace('\\', directorySeparatorChar)
+                    .Replace("//", directorySeparatorChar.ToString())
+                    .Replace('/', directorySeparatorChar);
+
+                if (isRelativePath && label.StartsWith(pathToRemove))
+                {
+                    label = label[pathToRemove.Length..];
+                    //File.AppendAllText(@"D:\WordToComplete-f.log", string.Join(Environment.NewLine, $"pathToRemove.Length:{pathToRemove.Length}"));
+                }
+
+                var indexOf = label.IndexOf(wordToComplete, StringComparison.InvariantCulture);
+                if (indexOf >= 0) label = label[indexOf..];
+                if (!label.StartsWith(wordToComplete)) continue;
+
+                fileItems.Add(new(label: label, sortText: $"{i:000}"));
+            }
+
+            // TODO remove File.WriteAllText
+            File.AppendAllText(@"D:\WordToComplete-f.log", string.Join(Environment.NewLine, fileItems.Select(x => x.Label)));
 
             return fileItems;
 
         });
+
+
+
+        
+
     }
 
 
-
-    public class DateCommand : Command
+    private void AddSingleDirectory(List<string> strResFiles, IEnumerable<DirectoryInfo> dirInfos, char directorySeparatorChar)
     {
-        private Argument<string> subjectArgument =
-            new("subject", "The subject of the appointment.");
-        private Option<DateTime> dateOption =
-            new("--date", "The day of week to schedule. Should be within one week.");
+        var dirInfoList = dirInfos.ToList();
 
-        public DateCommand() : base("schedule", "Makes an appointment for sometime in the next week.")
+        foreach (var dirInfo in dirInfoList)
         {
-            this.AddArgument(subjectArgument);
-            this.AddOption(dateOption);
+            strResFiles.Add(string.Concat(dirInfo.FullName, directorySeparatorChar));
 
-            dateOption.AddCompletions((ctx) =>
+            try
             {
-                var today = System.DateTime.Today;
-                var dates = new List<CompletionItem>();
+                strResFiles.AddRange(dirInfo.GetFiles("*.strings", SearchOption.TopDirectoryOnly)
+                    .Select(fileInfo => fileInfo.FullName));
+            }
+            catch
+            {
+               //
+            }
 
-                foreach (var i in Enumerable.Range(1, 7))
-                {
-                    var date = today.AddDays(i);
-                    dates.Add(new CompletionItem(
-                        label: date.ToShortDateString(),
-                        sortText: $"{i:2}"));
-                }
-
-                return dates;
-            });
-
-            this.SetHandler((subject, date) =>
-                {
-                    Console.WriteLine($"Scheduled \"{subject}\" for {date}");
-                },
-                subjectArgument, dateOption);
+            if (dirInfoList.Count == 1)
+            {
+                this.AddSingleDirectory(strResFiles, dirInfo.GetDirectories("*", SearchOption.TopDirectoryOnly), directorySeparatorChar);
+            }
         }
     }
+
 }
