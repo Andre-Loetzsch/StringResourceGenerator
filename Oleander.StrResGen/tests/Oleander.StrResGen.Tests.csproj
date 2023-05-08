@@ -44,5 +44,42 @@
     <None Update="TestData\SR.strings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Update="TestData\SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="TestData\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TestData\SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="TestData\SRX.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRX.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Update="TestData\SRX.strings">
+      <LastGenOutput>SRX.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Update="TestData\SRX.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRX.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TestData\SRX.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRX.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
