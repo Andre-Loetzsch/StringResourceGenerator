@@ -11,6 +11,7 @@
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>strresgen</ToolCommandName>
+    <PackageId>dotnet-oleander-strresgen-tool</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
