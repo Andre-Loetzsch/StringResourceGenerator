@@ -62,7 +62,7 @@ public class ResourceGenerator
             return this.ErrorCode;
         }
 
-        if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace);
+        if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(projectFileName, inputFileName, out nameSpace);
 
         return this.Generate(projectDir, projectFileName, projectItemDir, inputFileName, nameSpace);
     }
@@ -137,13 +137,13 @@ public class ResourceGenerator
                 return this.ErrorCode;
             }
 
-            if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(inputFileName, out nameSpace);
+            if (string.IsNullOrEmpty(nameSpace)) VSProject.TryFindNameSpaceFromProjectItem(projectFileName, inputFileName, out nameSpace);
 
             var errorCode = this.Generate(projectDir, vsProject, projectItemDir, inputFileName, nameSpace);
             if (errorCode != 0) return errorCode;
         }
 
-        vsProject.Save();
+        vsProject.SaveChanges();
         return 0;
     }
 
@@ -154,7 +154,7 @@ public class ResourceGenerator
         var vsProject = new VSProject(projectFileName);
         var errorCode = this.Generate(projectDir, vsProject, projectItemDir, inputFileName, nameSpace);
 
-        vsProject.Save();
+        vsProject.SaveChanges();
 
         return errorCode;
     }
@@ -194,7 +194,16 @@ public class ResourceGenerator
         };
 
         var generator = new CodeGenerator();
-        var generated = generator.GenerateCSharpResources(inputFileName, nameSpace).ToList();
+        var options = generator.CreateGenerationOptions(nameSpace);
+
+        options.SRClassName = string.Concat(Path.GetFileNameWithoutExtension(inputFileName).Replace('.', '_').Replace('-', '_'));
+
+        if (!vsProject.IsDotnetCoreProject)
+        {
+            options.KeysSRClassName = string.Concat("Keys_", Path.GetFileNameWithoutExtension(inputFileName).Replace('.', '_').Replace('-', '_'));
+        }
+
+        var generated = generator.GenerateCSharpResources(inputFileName, options).ToList();
 
         if (generator.ErrorCode != 0)
         {

@@ -28,10 +28,8 @@ internal class CodeGenerator
         this._logger = LoggerFactory.CreateLogger<CodeGenerator>();
     }
 
-    public IEnumerable<string> GenerateCSharpResources(string inputFileName, string? nameSpace = null)
+    public GenerationOptions CreateGenerationOptions(string? nameSpace = null)
     {
-        if (string.IsNullOrWhiteSpace(inputFileName)) throw new ArgumentNullException(nameof(inputFileName));
-
         var options = new GenerationOptions();
 
         if (string.IsNullOrEmpty(nameSpace))
@@ -40,10 +38,15 @@ internal class CodeGenerator
         }
         else
         {
-            options.SRNamespace = nameSpace;
+            options.SRNamespace = nameSpace.Replace("-", "_").Replace(" ", "_");
         }
 
-        return this.GenerateCSharpResources(inputFileName, options);
+        return options;
+    }
+
+    public IEnumerable<string> GenerateCSharpResources(string inputFileName, string? nameSpace = null)
+    {
+        return this.GenerateCSharpResources(inputFileName, this.CreateGenerationOptions(nameSpace));
     }
 
     public IEnumerable<string> GenerateCSharpResources(string inputFileName, GenerationOptions options)
@@ -356,7 +359,7 @@ internal class CodeGenerator
             options.SRClassName = Path.GetFileNameWithoutExtension(inputFileName);
             //--remove srt---
             options.SRClassName = options.SRClassName.Replace(".srt", "");
-            options.SRClassName = options.SRClassName.Replace('.', '_').Replace("-", "_");
+            options.SRClassName = options.SRClassName.Replace('.', '_').Replace("-", "_").Replace(" ", "_");
         }
         // remove .resx (resource.locale.resx, messages.de-DE.resx)
         options.ResourceName = Path.GetFileNameWithoutExtension(inputFileName);
@@ -489,6 +492,7 @@ internal class CodeGenerator
         // so SR class can have several Keys classes
         var cKeys = new CodeTypeDeclaration(keysClassName)
         {
+            IsPartial = true,
             TypeAttributes = options.PublicKeysSRClass ? TypeAttributes.Public : TypeAttributes.NotPublic
         };
 

@@ -24,8 +24,10 @@ public class VSProjectTests
         if (Directory.Exists(projectDir)) Directory.Delete(projectDir, true);
         Directory.CreateDirectory(projectDir);
 
-        var projectFileName = Path.Combine(projectDir, "MyProject.csproj");
+        var projectFileName = Path.Combine(projectDir, "MyProjectA.csproj");
+        File.WriteAllText(projectFileName, string.Empty);
 
+        projectFileName = Path.Combine(projectDir, "MyProjectB.csproj");
         File.WriteAllText(projectFileName, string.Empty);
 
         var projectItemDir = Path.Combine(projectDir, "Resources");
@@ -35,10 +37,37 @@ public class VSProjectTests
         File.WriteAllText(projectItemFileName, string.Empty);
 
         Assert.True(VSProject.TryFindNameSpaceFromProjectItem(projectItemFileName, out var nameSpace));
-        Assert.Equal("MyProject.Resources", nameSpace);
+        Assert.Equal("MyProjectA.Resources", nameSpace);
 
         Directory.Delete(projectDir, true);
     }
+
+    [Fact]
+    public void TestTryFindNameSpaceFromProjectItemWithProjectFile()
+    {
+        var projectDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyProject");
+
+        if (Directory.Exists(projectDir)) Directory.Delete(projectDir, true);
+        Directory.CreateDirectory(projectDir);
+
+        var projectFileName = Path.Combine(projectDir, "MyProjectA.csproj");
+        File.WriteAllText(projectFileName, string.Empty);
+
+        projectFileName = Path.Combine(projectDir, "MyProjectB.csproj");
+        File.WriteAllText(projectFileName, string.Empty);
+
+        var projectItemDir = Path.Combine(projectDir, "Resources");
+        if (!Directory.Exists(projectItemDir)) Directory.CreateDirectory(projectItemDir);
+        var projectItemFileName = Path.Combine(projectItemDir, "SR.strings");
+
+        File.WriteAllText(projectItemFileName, string.Empty);
+
+        Assert.True(VSProject.TryFindNameSpaceFromProjectItem(projectFileName, projectItemFileName, out var nameSpace));
+        Assert.Equal("MyProjectB.Resources", nameSpace);
+
+        Directory.Delete(projectDir, true);
+    }
+
 
     [Fact]
     public void Test_TryGetMetaData()
@@ -76,10 +105,13 @@ public class VSProjectTests
         };
 
         vsProject.UpdateOrCreateItemElement("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", metaData);
-        vsProject.Save();
+        vsProject.SaveChanges();
 
         Assert.True(vsProject.TryGetMetaData("EmbeddedResource", $"Resources{Path.DirectorySeparatorChar}StringResources.srt.resx", out metaData));
         Assert.True(metaData.TryGetValue("Test", out var value));
         Assert.Equal("Test value", value);
     }
+
+
+    
 }

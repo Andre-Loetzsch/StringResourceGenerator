@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Completions;
 using System.IO;
 using System.Linq;
 
@@ -36,5 +34,8 @@ internal class ExistFilesOption : Option<FileInfo[]>
                 result.ErrorMessage = ex.Message;
             }
         });
+
+
+        this.AddCompletions(ctx => TabCompletions.FileCompletions(ctx.WordToComplete, "*.strings"));
     }
 }

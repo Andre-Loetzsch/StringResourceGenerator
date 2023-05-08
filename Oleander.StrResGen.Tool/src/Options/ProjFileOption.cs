@@ -20,5 +20,7 @@ internal class ProjFileOption : Option<FileInfo>
                 result.ErrorMessage = $"Invalid project file: '{fullName}'";
             }
         });
+
+        this.AddCompletions(ctx => TabCompletions.FileCompletions(ctx.WordToComplete, "*.csproj"));
     }
 }

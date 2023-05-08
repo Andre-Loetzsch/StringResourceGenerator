@@ -22,15 +22,64 @@
 
 
   <ItemGroup>
+    <None Include="TestData\DotnetCore.csproj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\ClassLibrary.csproj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\LegacyProject\LegacyProject.csproj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
 
   <ItemGroup>
+    <None Update="TestData\LegacyProject\Basic_SR.strings">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Basic_SR.strings">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\SR.strings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Update="TestData\SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="TestData\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TestData\SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="TestData\SRX.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRX.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Update="TestData\SRX.strings">
+      <LastGenOutput>SRX.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Update="TestData\SRX.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRX.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TestData\SRX.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRX.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

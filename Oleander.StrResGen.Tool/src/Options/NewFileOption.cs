@@ -39,5 +39,7 @@ public class NewFileOption : Option<FileInfo[]>
                 result.ErrorMessage = ex.Message;
             }
         });
+
+        this.AddCompletions(ctx => TabCompletions.FileCompletions(ctx.WordToComplete));
     }
 }

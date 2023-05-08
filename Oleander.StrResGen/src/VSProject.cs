@@ -13,6 +13,7 @@ internal class VSProject
 {
     private readonly ProjectRootElement _projectRootElement;
     private readonly ILogger _logger;
+    private bool _hasChanges;
 
     public VSProject(string projectFileName)
     {
@@ -30,16 +31,22 @@ internal class VSProject
             ProjectCollection.GlobalProjectCollection,
             preserveFormatting: true);
 
+        this.IsDotnetCoreProject = !string.IsNullOrEmpty(this._projectRootElement.Sdk) && 
+                                   string.IsNullOrEmpty(this._projectRootElement.ToolsVersion);
+
         this._logger.LogInformation("Project has been opened.");
     }
 
-    public bool TryGetMetaData(string elementName, string update, out Dictionary<string, string> metaData)
+
+    public bool IsDotnetCoreProject { get; set; }
+
+    public bool TryGetMetaData(string elementName, string updateOrInclude, out Dictionary<string, string> metaData)
     {
         metaData = new Dictionary<string, string>();
 
         foreach (var projectItemGroupElement in this._projectRootElement.ItemGroups)
         {
-            var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && x.Update == update);
+            var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude));
 
             if (element == null) continue;
 
@@ -50,32 +57,49 @@ internal class VSProject
         return false;
     }
 
-    public ProjectItemGroupElement FindOrCreateProjectItemGroupElement(string elementName, string update)
+    public ProjectItemGroupElement? FindProjectItemGroupElement(string elementName, string updateOrInclude)
     {
         return this._projectRootElement.ItemGroups
-                   .FirstOrDefault(x => x.Items.Any(x1 => x1.ElementName == elementName && x1.Update == update)) ??
+            .FirstOrDefault(x => x.Items.Any(x1 => x1.ElementName == elementName && (x1.Update == updateOrInclude || x1.Include == updateOrInclude)));
+    }
+
+    public ProjectItemGroupElement FindOrCreateProjectItemGroupElement(string elementName, string updateOrInclude)
+    {
+        return this._projectRootElement.ItemGroups
+                   .FirstOrDefault(x => x.Items.Any(x1 => x1.ElementName == elementName && (x1.Update == updateOrInclude || x1.Include == updateOrInclude))) ??
                this._projectRootElement.AddItemGroup();
     }
 
-
-    public void UpdateOrCreateItemElement(string elementName, string update, Dictionary<string, string>? metaData = null)
+    public void UpdateOrCreateItemElement(string elementName, string updateOrInclude, Dictionary<string, string>? metaData = null)
     {
         this.UpdateOrCreateItemElement(
-            this.FindOrCreateProjectItemGroupElement(elementName, update), elementName, update, metaData);
+            this.FindOrCreateProjectItemGroupElement(elementName, updateOrInclude), elementName, updateOrInclude, metaData);
     }
 
-    public void UpdateOrCreateItemElement(ProjectItemGroupElement projectItemGroupElement, string elementName, string update, Dictionary<string, string>? metaData = null)
+    public void UpdateOrCreateItemElement(ProjectItemGroupElement defaultProjectItemGroupElement, string elementName, string updateOrInclude, Dictionary<string, string>? metaData = null)
     {
-        var element = projectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && x.Update == update);
-        this._logger.LogInformation("{action} element: <{elementName} Update=\"{update}\">.", element == null ? "Create" : "Update", elementName, update);
+        var element = defaultProjectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude)) ?? 
+                      this.FindProjectItemGroupElement(elementName, updateOrInclude)?.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude));
+
+        if (element != null) this.IsDotnetCoreProject = !string.IsNullOrEmpty(element.Update);
+        this._logger.LogInformation("{action} element: <{elementName} {attribute}=\"{updateOrInclude}\">.",
+            element == null ? "Create" : "Update", elementName, this.IsDotnetCoreProject ? "Update" : "Include", updateOrInclude);
 
         if (element == null)
         {
             element = this._projectRootElement.CreateItemElement(elementName);
-            element.Update = update;
+            if (this.IsDotnetCoreProject)
+            {
+                element.Update = updateOrInclude;
+            }
+            else
+            {
+                element.Include = updateOrInclude;
+            }
 
             // MUST be in the group before we can add metadata
-            projectItemGroupElement.AppendChild(element);
+            defaultProjectItemGroupElement.AppendChild(element);
+            this._hasChanges = true;
         }
 
         if (metaData == null) return;
@@ -87,17 +111,29 @@ internal class VSProject
             if (metaDataElement == null)
             {
                 element.AddMetadata(key, value);
+                this._hasChanges = true;
                 continue;
             }
 
+            if (metaDataElement.Value == value) continue;
+
             metaDataElement.Value = value;
+            this._hasChanges = true;
         }
     }
 
-    public void Save()
+    public void SaveChanges()
     {
-        this._projectRootElement.Save();
-        this._logger.LogInformation("Project saved.");
+        if (this._hasChanges)
+        {
+            this._projectRootElement.Save();
+            this._logger.LogInformation("Project saved.");
+            this._hasChanges = false;
+
+            return;
+        }
+        
+        this._logger.LogInformation("Nothing to save. Project has no changes.");
     }
 
     #region static members
@@ -110,7 +146,8 @@ internal class VSProject
 
         while (parentDir != null)
         {
-            var fileInfo = parentDir.GetFiles("*.csproj").FirstOrDefault();
+            var fileInfo = parentDir.GetFiles("*.csproj").MinBy(x => x.FullName);
+
             if (fileInfo != null)
             {
                 projectFileName = fileInfo.FullName;
@@ -128,7 +165,15 @@ internal class VSProject
         itemNamespace = string.Empty;
         var itemDir = Path.GetDirectoryName(itemFileName);
         if (itemDir == null) return false;
-        if (!TryFindProjectFileName(itemDir, out var projectFileName)) return false;
+        return TryFindProjectFileName(itemDir, out var projectFileName) && 
+               TryFindNameSpaceFromProjectItem(projectFileName, itemFileName, out itemNamespace);
+    }
+
+    public static bool TryFindNameSpaceFromProjectItem(string projectFileName, string itemFileName, out string itemNamespace)
+    {
+        itemNamespace = string.Empty;
+        var itemDir = Path.GetDirectoryName(itemFileName);
+        if (itemDir == null) return false;
 
         var projectDir = Path.GetDirectoryName(projectFileName);
         if (projectDir == null) return false;
