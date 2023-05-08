@@ -14,7 +14,7 @@ using Oleander.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
 using Oleander.Extensions.Logging.Providers;
 using Oleander.StrResGen.Tool.Commands;
-using static Oleander.StrResGen.Tool.Options.ExistFilesOption;
+using Oleander.StrResGen.Tool.Options;
 
 namespace Oleander.StrResGen.Tool;
 
@@ -38,7 +38,6 @@ internal class Program
             .AddConfiguration(builder.Configuration.GetSection("Logging"))
             .Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, LoggerSinkProvider>());
 
-
         var host = builder.Build();
 
         host.Services.InitLoggerFactory();
@@ -46,12 +45,12 @@ internal class Program
         var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
         var console = new ToolConsole(logger);
         var resGen = host.Services.GetRequiredService<ResGen>();
-
         var rootCommand = new RootCommand("String resources tool");
-        
         var commandLine = new CommandLineBuilder(rootCommand)
             .UseDefaults() // automatically configures dotnet-suggest
             .Build();
+
+        TabCompletions.Logger = logger;
 
         rootCommand.AddCommand(new GenerateCommand(logger, resGen));
         rootCommand.AddCommand(new NewCommand(logger, resGen));
@@ -62,14 +61,20 @@ internal class Program
 
         const string logMsg = "StrResGen '{args}' exit with exit code {exitCode}";
 
+        var arguments = string.Join(" ", args);
+
         if (exitCode == 0)
         {
-            logger.LogInformation(logMsg, string.Join(" ", args), exitCode);
-            //MSBuildLogFormatter.CreateMSBuildMessage("SRG0", $"StrResGen {exitCode}", "Main");
+            logger.LogInformation(logMsg, arguments, exitCode);
+            
+            if (!arguments.StartsWith("[suggest:"))
+            {
+                MSBuildLogFormatter.CreateMSBuildMessage("SRG0", $"StrResGen {exitCode}", "Main");
+            }
         }
         else
         {
-            logger.LogError(logMsg, string.Join(" ", args), exitCode);
+            logger.LogError(logMsg, arguments, exitCode);
         }
 
         await host.WaitForLoggingAsync(TimeSpan.FromSeconds(5));
