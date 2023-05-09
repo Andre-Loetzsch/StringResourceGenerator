@@ -90,7 +90,7 @@ jobs:
        if: ${{ env.VERSION_SUFFIX }} == 'dev'
        uses: actions/delete-package-versions@v3
        with:
-         package-name: 'Oleander.StrResGen.Tool'
+         package-name: 'dotnet-oleander-strresgen-tool'
          min-versions-to-keep: 5
          delete-only-pre-release-versions: "true"
          
