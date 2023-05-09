@@ -62,7 +62,7 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
      - name: 'Build and test Oleander.StrResGen.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@main
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
        with:
          solution: '${{ github.workspace }}\Oleander.StrResGen\Oleander.StrResGen.sln'
          version-suffix: ${{ env.VERSION_SUFFIX }}
@@ -70,7 +70,7 @@ jobs:
          github_token: ${{ secrets.GITHUB_TOKEN }}
 
      - name: 'Build and test Oleander.StrResGen.Tool.sln'
-       uses: Andre-Loetzsch/actions/buildAndTestSolution@main
+       uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
        with:
          solution: '${{ github.workspace }}\Oleander.StrResGen.Tool\Oleander.StrResGen.Tool.sln'
          version-suffix: ${{ env.VERSION_SUFFIX }}
