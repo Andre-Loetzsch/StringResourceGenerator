@@ -80,17 +80,19 @@ jobs:
     
      - name: 'delete Oleander.StrResGen-dev old packages'
        if: ${{ env.VERSION_SUFFIX }} == 'dev'
-       uses: actions/delete-package-versions@v3
+       uses: actions/delete-package-versions@v4
        with:
          package-name: 'Oleander.StrResGen'
+         package-type: 'nuget'
          min-versions-to-keep: 5
          delete-only-pre-release-versions: "true"
          
      - name: 'delete Oleander.StrResGen.Tool-dev old packages'
        if: ${{ env.VERSION_SUFFIX }} == 'dev'
-       uses: actions/delete-package-versions@v3
+       uses: actions/delete-package-versions@v4
        with:
          package-name: 'dotnet-oleander-strresgen-tool'
+         package-type: 'nuget'
          min-versions-to-keep: 5
          delete-only-pre-release-versions: "true"
          
