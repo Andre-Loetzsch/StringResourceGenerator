@@ -1,5 +1,5 @@
 [strings]
-Test(string s)=Test: 0
+Test(string s)=Test: {0}
 
 [strings.de]
-Test(string s)=German Test: 0
+Test(string s)=German Test: {0}
