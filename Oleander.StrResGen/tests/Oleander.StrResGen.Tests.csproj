@@ -43,6 +43,8 @@
     </None>
     <None Update="TestData\SR.strings">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>StrResGenCodeGenerator</Generator>
+      <LastGenOutput>SR.cs.strings</LastGenOutput>
     </None>
     <Compile Update="TestData\SR.cs">
       <AutoGen>True</AutoGen>
