@@ -7,13 +7,13 @@
         <Preview>true</Preview>
     </Metadata>
     <Installation>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Community">
+        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Pro">
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0,18.0)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
-        <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Enterprise">
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
     </Installation>
