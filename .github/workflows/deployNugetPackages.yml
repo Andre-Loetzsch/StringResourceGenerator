@@ -17,8 +17,8 @@ env:
   PACKOUTDIR: ${{ github.workspace }}\packoutput
                     
 jobs:
-  deploy:
-    name: 'Deploy packages'
+  deploy_dotnet7:
+    name: 'Deploy dotnet 7.0.x packages'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -76,15 +76,7 @@ jobs:
           version-suffix: ${{ env.VERSION_SUFFIX }}
           packoutdir: ${{ env.PACKOUTDIR }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Build and test Oleander.StrResGen.SingleFileGenerator.sln'
-        uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-        with:
-         solution: '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\Oleander.StrResGen.SingleFileGenerator.sln'
-         version-suffix: ${{ env.VERSION_SUFFIX }}
-         packoutdir: ${{ env.PACKOUTDIR }}
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-
+     
       - name: 'delete Oleander.StrResGen-dev old packages'
         if: env.VERSION_SUFFIX == 'dev'
         uses: actions/delete-package-versions@v4
@@ -116,3 +108,53 @@ jobs:
         with:
           packagedir: ${{ env.PACKOUTDIR }}
           nuget_apikey: ${{ secrets.NUGETORG_ACCESS_TOKEN }}
+
+  deploy_dotnet4:
+    name: 'Deploy dotnet 4.8.x packages'
+    runs-on: windows-latest
+    
+    steps:
+      - name: 'echo VERSION_SUFFIX'
+        shell: bash
+        run: echo ${{ env.VERSION_SUFFIX }}
+        
+      - name: 'Set VERSION_SUFFIX: dev'
+        if: ${{ github.ref_name }} == 'main'
+        shell: bash
+        run: echo "VERSION_SUFFIX=dev" >> $GITHUB_ENV
+        
+      - name: 'Set VERSION_SUFFIX: string.Empty'
+        if: ${{ startsWith(github.ref_name, 'release/v') }}
+        shell: bash
+        run: echo "VERSION_SUFFIX=" >> $GITHUB_ENV
+        
+      - name: 'Set VERSION_SUFFIX: alpha'
+        if: ${{ startsWith(github.ref_name, 'release/alpha') }}
+        shell: bash
+        run: echo "VERSION_SUFFIX=alpha" >> $GITHUB_ENV
+        
+      - name: 'Set VERSION_SUFFIX: beta'
+        if: ${{ startsWith(github.ref_name, 'release/beta') }}
+        shell: bash
+        run:  echo "VERSION_SUFFIX=beta" >> $GITHUB_ENV
+        
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+             
+      - name: 'Install dotnet'
+        uses: actions/setup-dotnet@v2
+        with:
+        dotnet-version: '4.8.x'
+        
+      - name: 'Add GitHub to Nuget source'
+        uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'
+        with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+             
+      - name: 'Build and test Oleander.StrResGen.SingleFileGenerator.sln'
+        uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
+        with:
+          solution: '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\Oleander.StrResGen.SingleFileGenerator.sln'
+          version-suffix: ${{ env.VERSION_SUFFIX }}
+          packoutdir: ${{ env.PACKOUTDIR }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
