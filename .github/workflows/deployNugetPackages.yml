@@ -144,12 +144,12 @@ jobs:
       - name: 'Install dotnet'
         uses: actions/setup-dotnet@v2
         with:
-        dotnet-version: '4.8.x'
+         dotnet-version: '4.8.x'
         
       - name: 'Add GitHub to Nuget source'
         uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'
         with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+         github_token: ${{ secrets.GITHUB_TOKEN }}
              
       - name: 'Build and test Oleander.StrResGen.SingleFileGenerator.sln'
         uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
