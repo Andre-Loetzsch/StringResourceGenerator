@@ -140,11 +140,6 @@ jobs:
         
       - name: 'Checkout'
         uses: actions/checkout@v3
-             
-      - name: 'Install dotnet'
-        uses: actions/setup-dotnet@v2
-        with:
-         dotnet-version: '4.8.x'
         
       - name: 'Add GitHub to Nuget source'
         uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'
