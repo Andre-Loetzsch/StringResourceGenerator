@@ -146,7 +146,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1
       
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.2
+        uses: NuGet/setup-nuget@v1.2.0
 
       - name: 'Add GitHub to Nuget source'
         uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'
