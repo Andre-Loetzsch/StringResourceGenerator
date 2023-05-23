@@ -163,7 +163,7 @@ jobs:
       - name: Publish extension to Marketplace
         uses: cezarypiatek/VsixPublisherAction@1.0
         with:
-          extension-file: Oleander.StrResGen.SingleFileGenerator\src\bin\Release\Oleander.StrResGen.SingleFileGenerator.vsix
-          publish-manifest-file: src\publishManifest.json
+          extension-file: '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\bin\Release\Oleander.StrResGen.SingleFileGenerator.vsix'
+          publish-manifest-file: '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\publishManifest.json'
           personal-access-code: ${{ secrets.VS_PUBLISHER_ACCESS_TOKEN }}
 
