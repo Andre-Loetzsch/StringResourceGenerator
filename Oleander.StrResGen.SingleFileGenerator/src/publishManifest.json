@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/vsix-publish",
+  "categories": [ "build", "coding", "programming languages" ],
+  "identity": {
+    "internalName": "Oleander.StrResGen.SingleFileGenerator.0ef94f9d-1cff-4b5b-8812-84abaa7d1f04" // If not specified, we try to generate the name from the display name of the extension in the vsixmanifest file.
+    // Required if the display name is not the actual name of the extension.
+  },
+  "overview": "overview.md", // Path to the "readme" file that gets uploaded to the Marketplace. Required.
+  "priceCategory": "free", // Either "free", "trial", or "paid". Defaults to "free".
+  "publisher": "Oleander", // The name of the publisher. Required.
+  "private": false, // Specifies whether or not the extension should be public when uploaded. Defaults to false.
+  "qna": false, // Specifies whether or not the extension should have a Q&A section. Defaults to true.
+  "repo": "https://github.com/Andre-Loetzsch/StringResourceGenerator" // Not required.
+}

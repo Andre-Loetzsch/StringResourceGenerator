@@ -63,6 +63,8 @@
     <Compile Include="Win32ExitCodes.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="overview.md" />
+    <None Include="publishManifest.json" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
