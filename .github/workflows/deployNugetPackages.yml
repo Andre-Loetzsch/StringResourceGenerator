@@ -79,7 +79,7 @@ jobs:
 
     
      - name: 'delete Oleander.StrResGen-dev old packages'
-       if: ${{ env.VERSION_SUFFIX }} == 'dev'
+       if: env.VERSION_SUFFIX == 'dev'
        uses: actions/delete-package-versions@v4
        with:
          package-name: 'Oleander.StrResGen'
@@ -88,7 +88,7 @@ jobs:
          delete-only-pre-release-versions: "true"
          
      - name: 'delete Oleander.StrResGen.Tool-dev old packages'
-       if: ${{ env.VERSION_SUFFIX }} == 'dev'
+       if: env.VERSION_SUFFIX == 'dev'
        uses: actions/delete-package-versions@v4
        with:
          package-name: 'dotnet-oleander-strresgen-tool'
