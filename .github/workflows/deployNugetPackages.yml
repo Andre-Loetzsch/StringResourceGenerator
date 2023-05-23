@@ -137,19 +137,26 @@ jobs:
         if: ${{ startsWith(github.ref_name, 'release/beta') }}
         shell: bash
         run:  echo "VERSION_SUFFIX=beta" >> $GITHUB_ENV
-        
+
       - name: 'Checkout'
         uses: actions/checkout@v3
-        
+
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.2
+
       - name: 'Add GitHub to Nuget source'
         uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'
         with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-             
-      - name: 'Build and test Oleander.StrResGen.SingleFileGenerator.sln'
-        uses: Andre-Loetzsch/actions/buildAndTestSolution@v1
-        with:
-          solution: '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\Oleander.StrResGen.SingleFileGenerator.sln'
-          version-suffix: ${{ env.VERSION_SUFFIX }}
-          packoutdir: ${{ env.PACKOUTDIR }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+             
+      - name: Restore Packages
+        run: nuget restore '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\Oleander.StrResGen.SingleFileGenerator.sln'
+
+      - name: Build Solution
+        run: |
+          msbuild.exe '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\Oleander.StrResGen.SingleFileGenerator.sln' /p:platform="Any CPU" /p:configuration="Release"
+
