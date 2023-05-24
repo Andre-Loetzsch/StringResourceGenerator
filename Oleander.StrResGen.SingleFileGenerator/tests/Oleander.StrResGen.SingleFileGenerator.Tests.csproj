@@ -54,6 +54,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SR.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.strings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\Oleander.StrResGen.SingleFileGenerator.csproj">
@@ -65,11 +70,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SR.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SR.strings</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="SR.strings">
       <LastGenOutput>SR.cs</LastGenOutput>
       <Generator>SRG</Generator>

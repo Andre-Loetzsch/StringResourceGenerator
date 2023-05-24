@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
@@ -9,17 +12,19 @@ namespace Oleander.StrResGen.SingleFileGenerator
     [Guid("8C3E490C-C096-4336-B687-1162F34386E4")]
     public sealed class StrResGenCodeGenerator : BaseCodeGeneratorWithSite
     {
-        private string _defaultExtension = ".cs";
+        public int WarnLevel { get; private set; }
+        public int ErrorLevel { get; private set; }
+        public string Message { get; private set; }
 
-        public int WarnLevel { get; set; }
-        public int ErrorLevel { get; set; }
-        public string Message { get; set; }
+        public ExternalProcessResult ExternalProcessResult { get; private set; }
 
-        public ExternalProcessResult ExternalProcessResult { get; set; }
+        private readonly List<string> _errors = new List<string>();
+        private readonly List<string> _warnings = new List<string>();
+
 
         public override string GetDefaultExtension()
         {
-            return this._defaultExtension;
+            return ".cs";
         }
 
         protected override byte[] GenerateCode(string inputFileName, string inputFileContent)
@@ -73,24 +78,42 @@ namespace Oleander.StrResGen.SingleFileGenerator
                 return null;
             }
 
+            if (this._errors.Any())
+            {
+                return string.Join(Environment.NewLine, this._errors);
+            }
+
             var csFile = string.Concat(inputFileName.Substring(0, inputFileName.Length - 8), ".cs");
-            return File.Exists(csFile) ? File.ReadAllText(csFile) : null;
+
+            if (!File.Exists(csFile))
+            {
+                this.CreateError(4, $"File '{csFile}' not found!");
+                this._errors.AddRange(this._warnings);
+                return string.Join(Environment.NewLine,   this._errors);
+            }
+
+            var csFileContent =  File.ReadAllText(csFile);
+
+            return this._warnings.Any() ? 
+                string.Concat(string.Join(Environment.NewLine, this._warnings), Environment.NewLine, csFileContent) : 
+                csFileContent;
         }
 
 
-        public void CreateWarning(int level, string message)
+        private void CreateWarning(int level, string message)
         {
             this.WarnLevel = level;
             this.Message = message;
+            this._warnings.Add($"// {level} : {message}");
             this.GeneratorErrorCallback(true, level, message, -1, -1);
         }
 
-        public void CreateError(int level, string message)
+        private void CreateError(int level, string message)
         {
             this.ErrorLevel = level;
             this.Message = message;
+            this._errors.Add(message);
 
-            this._defaultExtension = null;
             this.GeneratorErrorCallback(false, level, message, -1, -1);
         }
     }
