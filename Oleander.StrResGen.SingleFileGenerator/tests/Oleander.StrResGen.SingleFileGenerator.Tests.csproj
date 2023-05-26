@@ -71,8 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SR.strings">
-      <LastGenOutput>SR.cs</LastGenOutput>
       <Generator>SRG</Generator>
+      <LastGenOutput>SR.cs</LastGenOutput>
     </None>
     <EmbeddedResource Include="SR.srt.resx">
       <AutoGen>True</AutoGen>

@@ -53,7 +53,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ExternalProcesses\DotnetProcess.cs" />
+    <Compile Include="ExternalProcesses\ListDotnetToolProcess.cs" />
+    <Compile Include="ExternalProcesses\UpdateDotnetToolProcess.cs" />
+    <Compile Include="ExternalProcesses\InstallDotnetToolProcess.cs" />
     <Compile Include="ExternalProcesses\ExternalProcess.cs" />
     <Compile Include="ExternalProcesses\ExternalProcessResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
