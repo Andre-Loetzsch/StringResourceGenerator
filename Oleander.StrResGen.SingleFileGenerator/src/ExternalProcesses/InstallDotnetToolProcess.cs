@@ -1,8 +1,8 @@
 ﻿namespace Oleander.StrResGen.SingleFileGenerator.ExternalProcesses
 {
-    public class DotnetProcess : ExternalProcess
+    public class InstallDotnetToolProcess : ExternalProcess
     {
-        public DotnetProcess()
+        public InstallDotnetToolProcess()
             : base("dotnet", "tool install dotnet-oleander-strresgen-tool -g --prerelease")
         {
         }

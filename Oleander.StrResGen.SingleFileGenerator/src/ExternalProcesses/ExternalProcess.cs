@@ -17,7 +17,7 @@ namespace Oleander.StrResGen.SingleFileGenerator.ExternalProcesses
 
         public ExternalProcessResult Start()
         {
-            var epr = new ExternalProcessResult(this._fileName);
+            var epr = new ExternalProcessResult(this._fileName, this._arguments);
 
             var p = new Process
             {
@@ -88,7 +88,6 @@ namespace Oleander.StrResGen.SingleFileGenerator.ExternalProcesses
 
             return epr;
         }
-
     }
 }
     

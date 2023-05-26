@@ -42,7 +42,7 @@
     <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\tests\SR.strings</value>
   </resheader>
   <data name="Test">
-    <value>German Test: {0}cc</value>
+    <value>German Test: {0}</value>
     <comment>string s</comment>
   </data>
 </root>

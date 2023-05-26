@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using Oleander.StrResGen.SingleFileGenerator.ExternalProcesses;
 
@@ -10,8 +9,23 @@ namespace Oleander.StrResGen.SingleFileGenerator.Tests
         static void Main(string[] args)
         {
             var generator = new StrResGenCodeGenerator();
+            var isDotnetToolInstalled = StrResGenCodeGenerator.IsDotnetToolInstalled;
+            Console.WriteLine($"IsDotnetToolInstalled: {isDotnetToolInstalled}");
+
+            if (isDotnetToolInstalled)
+            {
+                var shouldUpdateDotnetTool = StrResGenCodeGenerator.ShouldUpdateDotnetTool;
+                Console.WriteLine($"ShouldUpdateDotnetTool: {shouldUpdateDotnetTool}");
+                Console.WriteLine($"UpdateDotnetTool: {StrResGenCodeGenerator.UpdateDotnetTool()}");
+            }
+            else
+            {
+                Console.WriteLine($"InstallDotnetTool: {StrResGenCodeGenerator.InstallDotnetTool()}");
+            }
+
+            
             var fileContent = generator.GenerateCSharpCode("D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.SingleFileGenerator\\tests\\SR.strings", "");
-            var result = generator.ExternalProcessResult ?? new ExternalProcessResult(string.Empty);
+            var result = generator.ExternalProcessResult ?? new ExternalProcessResult(string.Empty, string.Empty);
 
             Console.WriteLine(result.ExitCode);
 
