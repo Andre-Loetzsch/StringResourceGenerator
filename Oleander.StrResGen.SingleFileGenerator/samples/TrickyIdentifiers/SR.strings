@@ -1,0 +1,17 @@
+﻿# Options are specified as lines starting with "#!"
+
+# Comments are lines starting with ";" or "#"
+
+##! culture_info = Resources.CultureInfo
+
+#! accessor_class_accessibility = public
+
+[strings]
+a = An identifier
+1 = Single Numeral
+$%^@!&* = Punctuation
+₧ Sign = Peseta Sign in identifier
+Pts = ₧ sign in resource text
+■ = Black square
+void = void
+Public = Public

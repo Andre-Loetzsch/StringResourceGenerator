@@ -84,6 +84,11 @@
       <DependentUpon>SR.strings</DependentUpon>
       <DesignTime>True</DesignTime>
     </EmbeddedResource>
+    <EmbeddedResource Include="SR.srt.de-DE.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

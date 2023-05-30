@@ -39,13 +39,29 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="stringSource">
-    <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\tests\SR.strings</value>
+    <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\samples\MultiStrings\SR.strings</value>
+  </resheader>
+  <resheader name="culture_info">
+    <value>Resources.CultureInfo</value>
   </resheader>
   <data name="Raw">
-    <value>German raw string</value>
+    <value>Raw string</value>
+  </data>
+  <data name="SimpleArg">
+    <value>With argument {0}</value>
+    <comment>arg1</comment>
   </data>
   <data name="StringArg">
-    <value>German with name argument {0}</value>
+    <value>With name argument {0}</value>
     <comment>string name</comment>
+  </data>
+  <data name="NumberArgs">
+    <value>Integer {0}, Amount {1:C}, Change {2}%</value>
+    <comment>int name2, decimal amount, float chanceOfWinning</comment>
+  </data>
+  <data name="MultiLineEx">
+    <value>First Line
+Second Line
+Third Line</value>
   </data>
 </root>

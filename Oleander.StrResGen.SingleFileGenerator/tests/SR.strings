@@ -1,5 +1,15 @@
 [strings]
-Test(string s)=Test: {0}
+Test(string s)=Test {0}
+Raw = Raw string
+StringArg(string name) = With name argument {0}
+NumberArgs(int name2, decimal amount, float chanceOfWinning) = Integer {0}, Amount {1:C}, Change {2}%
+MultiLineWithArgs(int age, string name) = My age is {0}
+= My name is {0}
 
 [strings.de]
-Test(string s)=German Test: {0}
+Raw = German raw string
+StringArg(string name) = German with name argument {0}
+
+[strings.de-DE]
+Raw = Germany raw string
+StringArg(string name) = German with name argument {0}

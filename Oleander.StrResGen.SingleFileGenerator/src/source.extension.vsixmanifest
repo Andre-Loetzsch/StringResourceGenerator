@@ -3,7 +3,7 @@
     <Metadata>
         <Identity Id="Oleander.StrResGen.SingleFileGenerator" Version="1.2.23146.11334" Language="en-US" Publisher="Oleander" />
         <DisplayName>Oleander.StrResGen.SingleFileGenerator</DisplayName>
-        <Description xml:space="preserve">String Resource Generator</Description>
+        <Description xml:space="preserve">A simple tool that generates culture-specific string resources and a class to access the resources.</Description>
         <Preview>true</Preview>
     </Metadata>
     <Installation>
