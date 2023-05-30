@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Oleander.StrResGen.SingleFileGenerator.0ef94f9d-1cff-4b5b-8812-84abaa7d1f04" Version="1.2.23146.11334" Language="en-US" Publisher="Oleander" />
+        <Identity Id="Oleander.StrResGen.SingleFileGenerator" Version="1.2.23146.11334" Language="en-US" Publisher="Oleander" />
         <DisplayName>Oleander.StrResGen.SingleFileGenerator</DisplayName>
         <Description xml:space="preserve">String Resource Generator</Description>
         <Preview>true</Preview>
