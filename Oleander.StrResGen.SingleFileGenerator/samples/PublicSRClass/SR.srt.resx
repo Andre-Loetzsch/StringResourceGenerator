@@ -39,13 +39,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="stringSource">
-    <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\tests\SR.strings</value>
+    <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\samples\PublicSRClass\SR.strings</value>
+  </resheader>
+  <resheader name="accessor_class_accessibility">
+    <value>public</value>
   </resheader>
   <data name="Raw">
-    <value>German raw string</value>
+    <value>Raw string</value>
   </data>
-  <data name="StringArg">
-    <value>German with name argument {0}</value>
-    <comment>string name</comment>
+  <data name="SimpleArg">
+    <value>With argument {0}</value>
+    <comment>arg1</comment>
   </data>
 </root>

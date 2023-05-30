@@ -39,13 +39,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="stringSource">
-    <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\tests\SR.strings</value>
+    <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\samples\TrickyIdentifiers\SR.strings</value>
   </resheader>
-  <data name="Raw">
-    <value>German raw string</value>
+  <resheader name="accessor_class_accessibility">
+    <value>public</value>
+  </resheader>
+  <data name="a">
+    <value>An identifier</value>
   </data>
-  <data name="StringArg">
-    <value>German with name argument {0}</value>
-    <comment>string name</comment>
+  <data name="1">
+    <value>Single Numeral</value>
+  </data>
+  <data name="$%^@!&amp;*">
+    <value>Punctuation</value>
+  </data>
+  <data name="₧ Sign">
+    <value>Peseta Sign in identifier</value>
+  </data>
+  <data name="Pts">
+    <value>₧ sign in resource text</value>
+  </data>
+  <data name="■">
+    <value>Black square</value>
+  </data>
+  <data name="void">
+    <value>void</value>
+  </data>
+  <data name="Public">
+    <value>Public</value>
   </data>
 </root>

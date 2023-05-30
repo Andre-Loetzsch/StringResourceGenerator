@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using Oleander.StrResGen.SingleFileGenerator.ExternalProcesses;
 
@@ -8,6 +9,17 @@ namespace Oleander.StrResGen.SingleFileGenerator.Tests
     {
         static void Main(string[] args)
         {
+
+
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+
+            var rawText = SR.Raw;                // Germany raw String
+            var stringArg = SR.StringArg("Bob"); // Germany with name argument
+
+            return;
+
+
+
             var generator = new StrResGenCodeGenerator();
             var isDotnetToolInstalled = StrResGenCodeGenerator.IsDotnetToolInstalled;
             Console.WriteLine($"IsDotnetToolInstalled: {isDotnetToolInstalled}");

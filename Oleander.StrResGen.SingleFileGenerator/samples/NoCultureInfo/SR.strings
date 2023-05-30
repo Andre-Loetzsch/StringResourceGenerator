@@ -1,0 +1,10 @@
+# Options are specified as lines starting with "#!"
+
+# Comments are lines starting with ";" or "#"
+
+##! accessor_class_accessibility = public
+##! culture_info = Resources.CultureInfo
+
+[strings]
+Raw = Raw string
+SimpleArg(arg1) = With argument {0}

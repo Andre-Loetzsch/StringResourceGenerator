@@ -1,0 +1,98 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\.targets\common.targets" />
+
+  <PropertyGroup>
+    <Product>String Resource Generator Samples</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="CombinedStrings\SR.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+    </Compile>
+    <Compile Update="PublicSRClass\SR.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+  
+
+  <ItemGroup>
+    <None Update="CombinedStrings\SR.strings">
+      <Generator>SRG</Generator>
+      <LastGenOutput>SR.cs</LastGenOutput>
+    </None>
+    <None Update="MultiStrings\SR.strings">
+      <Generator>SRG</Generator>
+      <LastGenOutput>SR.cs</LastGenOutput>
+    </None>
+    <None Update="NoCultureInfo\SR.strings">
+      <Generator>SRG</Generator>
+      <LastGenOutput>SR.cs</LastGenOutput>
+    </None>
+    <None Update="PublicSRClass\SR.strings">
+      <Generator>SRG</Generator>
+      <LastGenOutput>SR.cs</LastGenOutput>
+    </None>
+    <None Update="TrickyIdentifiers\SR.strings">
+      <Generator>SRG</Generator>
+      <LastGenOutput>SR.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Update="CombinedStrings\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CombinedStrings\SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CombinedStrings\SR.srt.de-DE.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <Compile Update="MultiStrings\SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="MultiStrings\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <Compile Update="NoCultureInfo\SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="NoCultureInfo\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="PublicSRClass\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <Compile Update="TrickyIdentifiers\SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="TrickyIdentifiers\SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

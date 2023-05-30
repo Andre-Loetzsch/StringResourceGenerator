@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -8,10 +7,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Oleander.StrResGen.SingleFileGenerator.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Joyson Safety Systems")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Oleander.StrResGen.SingleFileGenerator.Tests")]
-[assembly: AssemblyCopyright("Copyright © Joyson Safety Systems 2023")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("")]
+[assembly: AssemblyTrademark("Oleanders")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -32,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.2.23150.11536")]
+[assembly: AssemblyFileVersion("1.2.23150.11536")]
