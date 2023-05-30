@@ -1,0 +1,25 @@
+# Options are specified as lines starting with "#!"
+
+# Comments are lines starting with ";" or "#"
+
+# To define the SR class public instead of internal (default):
+##! accessor_class_accessibility = public
+
+#! culture_info = Resources.CultureInfo
+
+[strings]
+Test(string s)=Test {0}
+Raw = Raw string
+SimpleArg(arg1) = With argument {0}
+StringArg(string name) = With name argument {0}
+NumberArgs(int name2, decimal amount, float chanceOfWinning) = Integer {0}, Amount {1:C}, Change {2}%
+MultiLineWithArgs(int age, string name) = My Age is {0}
+= My name is {0}
+
+[strings.de]
+Raw = German Raw String
+StringArg(string name) = German With name argument {0}
+
+[strings.de-DE]
+Raw = Germany Raw String
+StringArg(string name) = German With name argument {0}

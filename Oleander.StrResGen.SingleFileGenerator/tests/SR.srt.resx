@@ -42,7 +42,23 @@
     <value>D:\dev\git\oleander\StringResourceGenerator\Oleander.StrResGen.SingleFileGenerator\tests\SR.strings</value>
   </resheader>
   <data name="Test">
-    <value>Test: {0}</value>
+    <value>Test {0}</value>
     <comment>string s</comment>
+  </data>
+  <data name="Raw">
+    <value>Raw string</value>
+  </data>
+  <data name="StringArg">
+    <value>With name argument {0}</value>
+    <comment>string name</comment>
+  </data>
+  <data name="NumberArgs">
+    <value>Integer {0}, Amount {1:C}, Change {2}%</value>
+    <comment>int name2, decimal amount, float chanceOfWinning</comment>
+  </data>
+  <data name="MultiLineWithArgs">
+    <value>My age is {0}
+My name is {0}</value>
+    <comment>int age, string name</comment>
   </data>
 </root>
