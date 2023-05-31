@@ -1,5 +1,5 @@
 ﻿
-namespace Oleander.StrResGen.SingleFileGenerator.Samples;
+namespace Samples;
 
 internal class Program
 {

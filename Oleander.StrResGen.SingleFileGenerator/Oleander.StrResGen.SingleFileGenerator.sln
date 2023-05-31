@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{19FF0D00-CDD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{166F8898-F33F-428C-810E-5EA5377B5F93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oleander.StrResGen.SingleFileGenerator.Tests", "tests\Oleander.StrResGen.SingleFileGenerator.Tests.csproj", "{7C8CEAE8-A1F8-42F4-A4F8-12BCC5D5A4B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "tests\Tests.csproj", "{7C8CEAE8-A1F8-42F4-A4F8-12BCC5D5A4B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{4A372122-3B5E-4A9A-B78B-15B4761F9FFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oleander.StrResGen.SingleFileGenerator.Samples", "samples\Oleander.StrResGen.SingleFileGenerator.Samples.csproj", "{E86F14F5-6777-464F-9D31-14B630FE9AD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples", "samples\Samples.csproj", "{E86F14F5-6777-464F-9D31-14B630FE9AD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

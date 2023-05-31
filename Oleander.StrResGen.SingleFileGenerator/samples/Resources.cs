@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Oleander.StrResGen.SingleFileGenerator.Samples
+namespace Samples
 {
     internal static class Resources
     {
