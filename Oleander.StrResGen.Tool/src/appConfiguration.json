@@ -22,7 +22,7 @@
     "LogLevel": {
       "Default": "Debug",
       "Microsoft": "Debug",
-      "Olenamder": "Debug"
+      "Olenander": "Debug"
     },
     "Olenamder": {
       "LogLevel": {
