@@ -70,7 +70,7 @@ internal class CodeGenerator
         if (!File.Exists(inputFileName))
         {
             var content = $"[strings]{Environment.NewLine}Test(string s)=Test: {{0}}{Environment.NewLine}{Environment.NewLine}[strings.de]{Environment.NewLine}Test(string s)=German Test: {{0}}";
-            File.WriteAllText(inputFileName, content);
+            File.WriteAllText(inputFileName, content, Encoding.UTF8);
             generatedFiles.Add(inputFileName);
         }
 
