@@ -9,6 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A8885FCD-DF1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oleander.StrResGen", "..\Oleander.StrResGen\src\Oleander.StrResGen.csproj", "{F8D57B8B-128C-47B3-8189-75F2E09D7F88}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{783BCF3E-B582-4E6A-9418-22DCC9CEF1E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{1D42CF6B-6465-4597-9138-2273D35FB8F7}"
+	ProjectSection(SolutionItems) = preProject
+		..\common\targets\common.targets = ..\common\targets\common.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +37,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{028A3786-5980-4BD8-8AD4-9525ECF1A59E} = {A8885FCD-DF1F-4952-A19F-55212DD9F3FC}
 		{F8D57B8B-128C-47B3-8189-75F2E09D7F88} = {A8885FCD-DF1F-4952-A19F-55212DD9F3FC}
+		{1D42CF6B-6465-4597-9138-2273D35FB8F7} = {783BCF3E-B582-4E6A-9418-22DCC9CEF1E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {079C644F-B7A5-4A24-978C-7DDBB3ABE5BB}
