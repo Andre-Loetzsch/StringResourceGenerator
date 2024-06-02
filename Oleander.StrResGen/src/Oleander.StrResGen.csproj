@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\Common\targets\common.targets" />
+
   <PropertyGroup>
-    <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <SourceRevisionId>04e852745cb88b8da59cc8888eecb49d9defb4b6</SourceRevisionId>
+    <TargetFrameworks>net8.0;net48</TargetFrameworks>
+    <AssemblyVersion>1.4.0.1</AssemblyVersion>
+    <SourceRevisionId>8a96292650d867ce598f1c33e69369dfbc7a447b</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -11,7 +13,6 @@
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
   </PropertyGroup>
 
-  <Import Project="..\..\Common\targets\common.targets" />
 
   <ItemGroup>
     <None Remove="Template.xml" />

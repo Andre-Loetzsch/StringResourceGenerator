@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\Common\targets\common.targets" />
+
   <PropertyGroup>
     <AssemblyVersion>1.4.0.0</AssemblyVersion>
     <SourceRevisionId>c76d2932e14d3ce46ccc924b9a6aa44fe6ba155d</SourceRevisionId>
@@ -9,8 +11,6 @@
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
   </PropertyGroup>
-
-  <Import Project="..\..\Common\targets\common.targets" />
 
   <PropertyGroup>
     <TargetFrameworks>net48</TargetFrameworks>

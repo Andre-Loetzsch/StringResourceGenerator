@@ -3,7 +3,6 @@
   <Import Project="..\..\Common\targets\common.targets" />
 
   <PropertyGroup>
-    <Product>String Resource Generator Samples</Product>
     <AssemblyVersion>1.4.0.0</AssemblyVersion>
     <SourceRevisionId>c76d2932e14d3ce46ccc924b9a6aa44fe6ba155d</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
