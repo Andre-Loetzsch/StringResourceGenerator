@@ -4,13 +4,14 @@
 
   <PropertyGroup>
     <Product>String Resource Generator Tests</Product>
-    <AssemblyVersion>1.4.0.1</AssemblyVersion>
-    <SourceRevisionId>04e852745cb88b8da59cc8888eecb49d9defb4b6</SourceRevisionId>
+    <AssemblyVersion>1.4.0.2</AssemblyVersion>
+    <SourceRevisionId>890dda81accb446a6be222c479a21758825fe879</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
+    <TargetFrameworks>net8.0;net48</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

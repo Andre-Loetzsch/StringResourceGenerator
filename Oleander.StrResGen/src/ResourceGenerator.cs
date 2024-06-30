@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 // ReSharper disable ExplicitCallerInfoArgument
 
 namespace Oleander.StrResGen;
@@ -161,7 +162,12 @@ public class ResourceGenerator
 
     private int Generate(string projectDir, VSProject vsProject, string projectItemDir, string inputFileName, string? nameSpace)
     {
+#if NET
+        
         var relativeDir = Path.GetRelativePath(projectDir, projectItemDir);
+#else
+        var relativeDir = Path.GetFullPath(projectItemDir).Substring(Path.GetFullPath(projectDir).Length + 1);
+#endif
 
         if (relativeDir == ".") relativeDir = string.Empty;
         var elementNameStrings = Path.Combine(relativeDir, Path.GetFileName(inputFileName));
@@ -220,7 +226,7 @@ public class ResourceGenerator
 
         if (csFile != null) csFile = Path.GetFileName(csFile);
         if (csFile != null) noneMetaData["LastGenOutput"] = csFile;
-        if (!string.IsNullOrEmpty(customToolNamespace)) noneMetaData["CustomToolNamespace"] = customToolNamespace;
+        if (!string.IsNullOrEmpty(customToolNamespace)) noneMetaData["CustomToolNamespace"] = customToolNamespace ?? string.Empty;
 
         foreach (var path in generated)
         {

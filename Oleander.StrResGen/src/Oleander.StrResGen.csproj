@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\Common\targets\common.targets" />
+  <Import Project="..\..\common\targets\common.targets" />
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net48</TargetFrameworks>
-    <AssemblyVersion>1.4.0.1</AssemblyVersion>
-    <SourceRevisionId>8a96292650d867ce598f1c33e69369dfbc7a447b</SourceRevisionId>
-    <VersionSuffix>alpha</VersionSuffix>
+    <AssemblyVersion>1.4.2.0</AssemblyVersion>
+    <SourceRevisionId>890dda81accb446a6be222c479a21758825fe879</SourceRevisionId>
+    <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>

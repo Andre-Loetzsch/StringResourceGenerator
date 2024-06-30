@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.Build.Construction;
+﻿using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
@@ -104,20 +101,20 @@ internal class VSProject
 
         if (metaData == null) return;
 
-        foreach (var (key, value) in metaData)
+        foreach (var item in metaData)
         {
-            var metaDataElement = element.Metadata.FirstOrDefault(x => x.Name == key);
+            var metaDataElement = element.Metadata.FirstOrDefault(x => x.Name == item.Key);
 
             if (metaDataElement == null)
             {
-                element.AddMetadata(key, value);
+                element.AddMetadata(item.Key, item.Value);
                 this._hasChanges = true;
                 continue;
             }
 
-            if (metaDataElement.Value == value) continue;
+            if (metaDataElement.Value == item.Value) continue;
 
-            metaDataElement.Value = value;
+            metaDataElement.Value = item.Value;
             this._hasChanges = true;
         }
     }
@@ -146,7 +143,8 @@ internal class VSProject
 
         while (parentDir != null)
         {
-            var fileInfo = parentDir.GetFiles("*.csproj").MinBy(x => x.FullName);
+            //var fileInfo = parentDir.GetFiles("*.csproj").MinBy(x => x.FullName);
+            var fileInfo = parentDir.GetFiles("*.csproj").OrderBy(x => x.Length).FirstOrDefault();
 
             if (fileInfo != null)
             {
@@ -181,11 +179,16 @@ internal class VSProject
         var projectName = Path.GetFileName(projectFileName);
         if (projectName.Length < 8) return false;
 
-        projectName = projectName[..^7];
+        //projectName = projectName[..^7];
+        projectName = projectName.Substring(0, projectName.Length -7);
+
+
 
         if (itemDir.Length < projectDir.Length) return false;
 
-        itemNamespace = string.Concat(projectName, itemDir[projectDir.Length..]).Replace(Path.DirectorySeparatorChar, '.');
+        //itemNamespace = string.Concat(projectName, itemDir[projectDir.Length..]).Replace(Path.DirectorySeparatorChar, '.');
+        itemNamespace = string.Concat(projectName, itemDir.Substring(projectDir.Length)).Replace(Path.DirectorySeparatorChar, '.');
+
         return true;
     }
 

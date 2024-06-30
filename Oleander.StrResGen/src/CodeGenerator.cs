@@ -56,7 +56,8 @@ internal class CodeGenerator
         this._errorStringBuilder.Clear();
 
         var fileExtension = Path.GetExtension(inputFileName);
-        var outputFileName = string.Concat(inputFileName[..^fileExtension.Length], ".cs");
+        //var outputFileName = string.Concat(inputFileName[..^fileExtension.Length], ".cs");
+        var outputFileName = string.Concat(inputFileName.Substring(0, inputFileName.Length - fileExtension.Length), ".cs");
 
         if (!fileExtension.Equals(".strings", StringComparison.InvariantCultureIgnoreCase))
         {
@@ -166,9 +167,11 @@ internal class CodeGenerator
                         doc = null;
                     }
 
-                    if (line.Trim().ToLower()[..8] == "[strings")
+                    //if (line.Trim().ToLower()[..8] == "[strings")
+                    if (line.Trim().ToLower().Substring(0, 8) == "[strings")
                     {
-                        var strLocale = line.Trim()[8..^1];
+                        var strLocale = line.Trim().Substring(8, line.Length - 9);
+
                         if (strLocale != "") locale = strLocale;
                         doc = new XmlDocument();
 
@@ -190,15 +193,19 @@ internal class CodeGenerator
 
 
                 // Could use regex here, but this is probably faster.
-                var split = line.IndexOf('=');
-                if (split == -1)
+                var splitIndex = line.IndexOf('=');
+
+                if (splitIndex == -1)
                 {
                     this.ReportWarning(3, $"{line} -> Invalid resource, missing = sign", lineNo);
                     continue;
                 }
 
-                var res = line[..split].Trim();
-                var text = line[(split + 1)..].Trim();
+                //var res = line[..split].Trim(); 
+                var res = line.Substring(0, splitIndex).Trim();
+                //var text = line[(split + 1)..].Trim();
+                var text = line.Substring(splitIndex + 1).Trim();
+
                 string? comment = null;
 
                 if (res.Length == 0)
@@ -214,23 +221,25 @@ internal class CodeGenerator
                     continue;
                 }
 
-                var resArgSplit = res.IndexOf('(');
-                if (resArgSplit > -1)
+                var resArgSplitIndex = res.IndexOf('(');
+                if (resArgSplitIndex > -1)
                 {
-                    if (resArgSplit == 0)
+                    if (resArgSplitIndex == 0)
                     {
                         this.ReportWarning(5, $"{line} -> Invalid resource, no resource name", lineNo);
                         continue;
                     }
 
-                    var resArgSplit2 = res.IndexOf(')', resArgSplit);
+                    var resArgSplit2 = res.IndexOf(')', resArgSplitIndex);
                     if (resArgSplit2 == -1)
                     {
                         this.ReportWarning(6, $"{line} _> Invalid resource, missing end bracket on arguments", lineNo);
                         continue;
                     }
-                    comment = res.Substring(resArgSplit + 1, resArgSplit2 - resArgSplit - 1);
-                    res = res[..resArgSplit];
+                    comment = res.Substring(resArgSplitIndex + 1, resArgSplit2 - resArgSplitIndex - 1);
+                    //res = res[..resArgSplitIndex];
+                    res = res.Substring(0, resArgSplitIndex);
+
                 }
 
                 var el = doc.CreateElement("data");
@@ -623,10 +632,13 @@ internal class CodeGenerator
 
             // The VS Generator always lower cases the first letter, which is not
             // wanted in this case.
-            safeKey = char.ToUpper(safeKey[0], CultureInfo.InvariantCulture) + safeKey[1..];
+            //safeKey = char.ToUpper(safeKey[0], CultureInfo.InvariantCulture) + safeKey[1..];
+            safeKey = char.ToUpper(safeKey[0], CultureInfo.InvariantCulture) + safeKey.Substring(1);
+
 
             // Get parameter names from comma sep names in comment
-            var parameterNames = resource.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            //var parameterNames = resource.Value.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            var parameterNames = resource.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (parameterNames.Length > 0 || options.GenerateMethodsOnly)
             {
@@ -648,8 +660,11 @@ internal class CodeGenerator
                     if (parameterName.IndexOf(' ') > -1)
                     {
                         // parameter name includes type.
-                        var typeName = MapType(parameterName[..parameterName.IndexOf(' ')].Trim());
-                        parameterName = parameterName[(parameterName.IndexOf(' ') + 1)..].Trim();
+                        //var typeName = MapType(parameterName[..parameterName.IndexOf(' ')].Trim());
+                        var typeName = MapType(parameterName.Substring(0, parameterName.IndexOf(' ')).Trim());
+                        //parameterName = parameterName[(parameterName.IndexOf(' ') + 1)..].Trim();
+                        parameterName = parameterName.Substring(parameterName.IndexOf(' ') + 1).Trim();
+
 
                         mGetString.Parameters.Add(new(typeName, parameterName));
                     }
@@ -782,7 +797,8 @@ internal class CodeGenerator
 
         if (localeIndex != -1 && IsCultureSpecified(inputFileName))
         {
-            return resFilename[localeIndex..];
+            //return resFilename[localeIndex..];
+            return resFilename.Substring(localeIndex);
         }
 
         return string.Empty;
@@ -820,8 +836,15 @@ internal class CodeGenerator
 
         if (pos <= -1) return true;
 
-        var opt = line[2..pos].Trim();
-        var arg = line[(pos + 1)..].Trim();
+        //var opt = line[2..pos].Trim();
+        var opt = line.Substring(2, pos).Trim();
+
+        //var arg = line[(pos + 1)..].Trim();
+        var arg = line.Substring(pos + 1).Trim();
+
+
+
+
 
         // Add to the headers
         var resHeaderEl = template.CreateElement("resheader");
@@ -838,11 +861,15 @@ internal class CodeGenerator
 
     private static bool IsCultureSpecified(string stringsSource)
     {
-        var localeIndex = Path.GetFileNameWithoutExtension(stringsSource).LastIndexOf('.');
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(stringsSource);
+        var localeIndex = fileNameWithoutExtension.LastIndexOf('.');
 
         if (localeIndex == -1) return false;
+#if NET
+        var cultureX = fileNameWithoutExtension[(localeIndex + 1)..];
+#endif
+        var culture = fileNameWithoutExtension.Substring(localeIndex + 1);
 
-        var culture = Path.GetFileNameWithoutExtension(stringsSource)[(localeIndex + 1)..];
         return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(existingCulture => existingCulture.ToString() == culture);
     }
 
