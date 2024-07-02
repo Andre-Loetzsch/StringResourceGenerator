@@ -17,8 +17,8 @@ env:
   PACKOUTDIR: ${{ github.workspace }}\packoutput
                     
 jobs:
-  deploy_dotnet7:
-    name: 'Deploy dotnet 7.0.x packages'
+  deploy_dotnet8:
+    name: 'Deploy dotnet 8.0.x packages'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
