@@ -41,6 +41,7 @@ jobs:
         run: dotnet pack "${{env.SOLUTION}}" --configuration Debug --output "${{env.PACKOUTDIR}}" --no-restore --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
 
       - name: 'Push nuget packages'
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
 
