@@ -4,8 +4,8 @@
 
   <PropertyGroup>
     <Product>String Resource Generator Tests</Product>
-    <AssemblyVersion>1.5.0.0</AssemblyVersion>
-    <SourceRevisionId>86f369b6a0da875f2244216f4f0173a7ea72d80b</SourceRevisionId>
+    <AssemblyVersion>1.5.0.1</AssemblyVersion>
+    <SourceRevisionId>dca790a72bc6c46b066dfdc26f218babba2bd219</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>

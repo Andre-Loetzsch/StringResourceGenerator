@@ -51,10 +51,10 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v4
      
-      - name: 'Install dotnet'
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+      # - name: 'Install dotnet'
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: '8.0.x'
 
       - name: 'Add GitHub to Nuget source'
         uses: 'Andre-Loetzsch/actions/addGitHubToNugetSource@v1'

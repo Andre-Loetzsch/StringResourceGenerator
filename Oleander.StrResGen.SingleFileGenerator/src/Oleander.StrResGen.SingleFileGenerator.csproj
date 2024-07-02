@@ -3,8 +3,8 @@
   <Import Project="..\..\Common\targets\common.targets" />
 
   <PropertyGroup>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <SourceRevisionId>c76d2932e14d3ce46ccc924b9a6aa44fe6ba155d</SourceRevisionId>
+    <AssemblyVersion>1.4.1.0</AssemblyVersion>
+    <SourceRevisionId>dca790a72bc6c46b066dfdc26f218babba2bd219</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -25,9 +25,8 @@
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.5.33428.388" ExcludeAssets="runtime">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.VSHost">
-      <Version>17.5.33428.388</Version>
-    </PackageReference>
+
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.VSHost" Version="17.5.33428.388" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.5.4074" />
   </ItemGroup>
 </Project>
