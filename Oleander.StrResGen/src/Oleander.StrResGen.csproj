@@ -3,9 +3,9 @@
   <Import Project="..\..\common\targets\common.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net48</TargetFrameworks>
-    <AssemblyVersion>1.4.2.0</AssemblyVersion>
-    <SourceRevisionId>890dda81accb446a6be222c479a21758825fe879</SourceRevisionId>
+    <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
+    <AssemblyVersion>1.4.3.0</AssemblyVersion>
+    <SourceRevisionId>86f369b6a0da875f2244216f4f0173a7ea72d80b</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>

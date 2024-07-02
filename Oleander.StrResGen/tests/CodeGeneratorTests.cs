@@ -42,4 +42,15 @@ public class CodeGeneratorTests
             File.Delete(file);
         }
     }
+
+    [Fact]
+    public void Test_IsCultureSpecified()
+    {
+        Assert.False(CodeGenerator.IsCultureSpecified(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SR.srt.resx")));
+        Assert.False(CodeGenerator.IsCultureSpecified(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SR.srt.X.resx")));
+        Assert.True(CodeGenerator.IsCultureSpecified(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SR.srt.de.resx")));
+        Assert.True(CodeGenerator.IsCultureSpecified(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SR.srt.en.resx")));
+        Assert.True(CodeGenerator.IsCultureSpecified(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SR.srt.de-de.resx")));
+        Assert.True(CodeGenerator.IsCultureSpecified(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SR.srt.en-US.resx")));
+    }
 }

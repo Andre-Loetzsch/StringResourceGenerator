@@ -163,10 +163,12 @@ public class ResourceGenerator
     private int Generate(string projectDir, VSProject vsProject, string projectItemDir, string inputFileName, string? nameSpace)
     {
 #if NET
-        
+
         var relativeDir = Path.GetRelativePath(projectDir, projectItemDir);
 #else
-        var relativeDir = Path.GetFullPath(projectItemDir).Substring(Path.GetFullPath(projectDir).Length + 1);
+
+        var relativeDir = projectItemDir.Length > projectDir.Length ?
+            Path.GetFullPath(projectItemDir).Substring(Path.GetFullPath(projectDir).Length).Trim('\\') : string.Empty;
 #endif
 
         if (relativeDir == ".") relativeDir = string.Empty;

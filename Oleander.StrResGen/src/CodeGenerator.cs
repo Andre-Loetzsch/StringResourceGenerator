@@ -1,10 +1,6 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
@@ -58,6 +54,7 @@ internal class CodeGenerator
         var fileExtension = Path.GetExtension(inputFileName);
         //var outputFileName = string.Concat(inputFileName[..^fileExtension.Length], ".cs");
         var outputFileName = string.Concat(inputFileName.Substring(0, inputFileName.Length - fileExtension.Length), ".cs");
+
 
         if (!fileExtension.Equals(".strings", StringComparison.InvariantCultureIgnoreCase))
         {
@@ -170,6 +167,7 @@ internal class CodeGenerator
                     //if (line.Trim().ToLower()[..8] == "[strings")
                     if (line.Trim().ToLower().Substring(0, 8) == "[strings")
                     {
+                        //var strLocale = line.Trim()[8..^1];
                         var strLocale = line.Trim().Substring(8, line.Length - 9);
 
                         if (strLocale != "") locale = strLocale;
@@ -837,7 +835,7 @@ internal class CodeGenerator
         if (pos <= -1) return true;
 
         //var opt = line[2..pos].Trim();
-        var opt = line.Substring(2, pos).Trim();
+        var opt = line.Substring(2, pos -2).Trim();
 
         //var arg = line[(pos + 1)..].Trim();
         var arg = line.Substring(pos + 1).Trim();
@@ -859,18 +857,17 @@ internal class CodeGenerator
         return true;
     }
 
-    private static bool IsCultureSpecified(string stringsSource)
+    internal static bool IsCultureSpecified(string stringsSource)
     {
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(stringsSource);
         var localeIndex = fileNameWithoutExtension.LastIndexOf('.');
 
         if (localeIndex == -1) return false;
-#if NET
-        var cultureX = fileNameWithoutExtension[(localeIndex + 1)..];
-#endif
-        var culture = fileNameWithoutExtension.Substring(localeIndex + 1);
 
-        return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(existingCulture => existingCulture.ToString() == culture);
+        //var culture = Path.GetFileNameWithoutExtension(stringsSource)[(localeIndex + 1)..];
+        var culture = fileNameWithoutExtension.Substring(localeIndex + 1);
+        return CultureInfo.GetCultures(CultureTypes.AllCultures)
+            .Any(existingCulture => string.Equals(existingCulture.ToString(), culture, StringComparison.InvariantCultureIgnoreCase));
     }
 
     #endregion
