@@ -3,15 +3,16 @@
   <Import Project="..\..\common\targets\common.targets" />
 
   <PropertyGroup>
+    <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
     <Product>String Resource Generator Tests</Product>
-    <AssemblyVersion>1.5.0.1</AssemblyVersion>
-    <SourceRevisionId>dca790a72bc6c46b066dfdc26f218babba2bd219</SourceRevisionId>
+    <AssemblyVersion>1.5.0.2</AssemblyVersion>
+    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
-    <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

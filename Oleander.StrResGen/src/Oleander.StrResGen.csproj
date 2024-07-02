@@ -1,16 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Project="..\..\common\targets\common.targets" />
-
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
-    <AssemblyVersion>1.4.3.0</AssemblyVersion>
-    <SourceRevisionId>86f369b6a0da875f2244216f4f0173a7ea72d80b</SourceRevisionId>
+    <AssemblyVersion>1.4.3.1</AssemblyVersion>
+    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
+  </PropertyGroup>
+
+  <Import Project="..\..\common\targets\common.targets" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

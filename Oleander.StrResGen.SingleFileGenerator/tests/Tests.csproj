@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Project="..\..\common\targets\common.targets" />
-
   <PropertyGroup>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <SourceRevisionId>c76d2932e14d3ce46ccc924b9a6aa44fe6ba155d</SourceRevisionId>
+    <AssemblyVersion>1.4.0.1</AssemblyVersion>
+    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
   </PropertyGroup>
+
+  <Import Project="..\..\common\targets\common.targets" />
 
   <PropertyGroup>
     <TargetFrameworks>net48</TargetFrameworks>
@@ -21,7 +20,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-
   </ItemGroup>
 
   <ItemGroup>

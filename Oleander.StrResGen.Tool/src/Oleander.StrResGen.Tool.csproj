@@ -1,21 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Project="..\..\common\targets\common.targets" />
-
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <OutputType>Exe</OutputType>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>strresgen</ToolCommandName>
-    <PackageId>dotnet-oleander-strresgen-tool</PackageId>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
-    <SourceRevisionId>8a96292650d867ce598f1c33e69369dfbc7a447b</SourceRevisionId>
+    <AssemblyVersion>0.0.1.1</AssemblyVersion>
+    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>strresgen</ToolCommandName>
+    <PackageId>dotnet-oleander-strresgen-tool</PackageId>
   </PropertyGroup>
+
+  <Import Project="..\..\common\targets\common.targets" />
 
   <ItemGroup>
     <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.0.1.6">
@@ -44,5 +42,4 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>
