@@ -1,10 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\.targets\common.targets" />
+  <Import Project="..\..\Common\targets\common.targets" />
 
   <PropertyGroup>
-    <Product>String Resource Generator Samples</Product>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <SourceRevisionId>c76d2932e14d3ce46ccc924b9a6aa44fe6ba155d</SourceRevisionId>
+    <VersionSuffix></VersionSuffix>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
+    <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.0.1.6-dev">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="CombinedStrings\SR.cs">
@@ -19,8 +32,6 @@
     </Compile>
   </ItemGroup>
 
-
-  
 
   <ItemGroup>
     <None Update="CombinedStrings\SR.strings">
@@ -94,5 +105,4 @@
       <DesignTime>True</DesignTime>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>

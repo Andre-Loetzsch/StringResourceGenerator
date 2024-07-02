@@ -11,6 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CC3D2BBF-45D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7D3B8F3B-4549-4A50-921B-9166C6EBAC01}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{33412DF5-D0E8-41F1-A78A-2511106698F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{313360BB-6228-416E-8F09-8D9D18C6266F}"
+	ProjectSection(SolutionItems) = preProject
+		..\common\targets\common.targets = ..\common\targets\common.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +39,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1BB5E054-295F-42C4-B201-8A7CF7D3A561} = {CC3D2BBF-45DA-42AE-BEFE-FD40E8DF8A15}
 		{9FD674FB-D2FC-419E-8C20-9E3C728810AC} = {7D3B8F3B-4549-4A50-921B-9166C6EBAC01}
+		{313360BB-6228-416E-8F09-8D9D18C6266F} = {33412DF5-D0E8-41F1-A78A-2511106698F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B822E35F-46F2-4751-B163-663865509B71}

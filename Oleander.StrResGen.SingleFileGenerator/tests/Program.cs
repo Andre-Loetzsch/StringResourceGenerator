@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading;
+﻿using Oleander.StrResGen.SingleFileGenerator;
 using Oleander.StrResGen.SingleFileGenerator.ExternalProcesses;
 
-namespace Oleander.StrResGen.SingleFileGenerator.Tests
+namespace Tests
 {
     internal class Program
     {
