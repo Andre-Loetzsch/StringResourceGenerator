@@ -32,6 +32,30 @@ jobs:
         shell: bash
         run: dotnet nuget add source --username "Andre-Loetzsch" --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Andre-Loetzsch/index.json"
 
-      - name: 'dotnet build to calculate versions'
+      - name: 'dotnet build'
         shell: bash
-        run: dotnet build "${{ env.SOLUTION }}" --configuration Debug --version-suffix dev --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
+        run: dotnet build "${{env.SOLUTION}}" --configuration Debug --version-suffix dev --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
+
+      - name: 'dotnet pack dev version'
+        shell: bash
+        run: dotnet pack "${{env.SOLUTION}}" --configuration Debug --output "${{env.PACKOUTDIR}}" --no-restore --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
+
+      - name: 'Push nuget packages'
+        shell: bash
+        run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
+
+      - name: 'delete Oleander.StrResGen.Tool-dev old packages'
+        uses: actions/delete-package-versions@v4
+        with:
+          package-name: 'Oleander.StrResGen'
+          package-type: 'nuget'
+          min-versions-to-keep: 5
+          delete-only-pre-release-versions: "true"
+
+      - name: 'delete dotnet-oleander-strresgen-tool-dev old packages'
+        uses: actions/delete-package-versions@v4
+        with:
+          package-name: 'dotnet-oleander-strresgen-tool'
+          package-type: 'nuget'
+          min-versions-to-keep: 5
+          delete-only-pre-release-versions: "true"
