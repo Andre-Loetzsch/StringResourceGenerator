@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\Common\targets\common.targets" />
+  <Import Project="..\..\common\targets\common.targets" />
 
   <PropertyGroup>
     <AssemblyVersion>1.4.0.0</AssemblyVersion>
