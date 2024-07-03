@@ -5,7 +5,7 @@ on:
    
   pull_request:
     branches:
-    - main
+    - test_pull_request
     types: [opened, reopened]
 
   workflow_dispatch:
@@ -36,6 +36,10 @@ jobs:
       - name: 'dotnet build'
         shell: bash
         run: dotnet build "${{env.SOLUTION}}" --configuration Debug --version-suffix dev --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
+
+      - name: 'dotnet test'
+        shell: bash
+        run: dotnet test "${{env.SOLUTION}}" --configuration Debug --no-build 
 
       - name: 'dotnet pack dev version'
         shell: bash
