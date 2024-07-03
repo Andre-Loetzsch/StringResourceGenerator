@@ -25,6 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{FA6C8506-8AA5-4FFC-A06E-0907330D21F7}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\deployDevNugetPackages.yml = .github\workflows\deployDevNugetPackages.yml
+		.github\workflows\deployReleaseNugetPackages.yml = .github\workflows\deployReleaseNugetPackages.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{DC920D8B-2A3D-4C72-92B2-558DD6C68218}"

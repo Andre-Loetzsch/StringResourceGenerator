@@ -51,7 +51,7 @@ jobs:
         run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
 
       - name: 'delete Oleander.StrResGen.Tool-dev old packages'
-        uses: actions/delete-package-versions@v4
+        uses: actions/delete-package-versions@v5
         with:
           package-name: 'Oleander.StrResGen'
           package-type: 'nuget'
@@ -59,7 +59,7 @@ jobs:
           delete-only-pre-release-versions: "true"
 
       - name: 'delete dotnet-oleander-strresgen-tool-dev old packages'
-        uses: actions/delete-package-versions@v4
+        uses: actions/delete-package-versions@v5
         with:
           package-name: 'dotnet-oleander-strresgen-tool'
           package-type: 'nuget'
