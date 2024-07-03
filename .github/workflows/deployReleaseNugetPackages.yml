@@ -1,11 +1,9 @@
 name: 'deployReleaseNugetPackages'
 
 on:
-  # push:
-   
   pull_request:
     branches:
-    - test_pull_request
+    - release
     types: [opened, reopened]
 
   workflow_dispatch:
@@ -34,10 +32,11 @@ jobs:
         run: dotnet nuget add source --username "Andre-Loetzsch" --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Andre-Loetzsch/index.json"
 
       - name: 'dotnet build to calculate versions'
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: dotnet build "${{env.SOLUTION}}" --configuration Release
 
-      - name: 'dotnet build to use calculated versions'
+      - name: 'dotnet build'
         shell: bash
         run: dotnet build "${{env.SOLUTION}}" --configuration Release --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
 
@@ -45,12 +44,12 @@ jobs:
         shell: bash
         run: dotnet test "${{env.SOLUTION}}" --configuration Release --no-build 
 
-      - name: 'dotnet pack dev version'
+      - name: 'dotnet pack release version'
         if: matrix.os == 'windows-latest'
         shell: bash
         run: dotnet pack "${{env.SOLUTION}}" --configuration Release --output "${{env.PACKOUTDIR}}" --no-restore --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
 
-      # - name: 'Push nuget packages'
-      #   if: matrix.os == 'windows-latest'
-      #   shell: bash
-      #   run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
+      - name: 'Push nuget packages'
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate

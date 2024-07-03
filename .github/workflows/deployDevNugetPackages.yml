@@ -1,11 +1,9 @@
 name: 'deployDevNugetPackages'
 
 on:
-  # push:
-   
   pull_request:
     branches:
-    - test_pull_request
+    - main
     types: [opened, reopened]
 
   workflow_dispatch:
