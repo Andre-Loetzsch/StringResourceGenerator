@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>1.4.3.2</AssemblyVersion>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
     <SourceRevisionId>7bd9f4e23a4ae7a03d8dc2ec31eb3e2a53348d54</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
