@@ -34,7 +34,7 @@ internal class CodeGenerator
         }
         else
         {
-            options.SRNamespace = nameSpace.Replace("-", "_").Replace(" ", "_");
+            options.SRNamespace = nameSpace!.Replace("-", "_").Replace(" ", "_");
         }
 
         return options;

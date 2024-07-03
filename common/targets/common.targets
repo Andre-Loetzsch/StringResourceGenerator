@@ -1,4 +1,10 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsPackable  Condition="$(MSBuildProjectDirectory.Contains('src'))">true</IsPackable>
+  </PropertyGroup>
+  
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
@@ -10,7 +16,7 @@
     <Company>Oleander</Company>
     <Product>$(AssemblyName)</Product>
     <Authors>Oleander</Authors>
-    <GeneratePackageOnBuild Condition="$(IsPackable) != false AND $(MSBuildProjectDirectory.Contains('src'))">true</GeneratePackageOnBuild>
+    <!--<GeneratePackageOnBuild Condition="$(IsPackable) != false AND $(MSBuildProjectDirectory.Contains('src'))">true</GeneratePackageOnBuild>-->
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>$(AssemblyName)</Description>
     <PackageProjectUrl>https://github.com/Andre-Loetzsch/StringResourceGenerator</PackageProjectUrl>
@@ -18,6 +24,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Oleander;String Resource Generator;dotnet tool; C#</PackageTags>
     <PackageReleaseNotes>$(AssemblyName) Version:$(Version) Release:$([System.DateTime]::UtcNow.ToString('yyMMdd'))</PackageReleaseNotes>
+    <PackageVersion>$(Version)</PackageVersion>
+    <IncludeSymbols>false</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -25,6 +34,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\"/>
+    <None Include="$(ProjectDir)README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
+
+  <PropertyGroup Condition="$(Configuration) == 'Debug'">
+    <EmbedAllSources>true</EmbedAllSources>
+    <DebugType>Embedded</DebugType>
+  </PropertyGroup>
 </Project>

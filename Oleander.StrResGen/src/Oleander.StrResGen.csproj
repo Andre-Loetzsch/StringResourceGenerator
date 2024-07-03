@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>1.4.3.1</AssemblyVersion>
-    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
+    <AssemblyVersion>1.4.4.0</AssemblyVersion>
+    <SourceRevisionId>da012f16d525fdb5fb45851de21c5ac1598867ad</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -14,10 +14,15 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
+    <!--<Nullable Condition="'$(TargetFramework)' == 'net48'">disable</Nullable>-->
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Template.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\common\src\NullableAttributes.cs" Link="Common\NullableAttributes.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,5 +37,9 @@
     <PackageReference Include="Microsoft.Build" Version="17.10.4" />
     <PackageReference Include="Oleander.Extensions.Logging.Abstractions" Version="1.1.23347.11358" />
     <PackageReference Include="System.CodeDom" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 </Project>
