@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>1.4.1.1</AssemblyVersion>
-    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <SourceRevisionId>7bd9f4e23a4ae7a03d8dc2ec31eb3e2a53348d54</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -13,6 +13,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
