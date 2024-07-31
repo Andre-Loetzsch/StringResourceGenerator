@@ -8,8 +8,6 @@
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
-    <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
-    <!--<InformationalVersion>$(AssemblyVersion)</InformationalVersion>-->
   </PropertyGroup>
 
   <Import Project="..\..\common\targets\common.targets" />

@@ -6,13 +6,12 @@
     <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
     <Product>String Resource Generator Tests</Product>
-    <AssemblyVersion>1.5.0.2</AssemblyVersion>
-    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
+    <AssemblyVersion>1.5.0.3</AssemblyVersion>
+    <SourceRevisionId>834c5e9f2bf310ca3528757ce10bad7f38d6c0d5</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
-    <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
