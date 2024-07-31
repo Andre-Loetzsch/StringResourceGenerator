@@ -1,12 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>1.4.4.0</AssemblyVersion>
-    <SourceRevisionId>da012f16d525fdb5fb45851de21c5ac1598867ad</SourceRevisionId>
-    <VersionSuffix></VersionSuffix>
+    <AssemblyVersion>1.4.4.1</AssemblyVersion>
+    <SourceRevisionId>834c5e9f2bf310ca3528757ce10bad7f38d6c0d5</SourceRevisionId>
+    <VersionSuffix>test</VersionSuffix>
+    
+
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
+    <!--<InformationalVersion>$(AssemblyVersion)</InformationalVersion>-->
   </PropertyGroup>
 
   <Import Project="..\..\common\targets\common.targets" />
@@ -30,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.0.1.6">
+    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

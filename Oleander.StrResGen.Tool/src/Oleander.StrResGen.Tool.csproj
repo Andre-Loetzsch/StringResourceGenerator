@@ -16,7 +16,7 @@
   <Import Project="..\..\common\targets\common.targets" />
 
   <ItemGroup>
-    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.0.1.6">
+    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

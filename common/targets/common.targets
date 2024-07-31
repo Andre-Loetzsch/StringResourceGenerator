@@ -10,12 +10,15 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Product>$(AssemblyName)</Product>
-    <Description>$(AssemblyName)</Description><LangVersion>latest</LangVersion>
+    <Description>$(AssemblyName)</Description>
+    <LangVersion>latest</LangVersion>
     <Copyright>Copyright © Oleander $([System.DateTime]::UtcNow.Year)</Copyright>
     <Company>Oleander</Company>
-    <Product>$(AssemblyName)</Product>
     <Authors>Oleander</Authors>
+    
+    <Product>$(AssemblyName)-$(TargetFramework)+$(Configuration)</Product>
+
+
     <!--<GeneratePackageOnBuild Condition="$(IsPackable) != false AND $(MSBuildProjectDirectory.Contains('src'))">true</GeneratePackageOnBuild>-->
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>$(AssemblyName)</Description>
@@ -27,7 +30,23 @@
     <PackageVersion>$(Version)</PackageVersion>
     <IncludeSymbols>false</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+
+    <!--<PackageVersion Condition="'$(BuildSuffix)' != ''">1.0-$(BuildSuffix)</PackageVersion>-->
+    <!--<PackageVersion>1.2.3-test</PackageVersion>-->
+
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
+    <Version>$(AssemblyVersion)-$(VersionDevSuffix)</Version>
+    <InformationalVersion>$(AssemblyVersion)+$(VersionDevSuffix)</InformationalVersion>
+    <Product>$(AssemblyName)-$(TargetFramework)+$(VersionDevSuffix)+$(Configuration)</Product>
+
+    <PackageVersion>$(Version)</PackageVersion>
+
+  </PropertyGroup>
+
+
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <NoWarn>$(NoWarn);nullable</NoWarn>
