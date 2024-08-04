@@ -15,11 +15,8 @@
     <Copyright>Copyright © Oleander $([System.DateTime]::UtcNow.Year)</Copyright>
     <Company>Oleander</Company>
     <Authors>Oleander</Authors>
-    
     <Product Condition="'$(VersionSuffix)' != ''">$(AssemblyName)-$(TargetFramework)+$(VersionSuffix)+$(Configuration)</Product>
     <Product Condition="'$(VersionSuffix)' == ''">$(AssemblyName)-$(TargetFramework)+$(Configuration)</Product>
-
-
     <GeneratePackageOnBuild Condition="$(IsPackable) != false AND $(MSBuildProjectDirectory.Contains('src'))">true</GeneratePackageOnBuild>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>$(AssemblyName)</Description>
@@ -29,27 +26,16 @@
     <PackageTags>Oleander;String Resource Generator;dotnet tool; C#</PackageTags>
     <PackageReleaseNotes>$(AssemblyName) Version:$(Version) Release:$([System.DateTime]::UtcNow.ToString('yyMMdd'))</PackageReleaseNotes>
     <PackageVersion>$(Version)</PackageVersion>
-    <IncludeSymbols>false</IncludeSymbols>
+    <IncludeSymbols Condition="$(Configuration) == 'Release'">false"</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
-
-    <!--<PackageVersion Condition="'$(BuildSuffix)' != ''">1.0-$(BuildSuffix)</PackageVersion>-->
-    <!--<PackageVersion>1.2.3-test</PackageVersion>-->
-
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
     <Version>$(AssemblyVersion)-$(VersionDevSuffix)</Version>
-    <!--<Version>1.2.3.4-$(VersionDevSuffix)</Version>-->
-    
     <InformationalVersion>$(AssemblyVersion)+$(VersionDevSuffix)</InformationalVersion>
     <Product>$(AssemblyName)-$(TargetFramework)+$(VersionDevSuffix)+$(Configuration)</Product>
-
     <PackageVersion>$(Version)</PackageVersion>
-
   </PropertyGroup>
-
-
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <NoWarn>$(NoWarn);nullable</NoWarn>
