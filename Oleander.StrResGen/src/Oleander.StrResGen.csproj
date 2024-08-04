@@ -3,8 +3,6 @@
     <AssemblyVersion>1.4.4.1</AssemblyVersion>
     <SourceRevisionId>834c5e9f2bf310ca3528757ce10bad7f38d6c0d5</SourceRevisionId>
     <VersionSuffix>test</VersionSuffix>
-    
-
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
@@ -23,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\common\src\NullableAttributes.cs" Link="Common\NullableAttributes.cs" />
+    <Compile Include="..\..\common\src\NullableAttributes.cs" Link="common\NullableAttributes.cs" />
   </ItemGroup>
 
   <ItemGroup>
