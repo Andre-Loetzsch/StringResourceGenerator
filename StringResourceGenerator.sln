@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{313360BB-6228-416E-8F09-8D9D18C6266F}"
 	ProjectSection(SolutionItems) = preProject
 		common\targets\common.targets = common\targets\common.targets
+		common\targets\generatePackage.targets = common\targets\generatePackage.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oleander.StrResGen", "Oleander.StrResGen\src\Oleander.StrResGen.csproj", "{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}"
