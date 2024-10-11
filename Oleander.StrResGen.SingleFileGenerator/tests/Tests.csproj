@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>1.4.0.1</AssemblyVersion>
-    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
+    <AssemblyVersion>1.4.1.0</AssemblyVersion>
+    <SourceRevisionId>f559042f0cb3c2100f4f8e77288c7a70fa176c35</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -24,5 +24,28 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Oleander.StrResGen.SingleFileGenerator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR.srt.de-DE.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
