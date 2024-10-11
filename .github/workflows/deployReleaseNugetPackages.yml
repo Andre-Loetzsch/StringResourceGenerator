@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
     - release
-    types: [opened, reopened]
+    # types: [opened, reopened]
 
   workflow_dispatch:
 
@@ -13,7 +13,7 @@ env:
   SOLUTION: ${{ github.workspace }}\StringResourceGenerator.sln
 jobs:
   deploy_dev:
-    name: 'Deploy dev packages'
+    name: 'Deploy release packages'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -21,11 +21,6 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
-     
-      # - name: 'Install dotnet'
-      #   uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: '8.0.x'
 
       - name: 'nuget add source'
         shell: bash
@@ -34,11 +29,11 @@ jobs:
       - name: 'dotnet build to calculate versions'
         if: matrix.os == 'windows-latest'
         shell: bash
-        run: dotnet build "${{env.SOLUTION}}" --configuration Release
+        run: dotnet build "${{env.SOLUTION}}" --configuration Release --property:GeneratePackageOnBuild=false 
 
       - name: 'dotnet build'
         shell: bash
-        run: dotnet build "${{env.SOLUTION}}" --configuration Release --property:versioningTask-disabled=true --property:NoWarn=OAVBT46
+        run: dotnet build "${{env.SOLUTION}}" --configuration Release --property:versioningTask-disabled=true
 
       - name: 'dotnet test'
         shell: bash
@@ -52,4 +47,9 @@ jobs:
       - name: 'Push nuget packages'
         if: matrix.os == 'windows-latest'
         shell: bash
-        run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
+        run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" --api-key ${{secrets.GITHUB_TOKEN}} --source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
+
+      - name: 'Push nuget packages to NugetOrg'
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" --api-key "${{ secrets.NUGETORG_ACCESS_TOKEN }}" --source https://api.nuget.org/v3/index.json --skip-duplicate

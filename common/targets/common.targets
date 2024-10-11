@@ -1,66 +1,32 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <IsPackable  Condition="$(MSBuildProjectDirectory.Contains('src'))">true</IsPackable>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Description>$(AssemblyName)</Description>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <WarningsAsErrors>OAVBT47</WarningsAsErrors>
+    <Product Condition="'$(VersionSuffix)' != ''">$(AssemblyName)-$(TargetFramework)+$(VersionSuffix)+$(Configuration)</Product>
+    <Product Condition="'$(VersionSuffix)' == ''">$(AssemblyName)-$(TargetFramework)+$(Configuration)</Product>
     <LangVersion>latest</LangVersion>
     <Copyright>Copyright © Oleander $([System.DateTime]::UtcNow.Year)</Copyright>
     <Company>Oleander</Company>
+    <Title>$(AssemblyName)</Title>
     <Authors>Oleander</Authors>
-    
-    <Product Condition="'$(VersionSuffix)' != ''">$(AssemblyName)-$(TargetFramework)+$(VersionSuffix)+$(Configuration)</Product>
-    <Product Condition="'$(VersionSuffix)' == ''">$(AssemblyName)-$(TargetFramework)+$(Configuration)</Product>
-
-
-    <GeneratePackageOnBuild Condition="$(IsPackable) != false AND $(MSBuildProjectDirectory.Contains('src'))">true</GeneratePackageOnBuild>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>$(AssemblyName)</Description>
-    <PackageProjectUrl>https://github.com/Andre-Loetzsch/StringResourceGenerator</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Andre-Loetzsch/StringResourceGenerator.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>Oleander;String Resource Generator;dotnet tool; C#</PackageTags>
-    <PackageReleaseNotes>$(AssemblyName) Version:$(Version) Release:$([System.DateTime]::UtcNow.ToString('yyMMdd'))</PackageReleaseNotes>
-    <PackageVersion>$(Version)</PackageVersion>
-    <IncludeSymbols>false</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
-
-    <!--<PackageVersion Condition="'$(BuildSuffix)' != ''">1.0-$(BuildSuffix)</PackageVersion>-->
-    <!--<PackageVersion>1.2.3-test</PackageVersion>-->
-
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
-    <Version>$(AssemblyVersion)-$(VersionDevSuffix)</Version>
-    <!--<Version>1.2.3.4-$(VersionDevSuffix)</Version>-->
-    
-    <InformationalVersion>$(AssemblyVersion)+$(VersionDevSuffix)</InformationalVersion>
-    <Product>$(AssemblyName)-$(TargetFramework)+$(VersionDevSuffix)+$(Configuration)</Product>
-
-    <PackageVersion>$(Version)</PackageVersion>
-
-  </PropertyGroup>
-
-
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <NoWarn>$(NoWarn);nullable</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="$(ProjectDir)README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
+  <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
+    <Version>$(AssemblyVersion)-$(VersionDevSuffix)</Version>
+    <InformationalVersion>$(AssemblyVersion)+$(VersionDevSuffix)</InformationalVersion>
+    <Product>$(AssemblyName)-$(TargetFramework)+$(VersionDevSuffix)+$(Configuration)</Product>
+  </PropertyGroup>
 
   <PropertyGroup Condition="$(Configuration) == 'Debug'">
     <EmbedAllSources>true</EmbedAllSources>
     <DebugType>Embedded</DebugType>
   </PropertyGroup>
 </Project>
+
