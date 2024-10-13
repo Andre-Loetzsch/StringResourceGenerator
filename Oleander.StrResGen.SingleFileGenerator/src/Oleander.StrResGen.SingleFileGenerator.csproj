@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <SourceRevisionId>f559042f0cb3c2100f4f8e77288c7a70fa176c35</SourceRevisionId>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <SourceRevisionId>7e771a4ea0fc6ee5702a183910b6410a0bdf8467</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
+    <NoWarn Condition="$(AssemblyVersion) == '3.0.0.0'">OAVBT47</NoWarn>
   </PropertyGroup>
 
   <Import Project="..\..\common\targets\common.targets" />
