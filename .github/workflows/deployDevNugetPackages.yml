@@ -25,7 +25,7 @@ jobs:
       - name: 'Install dotnet'
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.xx' 
+          dotnet-version: '8.0.403xx'
 
       - name: 'nuget add source'
         shell: bash
