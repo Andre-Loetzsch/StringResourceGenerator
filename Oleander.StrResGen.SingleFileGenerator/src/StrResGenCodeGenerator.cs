@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -19,7 +19,7 @@ namespace Oleander.StrResGen.SingleFileGenerator
 
         private readonly List<string> _errors = new List<string>();
         private readonly List<string> _warnings = new List<string>();
-    
+
 
         public override string GetDefaultExtension()
         {
