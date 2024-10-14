@@ -53,3 +53,11 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: bash
         run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" --api-key "${{ secrets.NUGETORG_ACCESS_TOKEN }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Publish extension to Marketplace
+        if: matrix.os == 'windows-latest'
+        uses: cezarypiatek/VsixPublisherAction@1.1
+        with:
+          extension-file: '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\bin\Release\Oleander.StrResGen.SingleFileGenerator.vsix'
+          publish-manifest-file: '${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\publishManifest.json'
+          personal-access-code: ${{ secrets.VS_PUBLISHER_ACCESS_TOKEN }}

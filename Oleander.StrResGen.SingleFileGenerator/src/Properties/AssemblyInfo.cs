@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Oleander.StrResGen.SingleFileGenerator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("generates culture-specific string resources")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Oleander.StrResGen.SingleFileGenerator")]
-[assembly: AssemblyCopyright("")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright © Oleander 2024")]
+[assembly: AssemblyTrademark("Oleander")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
