@@ -31,6 +31,7 @@
     <ProjectReference Include="..\src\Oleander.StrResGen.SingleFileGenerator.csproj" />
   </ItemGroup>
 
+  
   <ItemGroup>
     <EmbeddedResource Update="SR.srt.resx">
       <AutoGen>True</AutoGen>

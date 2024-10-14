@@ -1,34 +1,38 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ItemGroup>
-      <None Include="$(ProjectDir)README.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
 
-    <PropertyGroup>
-      <AssemblyVersion>3.0.0.0</AssemblyVersion>
-      <SourceRevisionId>faf9477b9b57ca19b34ec88018ea47637df14eb0</SourceRevisionId>
-     
-      <FileVersion>$(AssemblyVersion)</FileVersion>
-      <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
-      <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
+    <WarningsAsErrors>OAVBT47</WarningsAsErrors>
+    <Product Condition="'$(VersionSuffix)' != ''">$(AssemblyName)-$(TargetFramework)+$(VersionSuffix)+$(Configuration)</Product>
+    <Product Condition="'$(VersionSuffix)' == ''">$(AssemblyName)-$(TargetFramework)+$(Configuration)</Product>
+    <LangVersion>latest</LangVersion>
+    <Copyright>Copyright © Oleander $([System.DateTime]::UtcNow.Year)</Copyright>
+    <Company>Oleander</Company>
+    <Title>$(AssemblyName)</Title>
+    <Description>$(AssemblyName)</Description>
+    <SourceRevisionId>faf9477b9b57ca19b34ec88018ea47637df14eb0</SourceRevisionId>
 
-      <NoWarn Condition >$(AssemblyVersion) == '3.0.0.0' >OAVBT47</NoWarn>
-      <Nullable>disable</Nullable>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
 
-      <IsPackable>false</IsPackable>
-      <IsPackable  Condition="$(MSBuildProjectDirectory.Contains('src'))">true</IsPackable>
-    </PropertyGroup>
+    <NoWarn Condition="$(AssemblyVersion) == '3.0.0.0'">OAVBT47</NoWarn>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="$(IsPackable) != false AND $(MSBuildProjectDirectory.Contains('src'))">
-      <Version Condition="'$(BuildSuffix)' != ''">$(AssemblyVersion)-$(BuildSuffix)</Version>
-      <PackageReadmeFile>README.md</PackageReadmeFile>
-      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-      <PackageProjectUrl>https://nuget.pkg.github.com/Andre-Loetzsch/index.json</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/Andre-Loetzsch/StringResourceGenerator</RepositoryUrl>
-      <RepositoryType>git</RepositoryType>
-      <PackageTags>Oleander; StringResource Generator C#</PackageTags>
-      <PackageVersion>$(Version)</PackageVersion>
-      <PackageReleaseNotes>Version: $(PackageVersion)</PackageReleaseNotes>
-      <IncludeSymbols Condition="$(Configuration) == 'Release'">true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    </PropertyGroup>
+
+  <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
+    <Version>$(AssemblyVersion)-$(VersionDevSuffix)</Version>
+    <InformationalVersion>$(AssemblyVersion)+$(VersionDevSuffix)</InformationalVersion>
+    <Product>$(AssemblyName)-$(TargetFramework)+$(VersionDevSuffix)+$(Configuration)</Product>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration) == 'Debug'">
+    <EmbedAllSources>true</EmbedAllSources>
+    <DebugType>Embedded</DebugType>
+  </PropertyGroup>
 </Project>
+
+
+
