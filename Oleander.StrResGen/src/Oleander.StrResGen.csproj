@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>1.4.4.1</AssemblyVersion>
-    <SourceRevisionId>834c5e9f2bf310ca3528757ce10bad7f38d6c0d5</SourceRevisionId>
+    <AssemblyVersion>1.4.4.2</AssemblyVersion>
+    <SourceRevisionId>ee6249734b921f343e7bcc5760ed89c5c4706697</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -12,7 +12,7 @@
   <Import Project="..\..\common\targets\generatePackage.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
+    <TargetFrameworks>net8.0;net48</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
