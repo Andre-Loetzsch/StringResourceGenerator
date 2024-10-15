@@ -39,13 +39,12 @@ jobs:
         run: |
           msbuild.exe "${{env.SOLUTION}}" -t:Restore -t:rebuild -p:configuration="Debug" -p:VersionDevSuffix=dev -p:GeneratePackageOnBuild=false -p:versioningTask-disabled=true
 
-      # - name: 'dotnet build'
+      # - name: 'dotnet test'
       #   shell: bash
-      #   run: dotnet build "${{env.SOLUTION}}" --configuration Debug --property:VersionDevSuffix=dev --property:GeneratePackageOnBuild=false --property:versioningTask-disabled=true
+      #   run: dotnet test "${{env.SOLUTION}}" --configuration Debug --no-build 
 
-      - name: 'dotnet test'
-        shell: bash
-        run: dotnet test "${{env.SOLUTION}}" --configuration Debug --no-build 
+
+
 
       - name: 'dotnet pack dev version'
         if: matrix.os == 'windows-latest'
