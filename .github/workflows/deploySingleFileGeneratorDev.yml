@@ -55,7 +55,7 @@ jobs:
       - name: 'Push nuget packages'
         if: matrix.os == 'windows-latest'
         shell: bash
-        run: dotnet nuget push "${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\bin\Release\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
+        run: dotnet nuget push "${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\bin\Debug\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
 
 
 
