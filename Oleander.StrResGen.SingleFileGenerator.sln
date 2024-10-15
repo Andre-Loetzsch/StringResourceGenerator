@@ -15,10 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "targets", "targets", "{3133
 		common\targets\generatePackage.targets = common\targets\generatePackage.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oleander.StrResGen", "Oleander.StrResGen\src\Oleander.StrResGen.csproj", "{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Oleander.StrResGen.Tests", "Oleander.StrResGen\tests\Oleander.StrResGen.Tests.csproj", "{FF288D32-3B91-4D59-A912-FE03336C8283}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{FA6C8506-8AA5-4FFC-A06E-0907330D21F7}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\deploySingleFileGeneratorDev.yml = .github\workflows\deploySingleFileGeneratorDev.yml
@@ -39,30 +35,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Debug|arm64.Build.0 = Debug|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Debug|x86.Build.0 = Debug|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Release|arm64.ActiveCfg = Release|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Release|arm64.Build.0 = Release|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Release|x86.ActiveCfg = Release|Any CPU
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE}.Release|x86.Build.0 = Release|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Debug|arm64.Build.0 = Debug|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Debug|x86.Build.0 = Debug|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Release|arm64.ActiveCfg = Release|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Release|arm64.Build.0 = Release|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Release|x86.ActiveCfg = Release|Any CPU
-		{FF288D32-3B91-4D59-A912-FE03336C8283}.Release|x86.Build.0 = Release|Any CPU
 		{6AC32059-C6CE-41DA-84AA-64334AF42096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6AC32059-C6CE-41DA-84AA-64334AF42096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AC32059-C6CE-41DA-84AA-64334AF42096}.Debug|arm64.ActiveCfg = Debug|arm64
@@ -81,8 +53,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{313360BB-6228-416E-8F09-8D9D18C6266F} = {33412DF5-D0E8-41F1-A78A-2511106698F9}
-		{357CC0F0-B379-45F5-97AD-9FA55B90B2FE} = {CC3D2BBF-45DA-42AE-BEFE-FD40E8DF8A15}
-		{FF288D32-3B91-4D59-A912-FE03336C8283} = {7D3B8F3B-4549-4A50-921B-9166C6EBAC01}
 		{FA6C8506-8AA5-4FFC-A06E-0907330D21F7} = {DC920D8B-2A3D-4C72-92B2-558DD6C68218}
 		{6AC32059-C6CE-41DA-84AA-64334AF42096} = {CC3D2BBF-45DA-42AE-BEFE-FD40E8DF8A15}
 	EndGlobalSection
