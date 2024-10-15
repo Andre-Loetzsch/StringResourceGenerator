@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Solution
         run: |
-          msbuild.exe "${{env.SOLUTION}}" -p:configuration="Debug" -p:VersionDevSuffix=dev -p:GeneratePackageOnBuild=false -p:versioningTask-disabled=true
+          msbuild.exe "${{env.SOLUTION}}" -t:Restore -t:rebuild -p:configuration="Debug" -p:VersionDevSuffix=dev -p:GeneratePackageOnBuild=false -p:versioningTask-disabled=true
 
       # - name: 'dotnet build'
       #   shell: bash
