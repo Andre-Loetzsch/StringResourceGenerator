@@ -1,4 +1,4 @@
-name: 'deployReleaseNugetPackages'
+name: 'deploy Oleander.StrResGen.Tool release'
 
 on:
   pull_request:

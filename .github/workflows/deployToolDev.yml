@@ -1,4 +1,4 @@
-name: 'deployDevNugetPackages'
+name: 'deploy Oleander.StrResGen.Tool dev'
 
 on:
   pull_request:

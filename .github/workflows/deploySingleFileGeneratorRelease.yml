@@ -1,4 +1,4 @@
-name: 'deployReleaseNugetPackages'
+name: 'deploy Oleander.StrResGen.SingleFileGenerator release'
 
 on:
   pull_request:
