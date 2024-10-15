@@ -37,24 +37,28 @@ jobs:
 
       - name: Build Solution
         run: |
-          msbuild.exe "${{env.SOLUTION}}" -t:Restore -t:rebuild -p:configuration="Debug" -p:VersionDevSuffix=dev -p:GeneratePackageOnBuild=false -p:versioningTask-disabled=true
+          msbuild.exe "${{env.SOLUTION}}" -t:Restore -t:rebuild -p:configuration="Debug" -p:VersionDevSuffix=dev -p:GeneratePackageOnBuild=true -p:versioningTask-disabled=true
 
       # - name: 'dotnet test'
       #   shell: bash
       #   run: dotnet test "${{env.SOLUTION}}" --configuration Debug --no-build 
 
 
+      # - name: 'dotnet pack dev version'
+      #   if: matrix.os == 'windows-latest'
+      #   shell: bash
+      #   run: dotnet pack "${{env.SOLUTION}}" --configuration Debug --output "${{env.PACKOUTDIR}}" --no-restore --property:versioningTask-disabled=true --property:VersionDevSuffix=dev 
 
 
-      - name: 'dotnet pack dev version'
-        if: matrix.os == 'windows-latest'
-        shell: bash
-        run: dotnet pack "${{env.SOLUTION}}" --configuration Debug --output "${{env.PACKOUTDIR}}" --no-restore --property:versioningTask-disabled=true --property:VersionDevSuffix=dev 
+
 
       - name: 'Push nuget packages'
         if: matrix.os == 'windows-latest'
         shell: bash
-        run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
+        run: dotnet nuget push "${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\bin\Release\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
+
+
+
 
       - name: 'delete Oleander.StrResGen old packages'
         uses: actions/delete-package-versions@v5
