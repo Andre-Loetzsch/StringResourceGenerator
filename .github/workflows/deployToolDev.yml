@@ -3,7 +3,7 @@ name: 'deploy Oleander.StrResGen.Tool dev'
 on:
   pull_request:
     branches:
-    - main
+    - mainX
     # types: [opened, reopened]
 
   workflow_dispatch:
