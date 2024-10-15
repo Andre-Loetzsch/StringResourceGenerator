@@ -10,7 +10,7 @@ on:
 
 env:
   PACKOUTDIR: ${{ github.workspace }}\packoutput
-  SOLUTION: ${{ github.workspace }}\StringResourceGenerator.sln
+  SOLUTION: ${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator.sln
 jobs:
   deploy_dev:
     name: 'Deploy release packages'
