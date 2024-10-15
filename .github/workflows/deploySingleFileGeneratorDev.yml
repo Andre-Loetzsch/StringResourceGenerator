@@ -25,40 +25,24 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
       
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+      # - name: Setup NuGet
+      #   uses: NuGet/setup-nuget@v2
 
       - name: 'nuget add source'
         shell: bash
         run: dotnet nuget add source --username "Andre-Loetzsch" --password ${{secrets.GITHUB_TOKEN}} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Andre-Loetzsch/index.json"
 
-      - name: Restore Packages
-        run: nuget restore "${{env.SOLUTION}}"
+      # - name: Restore Packages
+      #   run: nuget restore "${{env.SOLUTION}}"
 
       - name: Build Solution
         run: |
           msbuild.exe "${{env.SOLUTION}}" -t:Restore -t:rebuild -p:configuration="Debug" -p:VersionDevSuffix=dev -p:GeneratePackageOnBuild=true -p:versioningTask-disabled=true
 
-      # - name: 'dotnet test'
-      #   shell: bash
-      #   run: dotnet test "${{env.SOLUTION}}" --configuration Debug --no-build 
-
-
-      # - name: 'dotnet pack dev version'
-      #   if: matrix.os == 'windows-latest'
-      #   shell: bash
-      #   run: dotnet pack "${{env.SOLUTION}}" --configuration Debug --output "${{env.PACKOUTDIR}}" --no-restore --property:versioningTask-disabled=true --property:VersionDevSuffix=dev 
-
-
-
-
       - name: 'Push nuget packages'
         if: matrix.os == 'windows-latest'
         shell: bash
         run: dotnet nuget push "${{ github.workspace }}\Oleander.StrResGen.SingleFileGenerator\src\bin\Debug\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
-
-
-
 
       - name: 'delete Oleander.StrResGen old packages'
         uses: actions/delete-package-versions@v5
