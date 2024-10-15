@@ -10,6 +10,7 @@
 
     <PropertyGroup Condition="$(IsPackable) != false AND $(MSBuildProjectDirectory.Contains('src'))">
       <Version Condition="'$(BuildSuffix)' != ''">$(AssemblyVersion)-$(BuildSuffix)</Version>
+      <Authors>Oleander</Authors>
       <PackageReadmeFile>README.md</PackageReadmeFile>
       <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
       <PackageProjectUrl>https://nuget.pkg.github.com/Andre-Loetzsch/index.json</PackageProjectUrl>

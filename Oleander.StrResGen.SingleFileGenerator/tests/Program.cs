@@ -1,5 +1,5 @@
-﻿using Oleander.StrResGen.SingleFileGenerator;
-using Oleander.StrResGen.SingleFileGenerator.ExternalProcesses;
+﻿using System;
+using Oleander.StrResGen.SingleFileGenerator;
 
 namespace Tests
 {
@@ -7,25 +7,21 @@ namespace Tests
     {
         static void Main(string[] args)
         {
+
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Run with arg1 = inputFile, arg2 = nameSpace");
+                Console.ReadLine();
+                return;
+            }
+
             var generator = new StrResGenCodeGenerator();
-            var isDotnetToolInstalled = StrResGenCodeGenerator.IsDotnetToolInstalled;
-            Console.WriteLine($"IsDotnetToolInstalled: {isDotnetToolInstalled}");
 
-            if (isDotnetToolInstalled)
-            {
-                var shouldUpdateDotnetTool = StrResGenCodeGenerator.ShouldUpdateDotnetTool;
-                Console.WriteLine($"ShouldUpdateDotnetTool: {shouldUpdateDotnetTool}");
-                Console.WriteLine($"UpdateDotnetTool: {StrResGenCodeGenerator.UpdateDotnetTool()}");
-            }
-            else
-            {
-                Console.WriteLine($"InstallDotnetTool: {StrResGenCodeGenerator.InstallDotnetTool()}");
-            }
+            var inputFileName = args[0];
+            var nameSpace = args.Length > 1 ? args[1] : null;
 
-            //var fileContent = generator.GenerateCSharpCode("D:\\dev\\git\\oleander\\StringResourceGenerator\\Oleander.StrResGen.SingleFileGenerator\\tests\\SR.strings", "");
-            var result = generator.ExternalProcessResult ?? new ExternalProcessResult(string.Empty, string.Empty);
 
-            Console.WriteLine(result.ExitCode);
+            var result = generator.GenerateCSharpCode(inputFileName, nameSpace);
 
             if (generator.WarnLevel != 0)
             {
@@ -41,25 +37,8 @@ namespace Tests
                 Console.ResetColor();
             }
 
-            if (result.ExitCode == 0)
-            {
-                Console.WriteLine(result.StandardOutput);
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-
-                if (result.Win32ExitCode != Win32ExitCodes.ERROR_SUCCESS)
-                {
-                    Console.WriteLine(result.Win32ExitCode);
-                }
-
-                Console.WriteLine(result.StandardErrorOutput);
-                Console.ResetColor();
-            }
-
-            Console.WriteLine("Done!");
-            Thread.Sleep(5000);
+            Console.WriteLine(result);
+            Console.ReadLine();
         }
     }
 }

@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Oleander.StrResGen.SingleFileGenerator" Version="1.2.23147.11753" Language="en-US" Publisher="Oleander" />
-    <DisplayName>Oleander.StrResGen.SingleFileGenerator</DisplayName>
-    <Description xml:space="preserve">A simple tool that generates culture-specific string resources and a class to access the resources.</Description>
-    <Preview>true</Preview>
+    <Identity Id="VSIXProject1.9110bf97-d9fb-41b7-9243-8a9f9ae287c0" Version="1.0" Language="en-US" Publisher="Joyson Safety Systems" />
+    <DisplayName>VSIXProject1</DisplayName>
+    <Description>Empty VSIX Project.</Description>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0,18.0)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
-    <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
       <ProductArchitecture>amd64</ProductArchitecture>
     </InstallationTarget>
   </Installation>

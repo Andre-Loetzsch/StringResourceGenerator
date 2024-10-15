@@ -3,8 +3,8 @@
   <Import Project="..\..\Common\targets\common.targets" />
 
   <PropertyGroup>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <SourceRevisionId>c76d2932e14d3ce46ccc924b9a6aa44fe6ba155d</SourceRevisionId>
+    <AssemblyVersion>1.4.1.0</AssemblyVersion>
+    <SourceRevisionId>0580e06b7f63de2977c86e4347f12a1d68c4e4c6</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.0.1.6-dev">
+    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

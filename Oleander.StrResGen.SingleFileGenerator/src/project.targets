@@ -1,0 +1,33 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+
+    <WarningsAsErrors>OAVBT47</WarningsAsErrors>
+    <Product Condition="'$(VersionSuffix)' != ''">$(AssemblyName)-$(TargetFramework)+$(VersionSuffix)+$(Configuration)</Product>
+    <Product Condition="'$(VersionSuffix)' == ''">$(AssemblyName)-$(TargetFramework)+$(Configuration)</Product>
+    <LangVersion>latest</LangVersion>
+    <Copyright>Copyright © Oleander $([System.DateTime]::UtcNow.Year)</Copyright>
+    <Company>Oleander</Company>
+    <Title>$(AssemblyName)</Title>
+    <Description>$(AssemblyName)</Description>
+    <SourceRevisionId>faf9477b9b57ca19b34ec88018ea47637df14eb0</SourceRevisionId>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
+    <NoWarn Condition="$(AssemblyVersion) == '3.0.0.0'">OAVBT47</NoWarn>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
+    <Version>$(AssemblyVersion)-$(VersionDevSuffix)</Version>
+    <InformationalVersion>$(AssemblyVersion)+$(VersionDevSuffix)</InformationalVersion>
+    <Product>$(AssemblyName)-$(TargetFramework)+$(VersionDevSuffix)+$(Configuration)</Product>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration) == 'Debug'">
+    <EmbedAllSources>true</EmbedAllSources>
+    <DebugType>Embedded</DebugType>
+  </PropertyGroup>
+</Project>
