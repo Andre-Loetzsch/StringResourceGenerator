@@ -19,15 +19,9 @@
     <NoWarn Condition="$(AssemblyVersion) == '3.0.0.0'">OAVBT47</NoWarn>
   </PropertyGroup>
 
-
   <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
     <Version>$(AssemblyVersion)-$(VersionDevSuffix)</Version>
     <InformationalVersion>$(AssemblyVersion)+$(VersionDevSuffix)</InformationalVersion>
     <Product>$(AssemblyName)-$(TargetFramework)+$(VersionDevSuffix)+$(Configuration)</Product>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="$(Configuration) == 'Debug'">
-    <EmbedAllSources>true</EmbedAllSources>
-    <DebugType>Embedded</DebugType>
   </PropertyGroup>
 </Project>

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Oleander.StrResGen.SingleFileGenerator")]
-[assembly: AssemblyCopyright("Copyright © Oleander 2024")]
+[assembly: AssemblyCopyright("Copyright ï¿½ Oleander 2024")]
 [assembly: AssemblyTrademark("Oleander")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("3.0.0.0")]
-[assembly: AssemblyFileVersion("3.0.0.0")]
+[assembly: AssemblyVersion("3.0.0.1")]
+[assembly: AssemblyFileVersion("3.0.0.1")]
