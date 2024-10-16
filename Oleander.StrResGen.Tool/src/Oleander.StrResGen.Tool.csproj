@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>0.0.1.4</AssemblyVersion>
-    <SourceRevisionId>faf9477b9b57ca19b34ec88018ea47637df14eb0</SourceRevisionId>
-    <VersionSuffix>alpha</VersionSuffix>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <SourceRevisionId>111196fe1db4b060c3f0d6bc56e76077e458c83f</SourceRevisionId>
+    <VersionSuffix>beta</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
