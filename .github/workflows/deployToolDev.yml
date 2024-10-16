@@ -1,4 +1,4 @@
-name: 'deployDevNugetPackages'
+name: 'deploy Oleander.StrResGen.Tool dev'
 
 on:
   pull_request:
@@ -10,14 +10,14 @@ on:
 
 env:
   PACKOUTDIR: ${{ github.workspace }}\packoutput
-  SOLUTION: ${{ github.workspace }}\StringResourceGenerator.sln
+  SOLUTION: ${{ github.workspace }}\Oleander.StrResGen.Tool.sln
 jobs:
   deploy_dev:
     name: 'Deploy dev packages'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ windows-latest, ubuntu-latest ]
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: dotnet nuget push "${{env.PACKOUTDIR}}\*.nupkg" -k ${{secrets.GITHUB_TOKEN}} -s "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --skip-duplicate
 
-      - name: 'delete Oleander.StrResGen.Tool-dev old packages'
+      - name: 'delete Oleander.StrResGen old packages'
         uses: actions/delete-package-versions@v5
         with:
           package-name: 'Oleander.StrResGen'
@@ -52,7 +52,7 @@ jobs:
           min-versions-to-keep: 5
           delete-only-pre-release-versions: "true"
 
-      - name: 'delete dotnet-oleander-strresgen-tool-dev old packages'
+      - name: 'delete dotnet-oleander-strresgen-tool old packages'
         uses: actions/delete-package-versions@v5
         with:
           package-name: 'dotnet-oleander-strresgen-tool'

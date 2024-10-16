@@ -1,22 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common\targets\common.targets" />
+
   <PropertyGroup>
-    <AssemblyVersion>1.4.0.1</AssemblyVersion>
-    <SourceRevisionId>87d3156af0c9f24d9715dac95515916237f20582</SourceRevisionId>
+    <AssemblyVersion>1.4.3.0</AssemblyVersion>
+    <SourceRevisionId>697c393139bc7c72423654d061e7ffac947f53e9</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <InformationalVersion>$(AssemblyVersion)</InformationalVersion>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <Import Project="..\..\common\targets\common.targets" />
 
   <PropertyGroup>
     <TargetFrameworks>net48</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.0.1.6">
+    <PackageReference Include="Microsoft.VisualStudio.Interop" Version="17.11.40262" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="17.11.40262" />
+    <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -24,5 +29,32 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Oleander.StrResGen.SingleFileGenerator.csproj" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <EmbeddedResource Update="SR.srt.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SR.srt.de.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SR.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Update="SR.srt.de-DE.resx">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.strings</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

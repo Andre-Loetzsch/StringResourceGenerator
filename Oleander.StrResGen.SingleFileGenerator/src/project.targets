@@ -1,8 +1,9 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>disable</ImplicitUsings>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+
     <WarningsAsErrors>OAVBT47</WarningsAsErrors>
     <Product Condition="'$(VersionSuffix)' != ''">$(AssemblyName)-$(TargetFramework)+$(VersionSuffix)+$(Configuration)</Product>
     <Product Condition="'$(VersionSuffix)' == ''">$(AssemblyName)-$(TargetFramework)+$(Configuration)</Product>
@@ -10,12 +11,12 @@
     <Copyright>Copyright © Oleander $([System.DateTime]::UtcNow.Year)</Copyright>
     <Company>Oleander</Company>
     <Title>$(AssemblyName)</Title>
-    <Authors>Oleander</Authors>
     <Description>$(AssemblyName)</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <NoWarn>$(NoWarn);nullable</NoWarn>
+    <SourceRevisionId>faf9477b9b57ca19b34ec88018ea47637df14eb0</SourceRevisionId>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
+    <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
+    <NoWarn Condition="$(AssemblyVersion) == '3.0.0.0'">OAVBT47</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VersionSuffix)' == '' AND '$(VersionDevSuffix)' != ''">
