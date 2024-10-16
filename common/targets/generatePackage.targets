@@ -19,7 +19,7 @@
       <PackageTags>Oleander; StringResource Generator C#</PackageTags>
       <PackageVersion>$(Version)</PackageVersion>
       <PackageReleaseNotes>Version: $(PackageVersion)</PackageReleaseNotes>
-      <IncludeSymbols Condition="$(Configuration) == 'Release'">true</IncludeSymbols>
+      <IncludeSymbols>true</IncludeSymbols>
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 </Project>

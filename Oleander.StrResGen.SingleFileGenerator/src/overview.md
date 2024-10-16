@@ -1,1 +1,0 @@
-﻿Oleander.StrResGen.SingleFileGenerator

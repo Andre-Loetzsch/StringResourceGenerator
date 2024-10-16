@@ -5,7 +5,7 @@
     "internalName": "StrResGen" // If not specified, we try to generate the name from the display name of the extension in the vsixmanifest file.
     // Required if the display name is not the actual name of the extension.
   },
-  "overview": "overview.md", // Path to the "readme" file that gets uploaded to the Marketplace. Required.
+  "overview": "README.md", // Path to the "readme" file that gets uploaded to the Marketplace. Required.
   "priceCategory": "free", // Either "free", "trial", or "paid". Defaults to "free".
   "publisher": "Oleander", // The name of the publisher. Required.
   "private": false, // Specifies whether or not the extension should be public when uploaded. Defaults to false.

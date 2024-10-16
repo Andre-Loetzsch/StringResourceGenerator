@@ -1,25 +1,17 @@
-# StringResourceGenerator
-Generates culture-specific string resources
+# dotnet-oleander-strresgen-tool
+This dotnet tool generates culture-specific string resources
 
-# add nuget source
-dotnet nuget add source --username Andre-Loetzsch --password ********************* --store-password-in-clear-text --name oleander-github "https://nuget.pkg.github.com/Andre-Loetzsch/index.json"
 
-# install Oleander.StrResGen.Tool
-dotnet tool install --global --prerelease Oleander.StrResGen.Tool
-dotnet tool update --global --prerelease Oleander.StrResGen.Tool
-dotnet tool uninstall --global Oleander.StrResGen.Tool
+- dotnet tool install --global --prerelease dotnet-oleander-strresgen-tool
+- dotnet tool update --global --prerelease dotnet-oleander-strresgen-tool
+- dotnet tool uninstall --global dotnet-oleander-strresgen-tool
 
-# Visual Studio 2022 Projectfile
-
-<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-  <Exec Command="strresgen generate -p $(ProjectPath)" />
-</Target>
 
 # Visual Studio External Tool
-Title:			ResGen
-Command: 		$(ProjectDir)dotnet-tool.cmd
-Arguments: 		strresgen "generate -p $(ProjectFileName) -f $(ItemPath)"
-Initial directory:	$(ProjectDir)
+- Title: ResGen
+- Command: $(ProjectDir)dotnet-tool.cmd
+- Arguments: strresgen "generate -p $(ProjectFileName) -f $(ItemPath)"
+- Initial directory: $(ProjectDir)
 
 # dotnet-tool.cmd
 
