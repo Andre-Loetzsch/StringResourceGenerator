@@ -31,7 +31,7 @@ jobs:
       - name: Build Solution to calculate versions
         run: msbuild.exe "${{env.SOLUTION}}" -t:Restore -t:rebuild -p:configuration="Release" -p:GeneratePackageOnBuild=false
 
-      - name: Build Solution to calculate versions
+      - name: Build Solution
         run: msbuild.exe "${{env.SOLUTION}}" -t:Restore -t:rebuild -p:configuration="Release" -p:GeneratePackageOnBuild=true
 
       - name: 'Push nuget packages'
