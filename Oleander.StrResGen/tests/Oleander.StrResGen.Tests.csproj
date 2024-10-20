@@ -6,13 +6,16 @@
     <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
     <Product>String Resource Generator Tests</Product>
-    <AssemblyVersion>2.0.0.1</AssemblyVersion>
-    <SourceRevisionId>faf9477b9b57ca19b34ec88018ea47637df14eb0</SourceRevisionId>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <SourceRevisionId>3c9fe16517c0ca8543b7797550f21b0566ed1e5c</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <SignAssembly Condition="'$(TargetFramework)' == 'net48'">True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\common\package.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 

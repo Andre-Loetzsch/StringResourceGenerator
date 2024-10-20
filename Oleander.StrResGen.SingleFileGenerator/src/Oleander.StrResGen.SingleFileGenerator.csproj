@@ -6,11 +6,10 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>package.pfx</AssemblyOriginatorKeyFile>
     <Authors>Oleander</Authors>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -64,6 +63,7 @@
     <Compile Include="SingleFileGeneratorPackage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="package.pfx" />
     <None Include="project.targets" />
     <None Include="publishManifest.json" />
     <None Include="README.md" />
