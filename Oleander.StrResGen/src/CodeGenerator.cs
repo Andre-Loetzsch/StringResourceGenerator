@@ -32,6 +32,7 @@ internal class CodeGenerator
 #endif
     }
 
+
     public GenerationOptions CreateGenerationOptions(string? nameSpace = null)
     {
         var options = new GenerationOptions();
@@ -42,7 +43,7 @@ internal class CodeGenerator
         }
         else
         {
-            options.SRNamespace = nameSpace!.Replace("-", "_").Replace(" ", "_");
+            options.SRNamespace = nameSpace.Replace("-", "_").Replace(" ", "_");
         }
 
         return options;
@@ -881,22 +882,4 @@ internal class CodeGenerator
     #endregion
 
     #endregion
-}
-
-internal class Logger : ILogger
-{
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-    {
-       
-    }
-
-    public bool IsEnabled(LogLevel logLevel)
-    {
-        return true;
-    }
-
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
-    {
-        return null;
-    }
 }
