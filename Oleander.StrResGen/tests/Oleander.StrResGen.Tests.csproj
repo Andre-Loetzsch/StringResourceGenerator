@@ -6,8 +6,8 @@
     <TargetFrameworks>net8.0;net4.8</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
     <Product>String Resource Generator Tests</Product>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <SourceRevisionId>3c9fe16517c0ca8543b7797550f21b0566ed1e5c</SourceRevisionId>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <SourceRevisionId>c4c130bbc5912cf5b60c7eb3d902a71f7362d908</SourceRevisionId>
     <VersionSuffix>alpha</VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>

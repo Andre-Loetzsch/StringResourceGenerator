@@ -1,6 +1,10 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
@@ -21,7 +25,11 @@ internal class CodeGenerator
 
     public CodeGenerator()
     {
+#if NET48
+        this._logger = new Oleander.StrResGen.Logger();
+#else
         this._logger = LoggerFactory.CreateLogger<CodeGenerator>();
+#endif
     }
 
     public GenerationOptions CreateGenerationOptions(string? nameSpace = null)
@@ -835,7 +843,7 @@ internal class CodeGenerator
         if (pos <= -1) return true;
 
         //var opt = line[2..pos].Trim();
-        var opt = line.Substring(2, pos -2).Trim();
+        var opt = line.Substring(2, pos - 2).Trim();
 
         //var arg = line[(pos + 1)..].Trim();
         var arg = line.Substring(pos + 1).Trim();
@@ -873,4 +881,22 @@ internal class CodeGenerator
     #endregion
 
     #endregion
+}
+
+internal class Logger : ILogger
+{
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+       
+    }
+
+    public bool IsEnabled(LogLevel logLevel)
+    {
+        return true;
+    }
+
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+    {
+        return null;
+    }
 }

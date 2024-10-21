@@ -14,10 +14,7 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net48</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-
-    <SignAssembly Condition="'$(TargetFramework)' == 'net48'">True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\common\package.pfx</AssemblyOriginatorKeyFile>
+    <ImplicitUsings>disable</ImplicitUsings>
     <NoWarn Condition="$(AssemblyVersion) == '3.0.0.0'">OAVBT47</NoWarn>
   </PropertyGroup>
 

@@ -28,14 +28,7 @@ namespace Oleander.StrResGen.SingleFileGenerator
 
         protected override byte[] GenerateCode(string inputFileName, string inputFileContent)
         {
-            Log.Write($"GenerateCode inputFileName: {inputFileName}");
-            Log.Write($"GenerateCode inputFileContent: {inputFileContent}");
-
             var result = this.GenerateCSharpCode(inputFileName, this.FileNamespace);
-
-            Log.Write($"GenerateCode: {Environment.NewLine}{result}");
-            Log.Write(Environment.NewLine);
-
             return result == null ? null : Encoding.UTF8.GetBytes(result);
         }
 

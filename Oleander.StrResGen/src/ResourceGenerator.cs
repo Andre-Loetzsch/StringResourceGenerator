@@ -5,18 +5,22 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Oleander.Extensions.Logging.Abstractions;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
+
 // ReSharper disable ExplicitCallerInfoArgument
 
 namespace Oleander.StrResGen;
 
-public class ResourceGenerator
+public class ResourceGenerator 
 {
     private readonly ILogger _logger;
 
     public ResourceGenerator()
     {
+#if NET48
+        this._logger = new Oleander.StrResGen.Logger();
+#else
         this._logger = LoggerFactory.CreateLogger<ResourceGenerator>();
+#endif
     }
 
     public int Generate(string inputFileName, string? nameSpace)
