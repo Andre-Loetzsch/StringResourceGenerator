@@ -1,6 +1,10 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
@@ -9,7 +13,10 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.CSharp;
 using Microsoft.Extensions.Logging;
+
+#if !NET48
 using Oleander.Extensions.Logging.Abstractions;
+#endif
 // ReSharper disable ExplicitCallerInfoArgument
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
@@ -21,8 +28,13 @@ internal class CodeGenerator
 
     public CodeGenerator()
     {
+#if NET48
+        this._logger = new TraceLogger();
+#else
         this._logger = LoggerFactory.CreateLogger<CodeGenerator>();
+#endif
     }
+
 
     public GenerationOptions CreateGenerationOptions(string? nameSpace = null)
     {
@@ -835,7 +847,7 @@ internal class CodeGenerator
         if (pos <= -1) return true;
 
         //var opt = line[2..pos].Trim();
-        var opt = line.Substring(2, pos -2).Trim();
+        var opt = line.Substring(2, pos - 2).Trim();
 
         //var arg = line[(pos + 1)..].Trim();
         var arg = line.Substring(pos + 1).Trim();
