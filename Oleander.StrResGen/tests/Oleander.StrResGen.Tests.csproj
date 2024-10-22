@@ -13,9 +13,6 @@
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
     <Version Condition="'$(VersionSuffix)' == ''">$(AssemblyVersion)</Version>
     <ImplicitUsings>enable</ImplicitUsings>
-
-    <SignAssembly Condition="'$(TargetFramework)' == 'net48'">True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\common\package.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
