@@ -18,7 +18,6 @@
     <AssemblyOriginatorKeyFile>..\..\common\package.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
-
   <ItemGroup>
     <PackageReference Include="Oleander.Assembly.Versioning.BuildTask" Version="1.3.0">
       <PrivateAssets>all</PrivateAssets>
@@ -33,11 +32,9 @@
     </PackageReference>
   </ItemGroup>
 
-
   <ItemGroup>
     <ProjectReference Include="..\src\Oleander.StrResGen.csproj" />
   </ItemGroup>
-
 
   <ItemGroup>
     <None Include="TestData\DotnetCore.csproj">
@@ -50,7 +47,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 
   <ItemGroup>
     <None Update="TestData\LegacyProject\Basic_SR.strings">
@@ -80,7 +76,6 @@
       <DesignTime>True</DesignTime>
     </EmbeddedResource>
   </ItemGroup>
-
 
   <ItemGroup>
     <Compile Update="TestData\SRX.cs">
