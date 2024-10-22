@@ -4,7 +4,9 @@ using System.Linq;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Extensions.Logging;
+#if !NET48
 using Oleander.Extensions.Logging.Abstractions;
+#endif
 
 namespace Oleander.StrResGen;
 
@@ -19,7 +21,7 @@ internal class VSProject
     {
 
 #if NET48
-        this._logger = new Oleander.StrResGen.Logger();
+        this._logger = new TraceLogger();
 #else
         this._logger = LoggerFactory.CreateLogger<VSProject>();
 #endif

@@ -13,7 +13,10 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.CSharp;
 using Microsoft.Extensions.Logging;
+
+#if !NET48
 using Oleander.Extensions.Logging.Abstractions;
+#endif
 // ReSharper disable ExplicitCallerInfoArgument
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
@@ -26,7 +29,7 @@ internal class CodeGenerator
     public CodeGenerator()
     {
 #if NET48
-        this._logger = new Oleander.StrResGen.Logger();
+        this._logger = new TraceLogger();
 #else
         this._logger = LoggerFactory.CreateLogger<CodeGenerator>();
 #endif
@@ -43,7 +46,7 @@ internal class CodeGenerator
         }
         else
         {
-            options.SRNamespace = nameSpace.Replace("-", "_").Replace(" ", "_");
+            options.SRNamespace = nameSpace!.Replace("-", "_").Replace(" ", "_");
         }
 
         return options;

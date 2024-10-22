@@ -3,9 +3,11 @@ using System.IO;
 using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Oleander.Extensions.Logging.Abstractions;
 using System.Runtime.CompilerServices;
 
+#if !NET48
+using Oleander.Extensions.Logging.Abstractions;
+#endif
 // ReSharper disable ExplicitCallerInfoArgument
 
 namespace Oleander.StrResGen;
@@ -17,7 +19,7 @@ public class ResourceGenerator
     public ResourceGenerator()
     {
 #if NET48
-        this._logger = new Oleander.StrResGen.Logger();
+        this._logger = new TraceLogger();
 #else
         this._logger = LoggerFactory.CreateLogger<ResourceGenerator>();
 #endif
