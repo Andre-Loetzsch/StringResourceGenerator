@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -20,7 +21,6 @@ namespace Oleander.StrResGen.SingleFileGenerator
         private readonly List<string> _errors = new List<string>();
         private readonly List<string> _warnings = new List<string>();
 
-
         public override string GetDefaultExtension()
         {
             return ".cs";
@@ -33,7 +33,7 @@ namespace Oleander.StrResGen.SingleFileGenerator
         }
 
 
-        public string GenerateCSharpCode(string inputFileName, string fileNamespace)
+        private string GenerateCSharpCode(string inputFileName, string fileNamespace)
         {
             if (string.IsNullOrEmpty(fileNamespace))
             {

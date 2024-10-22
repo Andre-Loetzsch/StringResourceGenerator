@@ -1,7 +1,12 @@
-﻿using Microsoft.Build.Construction;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Extensions.Logging;
+#if !NET48
 using Oleander.Extensions.Logging.Abstractions;
+#endif
 
 namespace Oleander.StrResGen;
 
@@ -14,7 +19,13 @@ internal class VSProject
 
     public VSProject(string projectFileName)
     {
+
+#if NET48
+        this._logger = new TraceLogger();
+#else
         this._logger = LoggerFactory.CreateLogger<VSProject>();
+#endif
+
         this._logger.LogInformation("Try to open project file: '{projectFileName}'", projectFileName);
 
         if (!File.Exists(projectFileName))
@@ -28,7 +39,7 @@ internal class VSProject
             ProjectCollection.GlobalProjectCollection,
             preserveFormatting: true);
 
-        this.IsDotnetCoreProject = !string.IsNullOrEmpty(this._projectRootElement.Sdk) && 
+        this.IsDotnetCoreProject = !string.IsNullOrEmpty(this._projectRootElement.Sdk) &&
                                    string.IsNullOrEmpty(this._projectRootElement.ToolsVersion);
 
         this._logger.LogInformation("Project has been opened.");
@@ -75,7 +86,7 @@ internal class VSProject
 
     public void UpdateOrCreateItemElement(ProjectItemGroupElement defaultProjectItemGroupElement, string elementName, string updateOrInclude, Dictionary<string, string>? metaData = null)
     {
-        var element = defaultProjectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude)) ?? 
+        var element = defaultProjectItemGroupElement.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude)) ??
                       this.FindProjectItemGroupElement(elementName, updateOrInclude)?.Items.FirstOrDefault(x => x.ElementName == elementName && (x.Update == updateOrInclude || x.Include == updateOrInclude));
 
         if (element != null) this.IsDotnetCoreProject = !string.IsNullOrEmpty(element.Update);
@@ -129,7 +140,7 @@ internal class VSProject
 
             return;
         }
-        
+
         this._logger.LogInformation("Nothing to save. Project has no changes.");
     }
 
@@ -163,7 +174,7 @@ internal class VSProject
         itemNamespace = string.Empty;
         var itemDir = Path.GetDirectoryName(itemFileName);
         if (itemDir == null) return false;
-        return TryFindProjectFileName(itemDir, out var projectFileName) && 
+        return TryFindProjectFileName(itemDir, out var projectFileName) &&
                TryFindNameSpaceFromProjectItem(projectFileName, itemFileName, out itemNamespace);
     }
 
@@ -180,7 +191,7 @@ internal class VSProject
         if (projectName.Length < 8) return false;
 
         //projectName = projectName[..^7];
-        projectName = projectName.Substring(0, projectName.Length -7);
+        projectName = projectName.Substring(0, projectName.Length - 7);
 
 
 

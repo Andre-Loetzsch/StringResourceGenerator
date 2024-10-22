@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <SourceRevisionId>111196fe1db4b060c3f0d6bc56e76077e458c83f</SourceRevisionId>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <SourceRevisionId>3c9fe16517c0ca8543b7797550f21b0566ed1e5c</SourceRevisionId>
     <VersionSuffix></VersionSuffix>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version Condition="'$(VersionSuffix)' != ''">$(AssemblyVersion)-$(VersionSuffix)</Version>
@@ -14,7 +14,8 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net48</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net8.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <NoWarn Condition="$(AssemblyVersion) == '3.0.0.0'">OAVBT47</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
